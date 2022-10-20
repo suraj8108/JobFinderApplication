@@ -47,6 +47,12 @@ compileOnly 'org.projectlombok:lombok:1.18.24'
     
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    
+    
+    //http client
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
+    //validator
+   // implementation group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.CR2'
 }
 
 tasks.named('test') {
