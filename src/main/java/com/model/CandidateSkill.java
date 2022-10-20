@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -28,35 +29,14 @@ public class CandidateSkill {
 	private String skillName;
 	
 	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.ALL)
-	private Candidate candidate;
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	private Set<Candidate>  candidateSet;
 	
 	
 
 
-	public CandidateSkill(String skillName) {
-		super();
-		this.skillName = skillName;
-		
-	}
-
-
-	public CandidateSkill(int skillId, String skillName) {
-		super();
-		this.skillId = skillId;
-		this.skillName = skillName;
-		
-	}
-
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("CandidateSkill [skillName=").append(skillName).append(", candidate=").append(candidate)
-				.append("]");
-		return builder.toString();
-	}
-
 	
+
+
 	
 }

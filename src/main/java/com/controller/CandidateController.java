@@ -26,10 +26,22 @@ public class CandidateController {
 	CandidateService service;
 	
 	@GetMapping("/getallcandidates")
-	public List getallCandidates() {
+	public List<Candidate> getallCandidates() {
 		return service.getAllCandidates();
+	}
+	@GetMapping("/findcandidatebyid/{id}")
+	public ResponseEntity getbyid(@PathVariable int  id  ) {
+		if(id!=0 || id>0)
+		{ 
+		return new ResponseEntity<>(service.findById(id),HttpStatus.FOUND);
+		}
+		else {
+			return new	ResponseEntity<>("Candidate delete failed, check id "
+					,HttpStatus.FORBIDDEN);
+		}
 		
 	}
+	
 	@PostMapping("/addprofile")
 	public ResponseEntity addCandidate(@RequestBody Candidate cand) {
 		if(cand!=null)
@@ -44,6 +56,14 @@ public class CandidateController {
 		}
 		
 		
+	}
+	@PostMapping("/updatelocationbyid/{id}")
+	public ResponseEntity updateLocationById(@RequestBody String str,@PathVariable int id) {
+		service.updateLocation(id, str);
+		
+		return new	ResponseEntity<>("Candidate updated location ",HttpStatus.OK);
+
+
 	}
 	
 	@PatchMapping("/updatecandidate")
@@ -73,32 +93,23 @@ public class CandidateController {
 			return new	ResponseEntity<>("Candidate delete failed, check id "
 					,HttpStatus.FORBIDDEN);
 		}
-		
-		
+	
 	}
-	@GetMapping("/findcandidatebyid/{id}")
-	public ResponseEntity getbyid(@PathVariable int  id  ) {
-		if(id!=0)
-		{ 
-		return new ResponseEntity<>(service.findById(id),HttpStatus.FOUND);
-		}
-		else {
-			return new	ResponseEntity<>("Candidate delete failed, check id "
-					,HttpStatus.FORBIDDEN);
-		}
-		
-		 
-		
-		
-	}
-	@PostMapping("/updatelocationbyid/{id}")
-	public ResponseEntity updateLocationById(@RequestBody String str,@PathVariable int id) {
-		service.updateLocation(id, str);
-		
-		return new	ResponseEntity<>("Candidate updated location ",HttpStatus.OK);
+	
+	
+	
+	
+	@DeleteMapping("/deletecandidate/{id}")
+	public String deletebyid(@PathVariable int  id ) {
 
-
+	service.deletebyid(id);
+	return "Candidate delete successfully";
 	}
+	
+	
+	
+	
+	
 	
 //	@PatchMapping("/addskillbyid/{id}")
 //	public ResponseEntity addskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {

@@ -1,5 +1,6 @@
 package com.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,21 +28,7 @@ public class Project {
 	@ManyToOne
 	private Candidate candidate;
 
-	public Project(String projectName, String projectDescription) {
-		super();
-		this.projectName = projectName;
-		this.projectDescription = projectDescription;
-		
-	}
-
-	public Project(int projectId, String projectName, String projectDescription) {
-		super();
-		this.projectId = projectId;
-		this.projectName = projectName;
-		this.projectDescription = projectDescription;
-		
-	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

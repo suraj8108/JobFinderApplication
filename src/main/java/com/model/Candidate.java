@@ -32,7 +32,7 @@ import lombok.Setter;
 
 public class Candidate {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int candidateId;
 	//@NotNull
 	private String candidateName;
@@ -43,11 +43,11 @@ public class Candidate {
 	private String location;
 	private String educationQualification;
 	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "candidate")
 	private List<Project> projectList;
 	
 	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private Set<CandidateSkill> canditationSkillSet;
 
 	
@@ -68,30 +68,6 @@ public class Candidate {
 	
 	
 	
-	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,
-			List<Project> projectList, Set<CandidateSkill> canditationSkillSet) {
-		super();
-		this.candidateName = candidateName;
-		this.age = age;
-		this.experience = experience;
-		this.location = location;
-		this.educationQualification = educationQualification;
-		this.projectList = projectList;
-		this.canditationSkillSet = canditationSkillSet;
-	}
-
-	public Candidate(int candidateId, String candidateName, int age, int experience, String location,
-			String educationQualification, List<Project> projectList, Set<CandidateSkill> canditationSkillSet) {
-		super();
-		this.candidateId = candidateId;
-		this.candidateName = candidateName;
-		this.age = age;
-		this.experience = experience;
-		this.location = location;
-		this.educationQualification = educationQualification;
-		this.projectList = projectList;
-		this.canditationSkillSet = canditationSkillSet;
-	}
 
 	@Override
 	public String toString() {

@@ -28,23 +28,31 @@ public class CandidateService {
 		candao.save(c);
 	
 	}
+	public Candidate findById(int id) {
+		if(candao.existsById(id)) {
+		return candao.findById(id).get();
+		}
+		{
+			return null;
+		}
+	}
 	
 	public void updateCandidate(Candidate c) {
 		if(candao.existsById(c.getCandidateId()))
 		{
-		Candidate temp = candao.findById(c.getCandidateId()).get();
-		if(c.getAge()!=0)
-			temp.setAge(c.getAge());
-		if(c.getCandidateName()!=null)
-			temp.setCandidateName(c.getCandidateName());
-		if(c.getCanditationSkillSet()!=null)
-			temp.setCanditationSkillSet(c.getCanditationSkillSet());
-		if(c.getEducationQualification()!=null)
-			temp.setEducationQualification(c.getEducationQualification());
-		if(c.getLocation()!=null)
-			temp.setLocation(c.getLocation());
-		if(c.getProjectList()!=null)
-			temp.setProjectList(c.getProjectList());
+//		Candidate temp = candao.findById(c.getCandidateId()).get();
+//		if(c.getAge()!=0)
+//			temp.setAge(c.getAge());
+//		if(c.getCandidateName()!=null)
+//			temp.setCandidateName(c.getCandidateName());
+//		if(c.getCanditationSkillSet()!=null)
+//			temp.setCanditationSkillSet(c.getCanditationSkillSet());
+//		if(c.getEducationQualification()!=null)
+//			temp.setEducationQualification(c.getEducationQualification());
+//		if(c.getLocation()!=null)
+//			temp.setLocation(c.getLocation());
+//		if(c.getProjectList()!=null)
+//			temp.setProjectList(c.getProjectList());
 		candao.save(c);
 		
 		
@@ -62,9 +70,12 @@ public class CandidateService {
 			return false;
 		}
 	}
-	public Candidate findById(int id) {
-		return candao.findById(id).get();
+	
+	
+	public void deletebyid(int id) {
+		candao.deleteById(id);
 	}
+	
 	
 	public void updateLocation( int id,String loc) {
 		Optional<Candidate> c = candao.findById(id);
