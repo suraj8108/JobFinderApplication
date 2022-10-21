@@ -7,7 +7,6 @@ import com.model.Item;
 @Repository
 public interface ItemDao extends JpaRepository<Item, Integer>{
 	
-	
 	public int countByItemName(String ItemName);
 	
 	public Item findByItemName(String ItemName);
