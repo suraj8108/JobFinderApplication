@@ -29,7 +29,7 @@ public class CandidateService implements UserDetailsService{
 		
 		//return new User(can.getEmailId(), can.getPassword(), new ArrayList<>());
 		//System.out.println(passwordEncoder().encode("121aaa"));
-		return new User("suraj@gmail.com",  "121aaa", new ArrayList<>());
+		return new User(can.getEmailId(),  can.getPassword(), new ArrayList<>());
 	}
 	
 //	@Bean
