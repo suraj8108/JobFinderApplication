@@ -1,5 +1,4 @@
 package com.model;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -29,20 +30,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-//@DynamicUpdate
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name="CAND_TBL")
 public class Candidate {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int candidateId;
-	//@NotNull
+	@NotNull
 	private String candidateName;
-	//@Min(value = 18)
+	@Min(value = 20)
 	private  int age;
-	//@Min(value=0)
+	//@Min
 	private int experience;
 	private String location;
 	private String educationQualification;
@@ -51,12 +52,16 @@ public class Candidate {
 	private List<Project> projectList;
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY,
+	
+	  @ManyToMany(fetch = FetchType.LAZY,
+
 		      cascade = {
 		          CascadeType.PERSIST,
 		          CascadeType.MERGE
 		      })
+
 	  @JoinTable(name="CANDIDATE_SKILL_TABLE",
+
 			joinColumns= {
 					@JoinColumn(name="candidate_id")
 			},
@@ -65,6 +70,20 @@ public class Candidate {
 			})
 	
 	private Set<Skill> skillSet = new HashSet<>();
+	  
+	  @ManyToMany(fetch = FetchType.LAZY,
+		      cascade = {
+		          CascadeType.PERSIST,
+		          CascadeType.MERGE
+		      })
+	  @JoinTable(name="CANDIDATE_JOB_TABLE",
+			joinColumns= {
+					@JoinColumn(name="candidate_id")
+			},
+			inverseJoinColumns = {
+					@JoinColumn(name="job_id")
+			})
+	private Set<Job> jobSet = new HashSet<>();
 
 
 	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,
@@ -90,40 +109,11 @@ public class Candidate {
 		return builder.toString();
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
 
 	
-
-
-
-
-
-
+	
+	
+	
 
 
 	
@@ -132,3 +122,5 @@ public class Candidate {
 
 	
 }
+
+

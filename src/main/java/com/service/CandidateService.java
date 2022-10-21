@@ -30,18 +30,19 @@ public class CandidateService {
 	
 	public void addCandidate(Candidate c) {
 		
-//		//Stream<Skill> stream = alreadyExits.stream();
-//		if(!c.getSkillSet().isEmpty()||c.) {
-//		Set<Skill> temp =c.getSkillSet();
-//		for(Skill s : temp) {
-//			s.setSkillName(s.getSkillName().toUpperCase());
-//			Skill alreadyExits = new Skill(); 
-//			alreadyExits=	skilldao.findBySkillName(s.getSkillName().toUpperCase());
-//			if(alreadyExits.getSkillName().equalsIgnoreCase(c.getCandidateName())) {
-//				
-//			}
-//		}
-//		}
+		//Stream<Skill> stream = alreadyExits.stream();
+		if(!c.getSkillSet().isEmpty()) {
+		Set<Skill> temp =c.getSkillSet();
+		for(Skill s : temp) {
+			s.setSkillName(s.getSkillName().toUpperCase());
+			Skill alreadyExits=	skilldao.findBySkillNameIgnoreCase(s.getSkillName().toUpperCase());
+			if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(s.getSkillName())) {
+				
+				c.getSkillSet().remove(s);
+				c.getSkillSet().add(alreadyExits);
+			}
+		}
+		}
 		
 		candao.save(c);
 	
@@ -132,9 +133,9 @@ public class CandidateService {
 //		return c;
 //	}
 	
-	public void query() {
-		
-	}
+//	public void query() {
+//		
+//	}
 	
 	
 }

@@ -2,6 +2,9 @@ package com.controller;
 
 import java.util.List;
 
+import java.util.Set;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,20 +13,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.CandidateDao;
 import com.model.Candidate;
 
+
 import com.model.Project;
 import com.service.CandidateService;
+
+import com.model.Job;
+
 
 @RestController
 public class CandidateController {
 	
 	@Autowired
 	CandidateService service;
+	
+	
 	
 	@GetMapping("/getallcandidates")
 	public List<Candidate> getallCandidates() {
@@ -66,11 +78,23 @@ public class CandidateController {
 
 	}
 	
+
+
+	
+	@GetMapping("/getjobstatus")
+	public List<Job> findjob(@RequestBody Candidate cand) {
+		Candidate candi = service.findById(cand.getCandidateId());
+		return (List<Job>) candi.getJobSet();
+	}
+	                                                                      
+
 	@PatchMapping("/updatecandidate")
 	public ResponseEntity updateCandidate(@RequestBody Candidate cand) {
 		if(cand!=null)
 		{ 
+
 		service.updateCandidate(cand);
+
 		return new	ResponseEntity<>("Candidate updated successfully"
 				,HttpStatus.ACCEPTED);
 		}
@@ -78,6 +102,7 @@ public class CandidateController {
 			return new	ResponseEntity<>("Candidate updation failed, check id "
 					,HttpStatus.FORBIDDEN);
 		}
+
 		
 		
 	}
@@ -85,7 +110,9 @@ public class CandidateController {
 	public ResponseEntity deleteCandidate(@RequestBody Candidate cand) {
 		if(cand!=null)
 		{ 
+
 		service.deleteCandidate(cand);
+
 		return new	ResponseEntity<>("Candidate delete successfully"
 				,HttpStatus.ACCEPTED);
 		}
@@ -96,6 +123,7 @@ public class CandidateController {
 	
 	}
 	
+
 	
 	
 	
@@ -103,10 +131,12 @@ public class CandidateController {
 	public String deletebyid(@PathVariable int  id ) {
 
 	service.deletebyid(id);
+
 	return "Candidate delete successfully";
 	}
 	
 	
+
 	
 	
 	

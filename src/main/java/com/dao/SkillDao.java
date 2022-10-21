@@ -12,5 +12,5 @@ public interface SkillDao extends JpaRepository<Skill, Integer> {
 
 	
 	//public List<Skill> findBySkillName(String skillName );
-	public Skill findBySkillName(String skillName );
+	public Skill findBySkillNameIgnoreCase(String skillName );
 }

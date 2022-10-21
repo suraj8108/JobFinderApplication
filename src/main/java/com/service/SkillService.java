@@ -14,6 +14,9 @@ public class SkillService {
 	SkillDao cdao;
 	
 
-	
+	public void addSkill(Skill s) {
+		s.setSkillName(s.getSkillName().toUpperCase());
+		cdao.save(s);
+	}
 
 }

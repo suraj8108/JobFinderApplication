@@ -30,18 +30,22 @@ import org.springframework.web.client.RestTemplate;
 import com.dao.CandidateDao;
 import com.model.Candidate;
 
+
 import com.model.Project;
 import com.service.CandidateService;
+
 
 @SpringBootTest
 public class RestControllerTest {
 	@Autowired
 	CandidateDao candao ;
+
 	@Autowired
 	CandidateService service;
 
+
 	
-	Candidate cand1=new Candidate();;
+	Candidate cand1=new Candidate();
 	
 	
 	
@@ -60,6 +64,7 @@ public class RestControllerTest {
 		
 	}
 	
+
 	@Test
 	public void addProfiletest() throws URISyntaxException 
 	{
@@ -86,10 +91,13 @@ public class RestControllerTest {
 
 	
 	
+
 	
 	@Test
 	public void getallcandidates() throws URISyntaxException 
 	{
+		
+		
 	    RestTemplate restTemplate = new RestTemplate();
 	   
 	    
@@ -103,11 +111,13 @@ public class RestControllerTest {
                 HttpMethod.GET,entity,List.class);
 		
 		List<Candidate> temp = candao.findAll();
-		
+
 		//Assertions.assertEquals(temp,result.getBody());
 		
 		//assertTrue(temp.equals(result.getBody()));
-		
+
+
+
 		Assertions.assertEquals(temp.toString(),result.getBody().toString());
 		
 	    //Verify request succeed
@@ -186,8 +196,7 @@ public class RestControllerTest {
 	 
 		ResponseEntity<String>  result = restTemplate.exchange("http://localhost:9989/deletecandidate",
                 HttpMethod.DELETE,entity,String.class);
-		
-		
+
 		
 		//Assertions.assertEquals(temp,result.getBody());
 		
@@ -195,6 +204,9 @@ public class RestControllerTest {
 		
 		//Assertions.assertEquals(temp.toString(),result.getBody().toString());
 		
+
+			
+
 	    //Verify request succeed
 		
 	    Assertions.assertEquals(202, result.getStatusCodeValue());
@@ -226,4 +238,7 @@ public class RestControllerTest {
 	
 	
 	
+
 }
+
+

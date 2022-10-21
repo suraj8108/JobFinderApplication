@@ -41,9 +41,12 @@ dependencies {
 	//for swagger ui
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'         
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    
+    
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
 
-//lombock
-compileOnly 'org.projectlombok:lombok:1.18.24'
+	//lombock
+	compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
@@ -53,9 +56,8 @@ compileOnly 'org.projectlombok:lombok:1.18.24'
     //http client
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
     //validator
-   // implementation group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.CR2'
+   	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
-
 tasks.named('test') {
 	useJUnitPlatform()
 }
