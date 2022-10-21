@@ -1,6 +1,7 @@
 package com.model;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,26 +11,29 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DynamicUpdate
+//@DynamicUpdate
 @Getter
 @Setter
 @NoArgsConstructor
-
-
+@Table(name="CAND_TBL")
 public class Candidate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,28 +50,35 @@ public class Candidate {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "candidate")
 	private List<Project> projectList;
 	
-	@JsonManagedReference
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	private Set<CandidateSkill> canditationSkillSet;
+	
+	@ManyToMany(fetch = FetchType.LAZY,
+		      cascade = {
+		          CascadeType.PERSIST,
+		          CascadeType.MERGE
+		      })
+	  @JoinTable(name="CANDIDATE_SKILL_TABLE",
+			joinColumns= {
+					@JoinColumn(name="candidate_id")
+			},
+			inverseJoinColumns = {
+					@JoinColumn(name="skill_id")
+			})
+	
+	private Set<Skill> skillSet = new HashSet<>();
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,
+			List<Project> projectList, Set<Skill> skillSet) {
+		super();
+		this.candidateName = candidateName;
+		this.age = age;
+		this.experience = experience;
+		this.location = location;
+		this.educationQualification = educationQualification;
+		this.projectList = projectList;
+		this.skillSet = skillSet;
+	}
+
 
 	@Override
 	public String toString() {
@@ -75,14 +86,29 @@ public class Candidate {
 		builder.append("Candidate [candidateName=").append(candidateName).append(", age=").append(age)
 				.append(", experience=").append(experience).append(", location=").append(location)
 				.append(", educationQualification=").append(educationQualification).append(", projectList=")
-				.append(projectList).append(", canditationSkillSet=").append(canditationSkillSet).append("]");
+				.append(projectList).append(", skillSet=").append(skillSet).append("]");
 		return builder.toString();
 	}
-	
 
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 
 
 

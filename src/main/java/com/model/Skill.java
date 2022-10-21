@@ -1,0 +1,62 @@
+package com.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+//@NamedQuery()
+@Table(name ="skill_table")
+public class Skill {
+//	static{
+//		CandidateSkill java= new CandidateSkill();
+//		java.setSkillId(1);
+//		java.setSkillName("Java");
+//		
+//		CandidateSkill python = new CandidateSkill();
+//		python.setSkillId(2);
+//		python.setSkillName("Python");
+//		
+//	}
+	
+	@Id
+	@GeneratedValue
+	private int skillId;
+	
+
+	
+	
+	
+	@ManyToMany(fetch = FetchType.LAZY,
+		      cascade = {
+		          CascadeType.PERSIST,
+		          CascadeType.MERGE
+		      },
+		      mappedBy = "skillSet")
+	@JsonIgnore
+	private Set<Candidate>  candidateSet = new HashSet<>();
+	private String skillName;
+	
+	
+
+	
+	
+
+
+	
+}

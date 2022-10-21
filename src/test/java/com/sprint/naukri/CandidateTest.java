@@ -2,6 +2,7 @@ package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -32,22 +35,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import com.dao.CandidateDao;
-
+import com.dao.SkillDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.model.Candidate;
-import com.model.CandidateSkill;
+import com.model.Skill;
 import com.model.Project;
+
 import com.service.CandidateService;
 
+
 @SpringBootTest
+
 public class CandidateTest {
 	@Autowired
 	 CandidateDao candao ;
 	@Autowired
 	CandidateService service;
+	@Autowired
+	SkillDao sdao;
 	
 	 
 
@@ -68,24 +77,17 @@ public class CandidateTest {
 	
 	
 	@Test
+	@Transactional
 	public void getAllCandidatesTest() {
 		Candidate cand1 = new Candidate();
-		List<Project> pl = new ArrayList<>();
-		Set<CandidateSkill> css = new HashSet<>();
-		cand1.setProjectList(pl);
-		cand1.setCanditationSkillSet(css);
 		
 		candao.save(cand1);
 		
 		Candidate cand2 = new Candidate();
-		candao.save(cand2);
-		cand2= candao.findById(cand1.getCandidateId()+1).get();
-		cand2.setProjectList(pl);
-		cand2.setCanditationSkillSet(css);
+	
 		
-		
-		cand2.setCandidateName("yashhhhhh");
 		candao.save(cand2);
+		
 		List<Candidate> clist = new ArrayList<>();
 		clist.add(cand1);
 		clist.add(cand2);
@@ -176,6 +178,23 @@ public class CandidateTest {
 		
 		Candidate cn = service.findById(i);
 		assertNotNull(cn);
+		
+	
+	
+	}
+	
+	@ParameterizedTest
+	@ValueSource(ints = {0})
+	@Nullable
+	void findbyidTest0(int i) {
+		Candidate cand1 = new Candidate();
+		candao.save(cand1);
+		//System.out.println(cand1.getCandidateId());
+		cand1.setAge(5);
+		candao.save(cand1);
+		
+		Candidate cn = service.findById(i);
+		assertNull(cn);
 		
 	
 	

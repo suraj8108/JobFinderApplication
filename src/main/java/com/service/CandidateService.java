@@ -2,20 +2,26 @@ package com.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.dao.CandidateDao;
+import com.dao.SkillDao;
 import com.model.Candidate;
-import com.model.CandidateSkill;
+
 import com.model.Project;
+import com.model.Skill;
 
 @Service
 public class CandidateService {
 	@Autowired
 	CandidateDao candao;
+	@Autowired
+	SkillDao skilldao;
 	
 	public List<Candidate> getAllCandidates() {
 		return candao.findAll();
@@ -23,7 +29,19 @@ public class CandidateService {
 	}
 	
 	public void addCandidate(Candidate c) {
-	
+		
+//		//Stream<Skill> stream = alreadyExits.stream();
+//		if(!c.getSkillSet().isEmpty()||c.) {
+//		Set<Skill> temp =c.getSkillSet();
+//		for(Skill s : temp) {
+//			s.setSkillName(s.getSkillName().toUpperCase());
+//			Skill alreadyExits = new Skill(); 
+//			alreadyExits=	skilldao.findBySkillName(s.getSkillName().toUpperCase());
+//			if(alreadyExits.getSkillName().equalsIgnoreCase(c.getCandidateName())) {
+//				
+//			}
+//		}
+//		}
 		
 		candao.save(c);
 	
@@ -113,6 +131,10 @@ public class CandidateService {
 //		Candidate c = candao.findByCandidateName(candidateName);
 //		return c;
 //	}
+	
+	public void query() {
+		
+	}
 	
 	
 }

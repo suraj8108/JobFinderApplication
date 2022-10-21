@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dao.CandidateDao;
 import com.model.Candidate;
-import com.model.CandidateSkill;
+
 import com.model.Project;
 import com.service.CandidateService;
 
