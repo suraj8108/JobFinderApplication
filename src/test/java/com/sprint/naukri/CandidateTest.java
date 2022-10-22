@@ -174,7 +174,7 @@ public class CandidateTest {
 		candao.save(cand1);
 		Candidate cand2 = cand1;
 
-		service.updateCan(cand2);
+		service.updateCandidate(cand2);
 		
 	}
 	

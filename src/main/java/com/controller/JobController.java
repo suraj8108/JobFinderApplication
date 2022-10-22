@@ -40,6 +40,7 @@ public class JobController {
 	public ResponseEntity<String> addJob(@RequestBody NewJobDTO jobDTO) {
 		
 		List<Employer> employerList = employerDAO.findAll();
+		System.out.println(employerList);
 		Job job = new Job();
 		job.setJobDescription(jobDTO.getJobDescription());
 		job.setIndustry(jobDTO.getIndustry());

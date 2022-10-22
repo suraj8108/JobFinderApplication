@@ -24,7 +24,6 @@ public class CandidateService {
 	
 	public void addCandidate(Candidate c) {
 	
-		
 		candao.save(c);
 	
 	}
