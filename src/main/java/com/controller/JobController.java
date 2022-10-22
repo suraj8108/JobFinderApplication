@@ -11,13 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.EmployerDAO;
 import com.dao.JobDAO;
 import com.dto.NewJobDTO;
+import com.dto.NewJobDTO2;
+import com.enums.JobPostStatus;
+import com.exceptions.NoEmployersException;
 import com.model.Employer;
 import com.model.Job;
+import com.service.EmployerService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -30,6 +35,9 @@ public class JobController {
 	@Autowired
 	EmployerDAO employerDAO;
 	
+	@Autowired
+	EmployerService employerService;
+	
 	@GetMapping("/hello")
 	public String hello() {
 	  return "Hello world";
@@ -39,19 +47,38 @@ public class JobController {
 	@PostMapping("/addJob")
 	public ResponseEntity<String> addJob(@RequestBody NewJobDTO jobDTO) {
 		
-		List<Employer> employerList = employerDAO.findAll();
-		Job job = new Job();
-		job.setJobDescription(jobDTO.getJobDescription());
-		job.setIndustry(jobDTO.getIndustry());
-		job.setJobStatus(jobDTO.getJobStatus());
-		Employer first = employerList.get(0);
-		job.setCreatedBy(first);
-		jobDAO.save(job);
-		
-		first.getJobs().addAll(Arrays.asList(job));
-		employerDAO.save(first);
-		return new ResponseEntity<>("Job saved successfully", HttpStatus.ACCEPTED);
+		try {
+		  List<Employer> employerList = employerService.findAllEmployers();
+	      Job job = new Job(jobDTO.getJobDescription(), jobDTO.getIndustry());
+//	      job.setJobPostStatus(JobPostStatus.OPEN);
+	      Employer first = employerList.get(0);
+	      job.setCreatedBy(first);
+	      jobDAO.save(job);
+	        
+	      first.getJobs().addAll(Arrays.asList(job));
+	      employerDAO.save(first);
+	      return new ResponseEntity<>("Job added successfully", HttpStatus.ACCEPTED);
+		} catch (NoEmployersException e) {
+		  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
+	
+	
+	@ApiOperation(value = "add a job", notes = "Adding a new job", nickname = "add-job")
+    @PostMapping("/addJobManually")
+    public ResponseEntity<String> addJobManually(@RequestBody NewJobDTO2 jobDTO) {
+        Employer e = employerDAO.getById(jobDTO.getEid());
+//        List<Employer> employerList = employerDAO.findAll();
+        Job job = new Job(jobDTO.getJobDescription(), jobDTO.getIndustry());
+//        job.setJobPostStatus(JobPostStatus.OPEN);
+//        Employer first = employerList.get(0);
+        job.setCreatedBy(e);
+        jobDAO.save(job);
+        
+        e.getJobs().addAll(Arrays.asList(job));
+        employerDAO.save(e);
+        return new ResponseEntity<>("Job added successfully", HttpStatus.ACCEPTED);
+    }
 	
 	@GetMapping("/getAllJobs")
 	public ResponseEntity<List<Job>> getAllJobs() {

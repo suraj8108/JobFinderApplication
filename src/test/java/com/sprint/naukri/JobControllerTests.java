@@ -69,7 +69,7 @@ public class JobControllerTests {
     HttpEntity<Job> entity = new HttpEntity<Job>(j, headers);
     RestTemplate template = new RestTemplate();
     String output = template.exchange("http://localhost:8081/addJob", HttpMethod.POST, entity, String.class).getBody();
-    assertEquals("Job saved successfully", output);
+    assertEquals("Job added successfully", output);
   }
   
   @Test

@@ -8,6 +8,7 @@ plugins {
 jacoco {
     toolVersion = "0.8.7"
     reportsDir = file("$buildDir/jacoco")
+    reportsDir = file("$buildDir/reports/jacoco")
 }
 test {
     finalizedBy jacocoTestReport
@@ -54,6 +55,8 @@ compileOnly 'org.projectlombok:lombok:1.18.24'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
     //validator
    // implementation group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.CR2'
+    //validator
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

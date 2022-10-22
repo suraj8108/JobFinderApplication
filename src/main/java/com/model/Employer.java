@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 //import org.hibernate.validator.NotNull;
 
@@ -25,20 +26,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Embeddable
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employerId")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employerId")
 public class Employer {
 	
 	@Id
 	@GeneratedValue
-//	@NotNull
+	@NotNull
 	private int employerId;
 	private String employerName;
 	private String location;
 	
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-//	@OrderColumn
-//	@JsonIgnore
-//	@JsonBackReference
-//    @JsonManagedReference
+	@JsonBackReference
 	private List<Job> jobs;
+    
+    @OneToMany(mappedBy="employer", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Interview> interviews;
 }

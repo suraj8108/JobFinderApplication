@@ -1,7 +1,5 @@
 package com.dto;
 
-import com.enums.JobPostStatus;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewJobDTO {
-  private String jobDescription;
-  private String industry;
+public class NewInterviewDTO {
+  private int candidateId;
+  private int employerId;
+  private int jobId;
 }
