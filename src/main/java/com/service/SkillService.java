@@ -11,12 +11,12 @@ import com.model.Skill;
 @Service
 public class SkillService {
 	@Autowired
-	SkillDao cdao;
+	SkillDao skillDao;
 	
 
 	public void addSkill(Skill s) {
 		s.setSkillName(s.getSkillName().toUpperCase());
-		cdao.save(s);
+		skillDao.save(s);
 	}
 
 }

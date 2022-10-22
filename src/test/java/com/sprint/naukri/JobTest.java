@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dao.JobDao;
 import com.model.Job;
+import com.model.JobStatus;
 
 @SpringBootTest
 public class JobTest {
@@ -28,7 +29,7 @@ public class JobTest {
 	void testbyID() {
 		Job job = new Job();
 		job.setJobDescription("technical");
-		job.setStatus("active");
+		job.setJobStatus(JobStatus.OPENED);
 		job.setJobId(1);
 		dao.save(job);
 		
@@ -40,24 +41,24 @@ public class JobTest {
 	void testbystatus() {
 		Job job = new Job();
 		job.setJobDescription("technical skill");
-		job.setStatus("discarded");
+		job.setJobStatus(JobStatus.CLOSED);
 		job.setJobId(2);
 		dao.save(job);
 		
-		Job job2 = dao.findAllByStatus("discarded").get(0);
-		Assertions.assertEquals(job.getStatus(), job2.getStatus());
+		Job job2 = dao.findAllByJobStatus("discarded").get(0);
+		Assertions.assertEquals(job.getJobStatus(), job2.getJobStatus());
 	}
 	
 	@Test
 	void testbydescription() {
 		Job job = new Job();
 		job.setJobDescription("technical skill");
-		job.setStatus("discarded");
+		job.setJobStatus(JobStatus.CLOSED);
 		job.setJobId(3);
 		dao.save(job);
 		
 		Job job2 = dao.findAllByJobDescription("technical skill").get(0);
-		Assertions.assertEquals(job.getStatus(), job2.getStatus());
+		Assertions.assertEquals(job.getJobStatus(), job2.getJobStatus());
 	}
 
 }

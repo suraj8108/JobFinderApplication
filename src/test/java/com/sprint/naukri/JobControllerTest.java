@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.controller.JobController;
 import com.model.Job;
+import com.model.JobStatus;
 
 @SpringBootTest
 public class JobControllerTest {
@@ -37,7 +38,7 @@ public class JobControllerTest {
   public void testAddJob() {
     Job j = new Job();
     j.setJobDescription("This is a new job");
-    j.setStatus("active");
+    j.setJobStatus(JobStatus.OPENED);
     j.setCandidateSet(null);
     HttpHeaders headers = new HttpHeaders();
     HttpEntity<Job> entity = new HttpEntity<Job>(j, headers);
@@ -51,7 +52,7 @@ public class JobControllerTest {
 		Job job = new Job();
 		job.setJobId(1);
 		job.setJobDescription("tech");
-		job.setStatus("active");
+		job.setJobStatus(JobStatus.OPENED);
 		
 		RestTemplate restTemplate = new RestTemplate();
 		

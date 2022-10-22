@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,12 +31,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-
-@Getter
 @Setter
+@Getter
+
 @NoArgsConstructor
 @Table(name="CAND_TBL")
 public class Candidate {
+	
+	
+	
+	
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int candidateId;
@@ -47,8 +54,14 @@ public class Candidate {
 	private int experience;
 	private String location;
 	private String educationQualification;
+	
+	
+	
+	//relations
+	
+	
 	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "candidate")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
 	private List<Project> projectList;
 	
 	
@@ -84,6 +97,33 @@ public class Candidate {
 					@JoinColumn(name="job_id")
 			})
 	private Set<Job> jobSet = new HashSet<>();
+	  
+	  
+	@JsonManagedReference
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
+	private List<Interview> interview;
+	  
+	
+	
+
+	  
+	  
+	  
+	
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 
 
 	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,
@@ -104,10 +144,12 @@ public class Candidate {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Candidate [candidateName=").append(candidateName).append(", age=").append(age)
 				.append(", experience=").append(experience).append(", location=").append(location)
-				.append(", educationQualification=").append(educationQualification).append(", projectList=")
-				.append(projectList).append(", skillSet=").append(skillSet).append("]");
+				.append(", educationQualification=").append(educationQualification).append(", skillSet=")
+				.append(skillSet).append("]");
 		return builder.toString();
 	}
+
+
 
 
 	

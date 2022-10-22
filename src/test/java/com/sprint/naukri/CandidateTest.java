@@ -80,11 +80,13 @@ public class CandidateTest {
 	@Transactional
 	public void getAllCandidatesTest() {
 		Candidate cand1 = new Candidate();
-		
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		candao.save(cand1);
 		
 		Candidate cand2 = new Candidate();
-	
+		cand2.setAge(21);
+		cand2.setCandidateName("Yash");
 		
 		candao.save(cand2);
 		
@@ -105,6 +107,8 @@ public class CandidateTest {
 	@Test
 	void addcandidate() {
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		service.addCandidate(cand1);
 		
 		Candidate candexpec = cand1;
@@ -120,6 +124,8 @@ public class CandidateTest {
 	@Test
 	void updateCandidate() {
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		candao.save(cand1);
 		
 		Candidate candexpec = cand1;
@@ -136,6 +142,8 @@ public class CandidateTest {
 	@Test
 	void deleteCandidateTest() {
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		candao.save(cand1);
 		
 	
@@ -153,6 +161,8 @@ public class CandidateTest {
 	void updateLocationTest() {
 		
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		candao.save(cand1);
 		cand1.setLocation("sdfksdjssdcs");;
 		
@@ -171,9 +181,13 @@ public class CandidateTest {
 	@Nullable
 	void findbyidTest(int i) {
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
+		
+		
 		candao.save(cand1);
 		//System.out.println(cand1.getCandidateId());
-		cand1.setAge(5);
+		cand1.setAge(25);
 		candao.save(cand1);
 		
 		Candidate cn = service.findById(i);
@@ -188,9 +202,11 @@ public class CandidateTest {
 	@Nullable
 	void findbyidTest0(int i) {
 		Candidate cand1 = new Candidate();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		candao.save(cand1);
 		//System.out.println(cand1.getCandidateId());
-		cand1.setAge(5);
+		cand1.setAge(25);
 		candao.save(cand1);
 		
 		Candidate cn = service.findById(i);

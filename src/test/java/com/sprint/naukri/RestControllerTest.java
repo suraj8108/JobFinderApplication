@@ -45,15 +45,18 @@ public class RestControllerTest {
 
 
 	
-	Candidate cand1=new Candidate();
+	 Candidate cand1=new Candidate();
 	
-	
+	static Candidate cand2 = new Candidate();
 	
 
 	//rest controller test
 	@BeforeEach
 	void setUp() throws Exception {
 		candao.deleteAll();
+		candao.flush();
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
 		
 		
 	}
@@ -63,6 +66,12 @@ public class RestControllerTest {
 		candao.flush();
 		
 	}
+	
+	
+	
+	
+	
+	
 	
 
 	@Test
@@ -128,32 +137,34 @@ public class RestControllerTest {
 	
 	@Test
 	public void getbyidTest() throws URISyntaxException {
+		cand1.setAge(21);
+		cand1.setCandidateName("Yash");
+		List<Project> projectlist=new ArrayList<>();
+//		projectlist.add(new Project());
+		cand1.setProjectList(projectlist);
+
+		candao.save(cand1);
 		
-		Candidate cand2 = new Candidate();
-	
-		candao.save(cand2);
-		Candidate cand3 = candao.findById(cand2.getCandidateId()).get();
-	
+	//System.out.println(cand1);
 		RestTemplate template = new RestTemplate();
 		
-		 final String url="http://localhost:9989/findcandidatebyid/"+""+cand2.getCandidateId();
+		 final String url="http://localhost:9989/findcandidatebyid/"+""+cand1.getCandidateId();
 	      URI uri=new URI(url);
 	      ResponseEntity<Candidate> response = template.getForEntity(uri,Candidate.class);
 	     List<HttpStatus> expected = new ArrayList<>();
 	     expected.add(HttpStatus.FOUND);
 	     expected.add(HttpStatus.FORBIDDEN);
 	     Assertions.assertTrue(expected.contains(response.getStatusCode())) ;
-	
-	    Assertions.assertTrue(cand3.toString().equals(response.getBody().toString()));
+	    
+	    Assertions.assertEquals(cand1.toString(),response.getBody().toString());
 	}
 	
 	@Test
 	public void updateCandidateTest() throws URISyntaxException 
 	{
-	    
-		candao.save(cand1);
-		Candidate cand2 = candao.findById(cand1.getCandidateId()).get();
-		cand2.setAge(20);
+	   
+	
+		
 		RestTemplate template=new RestTemplate();
         template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	   
@@ -162,7 +173,7 @@ public class RestControllerTest {
 	     
 		 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	     
-		 HttpEntity<Candidate> entity=new HttpEntity<>(cand2,headers);
+		 HttpEntity<Candidate> entity=new HttpEntity<>(cand1,headers);
 	 
 		ResponseEntity<String>  result = template.exchange("http://localhost:9989/updatecandidate",
                 HttpMethod.PATCH,entity,String.class);
@@ -182,9 +193,8 @@ public class RestControllerTest {
 	public void deleteCandidateTest() throws URISyntaxException 
 	{
 	    
-		
 		candao.save(cand1);
-		Candidate cand2 = candao.findById(cand1.getCandidateId()).get();
+		
 		RestTemplate restTemplate = new RestTemplate();
 	   
 	    
@@ -192,7 +202,7 @@ public class RestControllerTest {
 	     
 		 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	     
-		 HttpEntity<Candidate> entity=new HttpEntity<>(cand2,headers);
+		 HttpEntity<Candidate> entity=new HttpEntity<>(cand1,headers);
 	 
 		ResponseEntity<String>  result = restTemplate.exchange("http://localhost:9989/deletecandidate",
                 HttpMethod.DELETE,entity,String.class);
@@ -216,8 +226,8 @@ public class RestControllerTest {
 	}
 	@Test
 	public void deletebyidTest() {
-		candao.save(cand1);
-		Candidate cand2 = candao.findById(cand1.getCandidateId()).get();
+		 candao.save(cand1);
+		
 		RestTemplate restTemplate = new RestTemplate();
 	   
 	    
@@ -225,7 +235,7 @@ public class RestControllerTest {
 	     
 		 headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 	     
-		 HttpEntity<Candidate> entity=new HttpEntity<>(cand2,headers);
+		 HttpEntity<Candidate> entity=new HttpEntity<>(cand1,headers);
 	 
 		ResponseEntity<String>  result = restTemplate.exchange("http://localhost:9989/deletecandidate/"+""+cand1.getCandidateId(),
                 HttpMethod.DELETE,entity,String.class);

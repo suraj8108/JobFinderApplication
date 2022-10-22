@@ -10,7 +10,7 @@ import com.model.Job;
 public interface JobDao extends JpaRepository<Job, Integer>{
 	
 	List<Job> findAllByJobDescription(String desc);
-	List<Job> findAllByStatus(String status);
+	List<Job> findAllByJobStatus(String status);
 
 }
 

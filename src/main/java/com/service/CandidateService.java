@@ -104,11 +104,45 @@ public class CandidateService {
 		candao.save(c.get());
 		}
 	}
-//	public void addSkillById(int id,CandidateSkill cs) {
-//		Candidate c = candao.findById(id).get();
-//		c.getCanditationSkillSet().add(cs);
-//		candao.save(c);
-//	}
+	
+	
+	//adding skil by id
+	public void addSkillById(int id,Skill cs) {
+		Candidate c = candao.findById(id).get();
+		c.getSkillSet().add(cs);
+		
+		if(!c.getSkillSet().isEmpty()) {
+			Set<Skill> temp =c.getSkillSet();
+			for(Skill s : temp) {
+				s.setSkillName(s.getSkillName().toUpperCase());
+				Skill alreadyExits=	skilldao.findBySkillNameIgnoreCase(s.getSkillName().toUpperCase());
+				if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(s.getSkillName())) {
+					
+					c.getSkillSet().remove(s);
+					c.getSkillSet().add(alreadyExits);
+				}
+			}
+			}
+			
+			candao.save(c);
+		
+	}
+	//rating  by id and interview id
+	
+	public void ratetheinterview(float rate,String id) {
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 //	public void removeSkillbyId(int id, CandidateSkill cs) {
 //		Candidate c = candao.findById(id).get();
 //		c.getCanditationSkillSet().remove(cs);

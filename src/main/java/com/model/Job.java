@@ -9,22 +9,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 
+
 @Entity
 @Table(name="JOB_TBL")
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class Job {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int jobId;
 	
-	@Column
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private JobStatus jobStatus = JobStatus.CLOSED;
 	
 	@Column
 	private String jobDescription;
 
+	
+	
+	
+	
+	
 	@ManyToMany(fetch = FetchType.LAZY,
 		      cascade = {
 		          CascadeType.PERSIST,
@@ -33,5 +40,20 @@ public class Job {
 		      mappedBy = "jobSet")
 	@JsonIgnore
 	private Set<Candidate>  candidateSet = new HashSet<>();
+	
+	
+	@JsonBackReference
+	@ManyToOne
+	private Employer employer;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
