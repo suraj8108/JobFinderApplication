@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.model.Candidate;
 import com.model.Project;
 import com.service.CandidateService;
@@ -27,7 +27,7 @@ import com.service.CandidateService;
 @SpringBootTest
 public class RestControllerTest {
 	@Autowired
-	CandidateDao candao ;
+	CandidateDAO candao ;
 	@Autowired
 	CandidateService service;
 	

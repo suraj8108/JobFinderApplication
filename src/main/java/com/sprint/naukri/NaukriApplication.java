@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication(scanBasePackages = {"com.controller","com.sprint.naukri", "com.service", "com.config", "com.helper"})
+@SpringBootApplication(scanBasePackages = {"com.controller","com.sprint.naukri", "com.service", "com.config", "com.helper", "com.dto"})
 @EnableJpaRepositories({"com.dao"})
 @EntityScan(basePackages = {"com.model"})
 //@ComponentScan(basePackages = {"com.helper"})

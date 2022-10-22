@@ -9,14 +9,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.model.Candidate;
 
 @Service
 public class CandidateJwtService implements UserDetailsService {
 
 	@Autowired
-	CandidateDao canDao;
+	CandidateDAO canDao;
 
 	@Override
 	public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException{

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.model.Candidate;
 import com.model.CandidateSkill;
 import com.model.Project;
@@ -16,7 +16,7 @@ import com.model.Project;
 @Service
 public class CandidateService {
 	@Autowired
-	CandidateDao candao;
+	CandidateDAO candao;
 	
 	public List<Candidate> getAllCandidates() {
 		return candao.findAll();

@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.helper.JwtFilter;
 import com.service.CandidateJwtService;
 

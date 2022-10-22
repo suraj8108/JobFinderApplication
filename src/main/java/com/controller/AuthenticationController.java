@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.helper.JwtUtil;
 import com.model.Candidate;
 import com.model.JwtRequest;
@@ -30,7 +30,7 @@ import com.service.CandidateJwtService;
 public class AuthenticationController {
 
 	@Autowired
-	CandidateDao candDao;
+	CandidateDAO candDao;
 	
 	@Autowired
 	private JwtUtil jwtUtility; 
@@ -49,12 +49,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "/authenticate", headers = "Accept=application/json", method = RequestMethod.POST)
 	public JwtResponse authenticateCand(@RequestBody JwtRequest jwtRequest) throws Exception {
 		
-//		System.out.println(HttpRe);
-		//System.out.println( request.getContentType() + request.getContentLength());
-//		System.out.println(request.);
 		System.out.println(jwtRequest);
-		System.out.println(jwtRequest.getUsername());
-		System.out.println(jwtRequest.getPassword());
 		
 		try {
 			authenticationManager.authenticate(

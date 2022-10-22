@@ -30,7 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.RestTemplate;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.model.Candidate;
@@ -41,7 +41,7 @@ import com.service.CandidateService;
 @SpringBootTest
 public class CandidateTest {
 	@Autowired
-	CandidateDao candao ;
+	CandidateDAO candao ;
 	@Autowired
 	CandidateService service;
 	
@@ -63,6 +63,8 @@ public class CandidateTest {
 		cand1.setEducationQualification("B.tech");
 		cand1.setExperience(2);
 		cand1.setLocation("sfs");
+		cand1.setEmailId("suraj@gmail.com");
+		cand1.setPassword("121aaa");
 		
 		
 		
@@ -97,12 +99,10 @@ public class CandidateTest {
 	public void getAllCandidatesTest() {
 		
 		candao.save(cand1);
-		Candidate cand2 =cand1;
-		cand2.setCandidateName("yashhhhhh");
-		candao.save(cand2);
+		
 		List<Candidate> clist = new ArrayList<>();
 		clist.add(cand1);
-		clist.add(cand2);
+		
 		System.out.println(clist);
 		System.out.println(service.getAllCandidates());
 		Assertions.assertEquals(clist.toString(),service.getAllCandidates().toString());
@@ -169,14 +169,14 @@ public class CandidateTest {
 		
 	}
 	
-	@Test
-	void updateLocationTest() {
-		candao.save(cand1);
-		Candidate cand2 = cand1;
-
-		service.updateCandidate(cand2);
-		
-	}
+//	@Test
+//	void updateLocationTest() {
+//		candao.save(cand1);
+//		Candidate cand2 = cand1;
+//
+//		service.updateCandidate(cand2);
+//		
+//	}
 	
 	
 	
