@@ -36,6 +36,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//http client
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
 	
 	//for swagger ui
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'         

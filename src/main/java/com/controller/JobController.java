@@ -1,17 +1,10 @@
 package com.controller;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,79 +13,56 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dao.JobDao;
+
 import com.model.Job;
-import com.model.JobSkillSet;
+import com.service.JobService;
 
 @RestController
 public class JobController {
 
 	@Autowired
-	JobDao jobdao;
+	JobService jobService;
 	
 	@PostMapping("/addjob")
 	public ResponseEntity<String> addJob(@RequestBody Job job)
 	{
-		List<JobSkillSet> skills = job.getJobSkillSet();
+		String response = jobService.addJob(job);
 		
-		for(JobSkillSet skill : skills) {
-			skill.setJob(job);
-		}
-		
-		jobdao.save(job);
-		
-		return new ResponseEntity<String>("Job added successfully",HttpStatus.OK);
+		return new ResponseEntity<String>(response,HttpStatus.OK);
 	}
 	
 	@GetMapping("/getalljobs")
-	public List<Job> getAllItems()
+	public List<Job> getAllJobs()
 	{
-		return jobdao.findAll();
-		
+		return jobService.getAllJobs();		
 	}
 	
 	@PostMapping("/getall")
 	public List<Job> getAllJobBySkill(@RequestBody List<String> option){
-		List<Job> allJobs = new LinkedList<>();
-
-		for(String category : option) {
-			//System.out.println(category);
-			List<Job> temp = jobdao.findByJobSkillSetSkillName(category);
-			allJobs.addAll(temp);
-		}
 		
-		//Removing Duplicates
-		Set<Integer> ids = new HashSet<>();
-		List<Job> resultant = new LinkedList<>();
-		for(Job j : allJobs) {
-			if(!ids.contains(j.getJobId())){
-				resultant.add(j);
-			}
-			ids.add(j.getJobId());
-		}
 		
-		return resultant;
+		return jobService.getAllJobBySkill(option);
 	}
 	
 	@PatchMapping("/updatejob")
-	public ResponseEntity<String> upDateItem(@RequestBody Job job) 
+	public ResponseEntity<String> upDateJob(@RequestBody Job job) 
 	{
-		jobdao.save(job);
-		 return new ResponseEntity<String>("Entity updated",HttpStatus.OK);
+		String response=jobService.upDateJob(job);
+		 return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/deletejob")
-	public ResponseEntity<String> DeleteItem(@RequestBody Job job) 
+	public ResponseEntity<String> DeleteJob(@RequestBody Job job) 
 	{
-		 jobdao.delete(job);
-		 return new ResponseEntity<String>("entity deleted",HttpStatus.OK);
+		String response= jobService.DeleteJob(job);
+		 return new ResponseEntity<String>(response,HttpStatus.OK);
 	}
 	
 	@GetMapping("findbyjobid/{id}")
 	public Job getUser(@PathVariable int id)
 	{
-		Optional<Job> user=jobdao.findById(id);
-		return user.get();
+		
+		return jobService.getUser(id);
 		
 	}
 }

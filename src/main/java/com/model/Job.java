@@ -21,9 +21,8 @@ import lombok.ToString;
 @Entity
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
 public class Job {
 	
 	@Id
@@ -31,7 +30,7 @@ public class Job {
 	private int jobId;
 	
 	@Enumerated(EnumType.STRING)
-	private Status status;
+	private Status status = Status.Open;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	List<JobSkillSet> jobSkillSet;
@@ -41,6 +40,7 @@ public class Job {
 		this.status = status;
 		this.jobSkillSet = jobSkillSet;
 	}
+
 	
 	
 }
