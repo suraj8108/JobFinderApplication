@@ -8,6 +8,7 @@ plugins {
 jacoco {
     toolVersion = "0.8.7"
     reportsDir = file("$buildDir/jacoco")
+    reportsDir = file("$buildDir/reports/jacoco")
 }
 test {
     finalizedBy jacocoTestReport
@@ -18,8 +19,6 @@ jacocoTestReport {
       xml.enabled true
    }
 }
-
-
 
 
 group = 'com.sprint'
@@ -49,11 +48,22 @@ compileOnly 'org.projectlombok:lombok:1.18.24'
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
     
-    
     //http client
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
     //validator
    // implementation group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.CR2'
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    
+    //JJWT Token
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+	
+	//JWT Token for above java version 8
+	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
 }
 
 tasks.named('test') {
