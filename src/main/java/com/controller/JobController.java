@@ -108,7 +108,7 @@ public class JobController {
 		
 		Job j1 = jobDAO.getById(Integer.parseInt(jobId));
 		j1.setJobDescription(jobDescription);
-		
+
 		jobDAO.save(j1);
 		
 		return new ResponseEntity("job updated successfuly", HttpStatus.ACCEPTED);

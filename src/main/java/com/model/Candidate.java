@@ -1,6 +1,8 @@
 package com.model;
 import java.util.Arrays;
+
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Setter
@@ -47,7 +50,10 @@ public class Candidate {
 	private int experience;
 	private String location;
 	private String educationQualification;
+	@Column(unique = true)
+	private String emailId;
 	
+	private String password;
 	
 	//relations
 
@@ -88,15 +94,17 @@ public class Candidate {
 	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,
 			List<Project> projectList, Set<Skill> skillSet) {
 		super();
+		this.candidateId = candidateId;
 		this.candidateName = candidateName;
 		this.age = age;
 		this.experience = experience;
 		this.location = location;
 		this.educationQualification = educationQualification;
+		this.emailId = emailId;
+		this.password = password;
 		this.projectList = projectList;
 		this.skillSet = skillSet;
 	}
-
 
 	@Override
 	public String toString() {
@@ -107,20 +115,6 @@ public class Candidate {
 				.append(skillSet).append("]");
 		return builder.toString();
 	}
-
-
-
-
-	
-	
-	
-	
-
-
-	
-
-
-
 	
 }
 

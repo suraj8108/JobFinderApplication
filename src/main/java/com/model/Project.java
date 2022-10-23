@@ -41,12 +41,22 @@ public class Project {
 
 	
 	
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Project [projectName=").append(projectName).append(", projectDescription=")
 				.append(projectDescription).append(", candidate=").append(candidate).append("]");
 		return builder.toString();
+	}
+
+
+
+
+	public Project(String projectName, String projectDescription) {
+		super();
+		this.projectName = projectName;
+		this.projectDescription = projectDescription;
 	}
 	
 	

@@ -21,8 +21,6 @@ jacocoTestReport {
 }
 
 
-
-
 group = 'com.sprint'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -56,14 +54,26 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
     
-    
     //http client
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
     //validator
+    
+   // implementation group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.CR2'
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    
+    //JJWT Token
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+	
+	//JWT Token for above java version 8
+	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
 
    	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
- 
 }
 tasks.named('test') {
 	useJUnitPlatform()

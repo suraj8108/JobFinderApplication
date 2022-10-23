@@ -34,6 +34,8 @@ import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.ProjectNotFoundException;
+import com.dao.CandidateDAO;
+
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;

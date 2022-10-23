@@ -55,6 +55,12 @@ public class Skill {
 	
 	@Column(unique=true)
 	private String skillName;
+
+	public Skill(String skillName) {
+		super();
+		this.skillName = skillName;
+	}
+	
 	
 	
 }

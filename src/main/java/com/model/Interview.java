@@ -50,7 +50,7 @@ public class Interview {
 	
 	private String employerFeedback;
 	@Column
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private PreInterviewStatus preInterviewStatus =PreInterviewStatus.INVALID;
 	
 	@Column

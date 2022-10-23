@@ -1,31 +1,23 @@
 package com.service;
 
 import java.util.Arrays;
+
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.dao.CandidateDAO;
+
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
 import com.dto.ProfileDTO;
-import com.enums.PostInterviewStatus;
-import com.enums.PreInterviewStatus;
-import com.exception.NoSuchEmployerFoundException;
+
 import com.model.Candidate;
-import com.model.Employer;
-import com.model.Interview;
-import com.model.Job;
 import com.model.Project;
 import com.model.Skill;
 
@@ -33,6 +25,7 @@ import com.model.Skill;
 public class CandidateService {
 	@Autowired
 	CandidateDAO candao;
+	
 	@Autowired
 	SkillDAO skilldao;
 	@Autowired
@@ -67,6 +60,9 @@ public class CandidateService {
 	       c.setEducationQualification(profile.getEducationQualification());
 	       c.setLocation(profile.getLocation());
 	       c.setSkillSet(profile.getSkillSet());
+	       c.setEmailId(profile.getEmailId());
+	       c.setPassword(profile.getPassword());
+	       
 	       
 	       c.setProjectList(profile.getProjectList());
 	       
@@ -160,6 +156,7 @@ public class CandidateService {
 	                candao.save(c);
 
 	    }	
+
 	
 	public Candidate findById(int id) {
 		if(candao.existsById(id)) {

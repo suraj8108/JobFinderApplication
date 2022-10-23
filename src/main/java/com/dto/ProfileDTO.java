@@ -29,6 +29,10 @@ public class ProfileDTO {
     
     private String educationQualification;
     
+    private String emailId;
+    
+    private String password;
+    
     private List<Project> projectList;
     
     private Set<Skill> skillSet;

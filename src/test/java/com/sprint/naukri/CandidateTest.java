@@ -1,13 +1,15 @@
 package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -24,13 +26,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.lang.Nullable;
 
 import com.dao.CandidateDAO;
-
 import com.dao.SkillDAO;
 
-
 import com.model.Candidate;
-
-
+import com.model.Project;
+import com.model.Skill;
 import com.service.CandidateService;
 
 
@@ -38,7 +38,7 @@ import com.service.CandidateService;
 
 public class CandidateTest {
 	@Autowired
-	 CandidateDAO candao ;
+	CandidateDAO candao ;
 	@Autowired
 	CandidateService service;
 	@Autowired
@@ -46,13 +46,38 @@ public class CandidateTest {
 	
 	 
 
+	Candidate cand1 = new Candidate();
 	//rest controller test
 	@BeforeEach
 	public  void setUp() throws Exception {
 		candao.deleteAll();
 		
+		candao.flush();
 		
-	
+		 
+		cand1.setAge(22);
+		cand1.setCandidateName("yash");
+		cand1.setEducationQualification("B.tech");
+		cand1.setExperience(2);
+		cand1.setLocation("sfs");
+		cand1.setEmailId("suraj@gmail.com");
+		cand1.setPassword("121aaa");
+		
+		
+		
+		
+		List<Project> pl = new ArrayList<>();
+		
+		
+		pl.add(new Project("yjbabv","happened"));
+		pl.add(new Project("slnacncs","happened"));
+		
+		Set<Skill> css = new HashSet<>() ;
+		css.add(new Skill("Tyons"));
+		css.add(new Skill("sflndskn"));
+		
+		cand1.setProjectList(pl);
+		cand1.setSkillSet(css);	
 		
 	}
 	@AfterEach
@@ -61,34 +86,6 @@ public class CandidateTest {
 	}
 	
 	
-	
-	@Test
-	@Transactional
-	public void getAllCandidatesTest() {
-		Candidate cand1 = new Candidate();
-		cand1.setAge(21);
-		cand1.setCandidateName("Yash");
-		candao.save(cand1);
-		
-		Candidate cand2 = new Candidate();
-		cand2.setAge(21);
-		cand2.setCandidateName("Yash");
-		
-		candao.save(cand2);
-		
-		List<Candidate> clist = new ArrayList<>();
-		clist.add(cand1);
-		clist.add(cand2);
-//		System.out.println(clist);
-//		System.out.println(service.getAllCandidates());
-		Assertions.assertEquals(clist.toString(),service.getAllCandidates().toString());
-	
-	
-	}
-
-
-	
-
 
 	@Test
 	void addcandidate() {
@@ -196,8 +193,6 @@ public class CandidateTest {
 		
 		Candidate cn = service.findById(i);
 		assertNull(cn);
-		
-	
 	
 	}
 	
