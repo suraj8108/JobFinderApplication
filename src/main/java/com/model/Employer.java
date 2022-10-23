@@ -3,18 +3,16 @@ package com.model;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-//import org.hibernate.validator.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,22 +21,32 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name="employer_table")
 @NoArgsConstructor
-@Embeddable
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employerId")
 public class Employer {
-	
+
 	@Id
-	@GeneratedValue
-//	@NotNull
+	@GeneratedValue(strategy =GenerationType.IDENTITY )
 	private int employerId;
+	
 	private String employerName;
+	
+	
 	private String location;
 	
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-//	@OrderColumn
-//	@JsonIgnore
-//	@JsonBackReference
-//    @JsonManagedReference
-	private List<Job> jobs;
+	@JsonManagedReference(value="employer_job")
+	@OneToMany(cascade = {CascadeType.ALL},mappedBy = "createdBy")
+	private List<Job> jobList;
+	
+	@JsonManagedReference(value="employer_interview")
+	@OneToMany(cascade = {CascadeType.ALL},mappedBy = "employer")
+	private List<Interview> interviewList;
+	
+	
+	
+	
+	
+	
+	
+
 }

@@ -12,3 +12,4 @@ public interface CandidateDAO extends JpaRepository<Candidate, Integer>{
 	Candidate findByEmailId(String emailId);
 	
 }
+

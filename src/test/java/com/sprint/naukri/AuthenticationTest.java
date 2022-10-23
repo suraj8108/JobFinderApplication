@@ -2,6 +2,7 @@ package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.dao.CandidateDAO;
 import com.helper.JwtUtil;
 import com.model.Candidate;
-import com.model.CandidateSkill;
+import com.model.Skill;
 import com.model.JwtRequest;
 import com.model.JwtResponse;
 import com.model.Project;
@@ -57,12 +58,12 @@ class AuthenticationTest {
 		pl.add(new Project("yjbabv","happened"));
 		pl.add(new Project("slnacncs","happened"));
 		
-		Set<CandidateSkill> css = new HashSet<>() ;
-		css.add(new CandidateSkill("Tyons"));
-		css.add(new CandidateSkill("sflndskn"));
+		Set<Skill> css = new HashSet<>() ;
+		css.add(new Skill("Tyons"));
+		css.add(new Skill("sflndskn"));
 		
 		cand1.setProjectList(pl);
-		cand1.setCanditationSkillSet(css);
+		cand1.setSkillSet(css);
 		
 		//Register Candidate
 		String url = "http://localhost:9989/registerCandidate";
