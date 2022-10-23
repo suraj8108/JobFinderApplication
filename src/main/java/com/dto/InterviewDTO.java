@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewInterviewDTO {
+public class InterviewDTO {
   private int candidateId;
   private int employerId;
   private int jobId;

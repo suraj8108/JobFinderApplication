@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.dao.EmployerDAO;
 import com.dao.InterviewDAO;
 import com.dao.JobDAO;
-import com.dto.NewInterviewDTO;
+import com.dto.InterviewDTO;
 import com.exceptions.NoSuchInterviewFoundException;
 import com.model.Employer;
 import com.model.Interview;
@@ -36,7 +37,7 @@ public class InterviewController {
   InterviewService interviewService;
   
   @PostMapping("/addInterview")
-  public ResponseEntity<?> addInterview(@RequestBody NewInterviewDTO interviewDTO) {
+  public ResponseEntity<?> addInterview(@RequestBody InterviewDTO interviewDTO) {
     
     try {
       Interview interview = new Interview();
@@ -44,13 +45,6 @@ public class InterviewController {
       Employer e = new Employer();
       Job j = new Job();
       
-  //    c = candidateDAO.getById(interviewDTO.getJobId());
-  //    e = employerDAO.getById(interviewDTO.getEmployerId());
-  //    j = jobDAO.getById(interviewDTO.getJobId());
-      
-  //    interview.setCandidate(c);
-  //    interview.setEmployer(e);
-  //    interview.setJob(j);
       interviewDAO.save(interview);
       return new ResponseEntity<>("Interview added successfully", HttpStatus.ACCEPTED);  
     } catch (Exception e) {
@@ -62,19 +56,26 @@ public class InterviewController {
   
   @GetMapping("/getAllInterviews")
   public ResponseEntity<List<Interview>> getAllInterviews() {
+	  
     return new ResponseEntity<>(interviewDAO.findAll(), HttpStatus.OK);
+  
   }
   
-  @GetMapping("/getAnInterview")
-  public ResponseEntity<?> getInterview() {
-    int id = 2;
+  @GetMapping("/getInterviewById/{id}")
+  public ResponseEntity<?> getInterview(@PathVariable String id) {
+	  
     try {
-      Interview i = interviewService.getInterviewById(id);
+    	
+      Interview i = interviewService.getInterviewById(Integer.parseInt(id));
       return new ResponseEntity<>(i, HttpStatus.OK);
+      
     } catch (NoSuchInterviewFoundException e) {
+    	
       return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    
     }
     
-    
   }
+  
+  
 }

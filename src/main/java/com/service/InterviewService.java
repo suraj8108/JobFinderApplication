@@ -22,7 +22,7 @@ public class InterviewService {
 
 	  public Interview getInterviewById(int id) throws NoSuchInterviewFoundException {
 	      try {
-	        Interview i = interviewDAO.getById(id);
+	        Interview i = interviewDAO.findById(id).get();
 	        return i;
 	      } catch (Exception e) {
 	        throw new NoSuchInterviewFoundException(id);
@@ -34,9 +34,6 @@ public class InterviewService {
 	      interview.setCandidateFeedback(dto.getFeedback());
 	      interviewDAO.save(interview);
 	    }
-
-
-
 
   
 
