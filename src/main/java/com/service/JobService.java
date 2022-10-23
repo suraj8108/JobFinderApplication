@@ -1,8 +1,11 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import com.dao.JobDAO;
 import com.enums.JobStatus;
@@ -31,5 +34,33 @@ public class JobService {
       throw new NoSuchJobFoundException(id);
     }
   }
+  
+  public List<Job> getJobBySkillName(String skillNames){
+	  List<Job> result = new ArrayList<>();
+  	
+  		List<Job> jobs= jobDAO.findAll();
+  		
+		String [] skillsRequired = skillNames.split(",");
+		
+		System.out.println(Arrays.toString(skillsRequired));
+		System.out.println(skillNames);
+		
+		for(Job j: jobs) {
+			
+			for(String skill : skillsRequired) {
+				
+				if( j.getJobDescription().contains(skill)) {
+					
+					result.add(j);
+					break;
+					
+				}
+				
+			}
+			
+		}
+		
+		return result;
+  	}
 
 }

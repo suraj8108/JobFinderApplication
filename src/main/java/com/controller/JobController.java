@@ -35,6 +35,7 @@ import com.exception.NoEmployersException;
 import com.model.Employer;
 import com.model.Job;
 import com.service.EmployerService;
+import com.service.JobService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -49,6 +50,9 @@ public class JobController {
     
     @Autowired
     EmployerService employerService;
+    
+    @Autowired
+    JobService jobService;
     
     
 	@ApiOperation(value = "getAllJobs",notes="getting all jobs",nickname = "getall" )
@@ -138,5 +142,11 @@ public class JobController {
         
         return new ResponseEntity<>(jobList, HttpStatus.OK);
     }
+    
+    @PostMapping("/getJobBySkill")
+    public List<Job> getAllJobBySkill(@RequestBody String skillNames){
+		
+    	return jobService.getJobBySkillName(skillNames);
+	}
 
 }
