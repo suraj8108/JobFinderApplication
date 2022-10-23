@@ -1,6 +1,7 @@
 package com.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,16 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.dao.CandidateDao;
+import com.dao.CandidateDAO;
 import com.helper.JwtFilter;
-import com.service.CandidateService;
+import com.service.CandidateJwtService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter { 
 
 	@Autowired
-	private CandidateService candService;
+	private CandidateJwtService candService;
 	
 	@Autowired
 	JwtFilter jwtFilter;

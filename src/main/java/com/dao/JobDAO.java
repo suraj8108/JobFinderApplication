@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.model.Candidate;
+import com.model.Job;
 
 @Repository
-public interface CandidateDao extends JpaRepository<Candidate, Integer>{
-
-	Candidate findByEmailId(String emailId);
+public interface JobDAO extends JpaRepository<Job, Integer> {
+	List<Job> findByIndustry(String industry);
 }

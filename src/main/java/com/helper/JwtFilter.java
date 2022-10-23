@@ -2,6 +2,7 @@ package com.helper;
 
 import java.io.IOException;
 
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,13 +16,14 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.service.CandidateService;
+import com.service.CandidateJwtService;
+
 
 @Component
 public class JwtFilter extends OncePerRequestFilter{
 
 	@Autowired
-	private CandidateService candidateService;
+	private CandidateJwtService candidateService;
 	
 	@Autowired 
 	private JwtUtil jwtUtil;
