@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import com.dao.EmployerDAO;
 import com.dao.InterviewDAO;
-import com.dto.NewEmployerDTO;
+import com.dto.EmployerDTO;
 
 
 import com.enums.JobStatus;
@@ -34,7 +34,7 @@ public class EmployerService {
   @Autowired
   InterviewDAO interviewDAO;
   
-  public void addEmployer(NewEmployerDTO dto) {
+  public void addEmployer(EmployerDTO dto) {
     Employer employer = new Employer();
     employer.setEmployerName(dto.getEmployerName());
     employer.setLocation(dto.getLocation());

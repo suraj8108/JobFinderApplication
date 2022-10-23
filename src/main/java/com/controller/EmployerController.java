@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dao.EmployerDAO;
 import com.dao.InterviewDAO;
 import com.dao.JobDAO;
-import com.dto.NewEmployerDTO;
+import com.dto.EmployerDTO;
 import com.dto.RatingFeedbackDTO;
 
 import com.enums.PostInterviewStatus;
@@ -62,17 +62,14 @@ public class EmployerController {
 	@Autowired
 	CandidateService candidateService;
 	
-	
-	
-	
-	
-	
 
 	@ApiOperation(value = "add an employer", notes = "Adding a new employer", nickname = "add-employer")
 	@PostMapping("/addEmployer")
-	public ResponseEntity<String> addEmployer(@RequestBody NewEmployerDTO employerDTO) {
+	public ResponseEntity<String> addEmployer(@RequestBody EmployerDTO employerDTO) {
+		
 	    employerService.addEmployer(employerDTO);
 		return new ResponseEntity<>("Employer added successfully", HttpStatus.ACCEPTED);
+	
 	}
 
 	@GetMapping("/getAllEmployers")
@@ -140,20 +137,24 @@ public class EmployerController {
 	    Employer e = j.getCreatedBy();
 	    
 	    
-	    // first, add the candidate to the candidatelist of that job object
-	    //	  j.getCandidateList().add(candidateId);
-	    if (j.getCandidateSet() == null) //eddited by yash
-	            j.getCandidateSet().add(c); //eddited by yash
-	    else 
-	        j.getCandidateSet().add(c); //eddited by yash
+	    j.getCandidateSet().add(c);
+	    
+//	    // first, add the candidate to the candidatelist of that job object
+//	    //	  j.getCandidateList().add(candidateId);
+//	    if (j.getCandidateSet() == null) //eddited by yash
+//	            j.getCandidateSet().add(c); //eddited by yash
+//	    else 
+//	        j.getCandidateSet().add(c); //eddited by yash
 	    // then, add the job to the appliedlist of that candidate object
 	    // then, create a new interview object with that employer, candidate, job
+	    
 	    Interview i = new Interview();
 	    i.setCandidate(c);
 	    i.setJob(j);
 	    i.setEmployer(j.getCreatedBy());
 	    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
 	    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+	    
 	    jobDAO.save(j);
 	    interviewDAO.save(i);
 	    
@@ -161,9 +162,8 @@ public class EmployerController {
 	    e.getInterviewList().add(i);
 	    employerDAO.save(e);
 	  } catch (Exception e) {
-	    
+	    System.out.println(e.getMessage());
 	  }
-	  
 	  
 	  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
 	}

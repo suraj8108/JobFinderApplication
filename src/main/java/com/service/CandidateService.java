@@ -58,7 +58,14 @@ public class CandidateService {
 	       c.setEducationQualification(profile.getEducationQualification());
 	       c.setLocation(profile.getLocation());
 	       c.setSkillSet(profile.getSkillSet());
+	       
 	       c.setProjectList(profile.getProjectList());
+	       
+	       for(Project pro : profile.getProjectList() ) {
+	    	   
+	    	   pro.setCandidate(c);
+	    	   
+	       }
 	       
 	       addAndCheckSkill(c);
 	       
@@ -68,6 +75,13 @@ public class CandidateService {
 	public void addProjectbyId(int id, List<Project> pr ) throws NoSuchElementException{
 	    
 	      Candidate c = candao.findById(id).get();
+	      
+	      for(Project pro : pr) {
+	    	   
+	    	   pro.setCandidate(c);
+	    	   
+	       }
+	      
 	      c.getProjectList().addAll(pr);
 	      candao.save(c);
     
@@ -116,30 +130,27 @@ public class CandidateService {
 	 
 	    //adding skil by id
 	    public void addSkillById(int id,Skill cs) throws NoSuchElementException {
-	        Candidate c = candao.findById(id).get();
-	        c.getSkillSet().add(cs);
-	        
-	        if(!c.getSkillSet().isEmpty()) {
-	            Set<Skill> temp =c.getSkillSet();
-	            for(Skill s : temp) {
-	                s.setSkillName(s.getSkillName().toUpperCase());
-	                Skill alreadyExits= skilldao.findBySkillNameIgnoreCase(s.getSkillName().toUpperCase());
-	                if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(s.getSkillName())) {
-	                    
-	                    c.getSkillSet().remove(s);
-	                    c.getSkillSet().add(alreadyExits);
-	                }
-	            }
-	            }
-	            
-	            candao.save(c);
-	        
-	    }
-	 
-	 
-	 
+	    	 Candidate c = candao.findById(id).get();
 
-	
+	            if(!c.getSkillSet().isEmpty()) {
+	                Set<Skill> temp =c.getSkillSet();
+	            
+	                    cs.setSkillName(cs.getSkillName().toUpperCase());
+	                    Skill alreadyExits= skilldao.findBySkillNameIgnoreCase(cs.getSkillName().toUpperCase());
+	                 
+	                    if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(cs.getSkillName())) {
+	     
+	                        c.getSkillSet().add(alreadyExits);
+	                    
+	                }
+	                    
+	                    else {
+	                        c.getSkillSet().add(cs);
+	                    }
+	                }
+	                candao.save(c);
+
+	    }	
 	
 	public Candidate findById(int id) {
 		if(candao.existsById(id)) {
@@ -153,9 +164,7 @@ public class CandidateService {
 	public void updateCandidate(Candidate c) {
 		if(candao.existsById(c.getCandidateId()))
 		{
-
 		candao.save(c);
-		
 		
 		}
 	}

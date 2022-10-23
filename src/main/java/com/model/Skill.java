@@ -42,11 +42,7 @@ public class Skill {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int skillId;
-	
 
-	
-	
-	
 	@ManyToMany(fetch = FetchType.LAZY,
 		      cascade = {
 		          CascadeType.PERSIST,
@@ -59,11 +55,5 @@ public class Skill {
 	@Column(unique=true)
 	private String skillName;
 	
-	
-
-	
-	
-
-
 	
 }

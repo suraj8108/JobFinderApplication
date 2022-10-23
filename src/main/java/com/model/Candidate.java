@@ -33,16 +33,9 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-
 @NoArgsConstructor
-@Table(name="CAND_TBL")
+@Table(name="candidate_table")
 public class Candidate {
-	
-	
-	
-	
-	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int candidateId;
@@ -54,7 +47,6 @@ public class Candidate {
 	private int experience;
 	private String location;
 	private String educationQualification;
-	
 	
 	
 	//relations
@@ -91,24 +83,6 @@ public class Candidate {
                 )
     private List<Project> projectList;
 
-	  
-	  
-	  
-	
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
 
 
 	public Candidate(String candidateName, int age, int experience, String location, String educationQualification,

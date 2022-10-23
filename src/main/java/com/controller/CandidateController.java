@@ -1,7 +1,9 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.ValidationException;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dto.ProfileDTO;
+import com.dto.ProjectDTO;
 import com.dto.RatingFeedbackDTO;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
@@ -58,7 +61,7 @@ public class CandidateController {
     @ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
 	@PostMapping("/addProfile")
     public ResponseEntity addCandidate(@RequestBody ProfileDTO profile)throws CandidateValidationExceptioncheck {
-       
+		
         try {
         candidateService.addProfile(profile);
         return new  ResponseEntity<>("Candidate added successfully"
@@ -71,12 +74,22 @@ public class CandidateController {
         
     }
 	 
-	//user Story 2 -able to add profile 
+	//user Story 2 -able to add Project by Id
 	@PostMapping("/addProjectById/{candidateId}")
-    public ResponseEntity addProject(@RequestBody List<Project> project,@PathVariable String id)throws CandidateValidationExceptioncheck,CandidateNotFoundException, FormatException {
+    public ResponseEntity addProject(@RequestBody List<ProjectDTO> project,@PathVariable(name = "candidateId") String id)throws Exception {
        
         try {
-        candidateService.addProjectbyId(Integer.parseInt(id),project);
+        	
+        	List<Project> listPro = new ArrayList<>();
+        	for(ProjectDTO proDTO : project) {
+        		Project p1 = new Project();
+        		p1.setProjectName(proDTO.getProjectName());
+            	p1.setProjectDescription(proDTO.getProjectDescription());
+                
+            	listPro.add(p1);
+        	}
+        	candidateService.addProjectbyId(Integer.parseInt(id),listPro);
+        	
         return new  ResponseEntity<>("Candidate added successfully"
                 ,HttpStatus.ACCEPTED);
         }
@@ -89,10 +102,11 @@ public class CandidateController {
         catch (NumberFormatException e) {
             throw new FormatException("Check the format of the input or wrong user id");
         }
+        catch(Exception e) {
+        	throw new Exception(e.getMessage());
+        }
        
-        
     }
-	
 	
 	
 	//user Story 2 -able to add profile 
@@ -114,7 +128,7 @@ public class CandidateController {
 	
 	    
 	//user Story 2 -able to add profile 
-	   @PostMapping("/updatelocationbyid/{id}")
+	   @PostMapping("/updateLocationById/{id}")
 	   public ResponseEntity updateLocationById(@RequestBody String str,@PathVariable int id)throws CandidateValidationExceptioncheck {
 	        try {
 	        candidateService.updateLocation(id, str);
@@ -129,7 +143,7 @@ public class CandidateController {
 	    }
 	
 	 //user Story 2 -able to add profile 
-	   @GetMapping("/getallcandidates")
+	   @GetMapping("/getAllCandidates")
 	    public List<Candidate> getallCandidates() throws CandidateValidationExceptioncheck {
 	        try {
 	        return candidateService.getAllCandidates();
@@ -141,25 +155,29 @@ public class CandidateController {
 	    }
 	
 	
-	   @GetMapping("/findcandidatebyid/{id}")
+	   @GetMapping("/findCandidateById/{id}")
 	    public ResponseEntity getbyid(@PathVariable int  id  ) throws CandidateNotFoundException{
 	     
 	            try {
-	        return new ResponseEntity<>(candidateService.findById(id),HttpStatus.FOUND);
+	            	return new ResponseEntity<>(candidateService.findById(id),HttpStatus.FOUND);
 	            }
 	            catch (NoSuchElementException c) {
-	                throw new CandidateNotFoundException("not found");
+	                
+	            	throw new CandidateNotFoundException("Not found");
 	            
 	            }
 	        }
 
-	   //add skill
-	   @PatchMapping("/addskillbyid/{id}")
-	    public ResponseEntity addskillbyid(@RequestBody Skill cs,@PathVariable int id) throws CandidateNotFoundException {
+	   //add skill to a particular candidate
+	   @ApiOperation(value = "Add",notes="Add Candidate Skill By Candidate Id",nickname = "Add Skill to Candidate" )
+	   @PatchMapping("/addSkillById/{id}")
+	    public ResponseEntity addSkillByCandidateId(@RequestBody Skill cs,@PathVariable String id) throws CandidateNotFoundException {
 	       try {
-	    candidateService.addSkillById(id, cs);
+	    	   
+	    	   System.out.println(cs);
+	    	   	candidateService.addSkillById(Integer.parseInt(id), cs);
 	    
-	    return new  ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
+	    	   return new  ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
 	    }
 	       catch(NoSuchElementException ex){
 	           throw new CandidateNotFoundException("check id");
@@ -167,8 +185,7 @@ public class CandidateController {
 	       
 	   }
 	    
-	   
-	   @PostMapping("/CandidatefeedbackRating/{interviewId}")
+	   @PostMapping("/candidateFeedbackRating/{interviewId}")
 	    public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, NoSuchInterviewFoundException {
 	     
 	        Interview i = interviewService.getInterviewById(Integer.parseInt(id));
@@ -177,64 +194,34 @@ public class CandidateController {
 	          return new ResponseEntity<>("Feedback and rating by employer saved", HttpStatus.OK);
 	      
 	    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	@PostMapping("/addwholeProject")
-	    public ResponseEntity addProjectList(@RequestBody List<Project> project )throws CandidateValidationExceptioncheck {
-	       
-	        try {
-	         
-	       // candidateService.addProfile(profile);
-	        return new  ResponseEntity<>("Candidate added successfully"
-	                ,HttpStatus.ACCEPTED);
-	        }
-	        catch(ValidationException v) {
-	            throw new CandidateValidationExceptioncheck("validation error");
-	        }
-	   
-	        
-	    }
-	    
-	
-	
 
 	
 	
-	
 	@PatchMapping("/updatecandidate")
-	public ResponseEntity updateCandidate(@RequestBody Candidate cand) throws CandidateValidationExceptioncheck {
-		if(cand!=null)
+	public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws CandidateValidationExceptioncheck {
+		if(candDto!=null)
 		{ 
 			try {
-		candidateService.updateCandidate(cand);
+				
+				Candidate cand = new Candidate();
+				
+				cand.setAge(candDto.getAge());
+				cand.setCandidateName(candDto.getCandidateName());
+				cand.setEducationQualification(candDto.getEducationQualification());
+				cand.setExperience(candDto.getExperience());
+				cand.setProjectList(candDto.getProjectList());
+				cand.setSkillSet(candDto.getSkillSet());
+				cand.setLocation(candDto.getLocation());
+				
+				candidateService.updateCandidate(cand);
+			
 			}
 			catch(ValidationException v) {
 				throw new CandidateValidationExceptioncheck("validation error");
 			}
 
-		return new	ResponseEntity<>("Candidate updated successfully"
-				,HttpStatus.ACCEPTED);
+			return new	ResponseEntity<>("Candidate updated successfully"
+					,HttpStatus.ACCEPTED);
 		}
 		else {
 			return new	ResponseEntity<>("Candidate updation failed, check id "
@@ -242,30 +229,26 @@ public class CandidateController {
 		}
 
 		
-		
 	}
 	
 
-	
-
-	// need to be eddited
-	@GetMapping("/getjobstatus")
-	public List<Job> findjob(@RequestBody Candidate cand) {
-		Candidate candi = candidateService.findById(cand.getCandidateId());
-		return (List<Job>) candi.getJobSet();
+	@GetMapping("/getjobstatus/{id}")
+	public List<Interview> findjob(@PathVariable  int id) {
+		Candidate candidate = candidateService.findById(id);
+		List<Interview> interviewStatus = candidate.getInterviewList();
+		return  interviewStatus ;
 	}
-	                                                                      
-
+	
 	
 	@DeleteMapping("/deletecandidate")
 	public ResponseEntity deleteCandidate(@RequestBody Candidate cand) throws CandidateNotFoundException {
 		if(cand!=null)
 		{ 
 
-		candidateService.deleteCandidate(cand);
-
-		return new	ResponseEntity<>("Candidate delete successfully"
-				,HttpStatus.ACCEPTED);
+			candidateService.deleteCandidate(cand);
+	
+			return new	ResponseEntity<>("Candidate delete successfully"
+					,HttpStatus.ACCEPTED);
 		}
 		else {
 			return new	ResponseEntity<>("Candidate delete failed, check id "
@@ -273,9 +256,6 @@ public class CandidateController {
 		}
 	
 	}
-	
-
-	
 	
 	
 	@DeleteMapping("/deletecandidate/{id}")
@@ -285,17 +265,8 @@ public class CandidateController {
 
 	return "Candidate delete successfully";
 	}
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
+
 //	
 //	@PatchMapping("/removeskillbyid/{id}")
 //	public ResponseEntity removeskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {

@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="Project_TBL")
+@Table(name="Project_table")
 @NoArgsConstructor
 
 public class Project {
@@ -40,6 +40,7 @@ public class Project {
 	private Candidate candidate;
 
 	
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -47,11 +48,6 @@ public class Project {
 				.append(projectDescription).append(", candidate=").append(candidate).append("]");
 		return builder.toString();
 	}
-	
-	
-
-	
-	
 	
 	
 }
