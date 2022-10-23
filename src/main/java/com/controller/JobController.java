@@ -31,8 +31,7 @@ import io.swagger.annotations.ApiResponses;
 import com.dao.EmployerDAO;
 import com.dao.JobDAO;
 import com.dto.JobDTO;
-
-import com.exceptions.NoEmployersException;
+import com.exception.NoEmployersException;
 import com.model.Employer;
 import com.model.Job;
 import com.service.EmployerService;
@@ -58,7 +57,6 @@ public class JobController {
     public ResponseEntity<List<Job>> getAllJobs() {
         return new ResponseEntity<>(jobDAO.findAll(), HttpStatus.OK);
     }
-    
     
 //	@PostMapping("/addjob")
 //	public ResponseEntity addjob(@RequestBody Job job) {

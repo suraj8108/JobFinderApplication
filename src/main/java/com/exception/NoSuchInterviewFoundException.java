@@ -1,4 +1,4 @@
-package com.exceptions;
+package com.exception;
 
 public class NoSuchInterviewFoundException extends Exception {
   public NoSuchInterviewFoundException(int id) {

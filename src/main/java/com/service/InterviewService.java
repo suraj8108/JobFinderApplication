@@ -12,7 +12,7 @@ import java.util.List;
 
 
 import com.dto.RatingFeedbackDTO;
-import com.exceptions.NoSuchInterviewFoundException;
+import com.exception.NoSuchInterviewFoundException;
 
 
 @Service

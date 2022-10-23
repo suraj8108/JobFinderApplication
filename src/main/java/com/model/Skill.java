@@ -49,6 +49,7 @@ public class Skill {
 		          CascadeType.MERGE
 		      },
 		      mappedBy = "skillSet")
+	
 	@JsonIgnore
 	private Set<Candidate>  candidateSet = new HashSet<>();
 	

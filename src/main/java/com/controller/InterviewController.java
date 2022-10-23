@@ -15,7 +15,7 @@ import com.dao.EmployerDAO;
 import com.dao.InterviewDAO;
 import com.dao.JobDAO;
 import com.dto.InterviewDTO;
-import com.exceptions.NoSuchInterviewFoundException;
+import com.exception.NoSuchInterviewFoundException;
 import com.model.Employer;
 import com.model.Interview;
 import com.model.Job;

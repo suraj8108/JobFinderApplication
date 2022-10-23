@@ -1,4 +1,4 @@
-package com.exceptions;
+package com.exception;
 
 import com.model.Interview;
 

@@ -21,7 +21,7 @@ import com.dao.SkillDAO;
 import com.dto.ProfileDTO;
 import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
-import com.exceptions.NoSuchEmployerFoundException;
+import com.exception.NoSuchEmployerFoundException;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;

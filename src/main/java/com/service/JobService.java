@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.dao.JobDAO;
 import com.enums.JobStatus;
-import com.exceptions.NoSuchJobFoundException;
+import com.exception.NoSuchJobFoundException;
 import com.model.Job;
 @Service
 public class JobService {

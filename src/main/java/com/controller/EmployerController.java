@@ -21,12 +21,12 @@ import com.dto.RatingFeedbackDTO;
 
 import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
-import com.exceptions.AllInterviewsNotCompletedException;
-import com.exceptions.JobAlreadyClosedWithCandidateSelectedException;
-import com.exceptions.NoEmployersException;
-import com.exceptions.NoSuchEmployerFoundException;
-import com.exceptions.NoSuchInterviewFoundException;
-import com.exceptions.NoSuchJobFoundException;
+import com.exception.AllInterviewsNotCompletedException;
+import com.exception.JobAlreadyClosedWithCandidateSelectedException;
+import com.exception.NoEmployersException;
+import com.exception.NoSuchEmployerFoundException;
+import com.exception.NoSuchInterviewFoundException;
+import com.exception.NoSuchJobFoundException;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;

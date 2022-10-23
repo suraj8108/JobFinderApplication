@@ -16,11 +16,10 @@ import com.dto.EmployerDTO;
 
 import com.enums.JobStatus;
 import com.enums.PostInterviewStatus;
-import com.exceptions.AllInterviewsNotCompletedException;
-import com.exceptions.JobAlreadyClosedWithCandidateSelectedException;
-import com.exceptions.NoEmployersException;
-import com.exceptions.NoSuchEmployerFoundException;
-
+import com.exception.AllInterviewsNotCompletedException;
+import com.exception.JobAlreadyClosedWithCandidateSelectedException;
+import com.exception.NoEmployersException;
+import com.exception.NoSuchEmployerFoundException;
 import com.model.Employer;
 import com.model.Interview;
 import com.model.Job;

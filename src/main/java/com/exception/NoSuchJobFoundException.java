@@ -1,4 +1,4 @@
-package com.exceptions;
+package com.exception;
 
 public class NoSuchJobFoundException extends Exception {
   public NoSuchJobFoundException(int id) {

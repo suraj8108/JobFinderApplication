@@ -1,6 +1,8 @@
 package com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +20,18 @@ public class SkillController {
 	SkillDAO dao;
 	
 	
+	/*
+	 * Candidate can add the skills
+	 * Job can add the Skills
+	 * 
+	 */
 	@PostMapping("/addSkill")
-	public String addSill(@RequestBody Skill sk) {
+	public ResponseEntity<String> addSill(@RequestBody Skill sk) {
 		
 		dao.save(sk);
-		return "added";
+		
+		return new ResponseEntity("Added Successfully", HttpStatus.OK);
+	
 	}
 	
 }
