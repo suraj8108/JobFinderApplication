@@ -4,46 +4,32 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
-import com.dao.CandidateDao;
-import com.dao.SkillDao;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.dao.CandidateDAO;
+
+import com.dao.SkillDAO;
+
+
 import com.model.Candidate;
-import com.model.Skill;
-import com.model.Project;
+
 
 import com.service.CandidateService;
 
@@ -52,11 +38,11 @@ import com.service.CandidateService;
 
 public class CandidateTest {
 	@Autowired
-	 CandidateDao candao ;
+	 CandidateDAO candao ;
 	@Autowired
 	CandidateService service;
 	@Autowired
-	SkillDao sdao;
+	SkillDAO sdao;
 	
 	 
 
@@ -109,7 +95,7 @@ public class CandidateTest {
 		Candidate cand1 = new Candidate();
 		cand1.setAge(21);
 		cand1.setCandidateName("Yash");
-		service.addCandidate(cand1);
+		service.addAndCheckSkill(cand1);
 		
 		Candidate candexpec = cand1;
 		
@@ -175,31 +161,30 @@ public class CandidateTest {
 		assertFalse(cand1.getLocation().equals(actual.getLocation()));
 		
 	}
-	
-	@ParameterizedTest
-	@ValueSource(ints = {1})
-	@Nullable
-	void findbyidTest(int i) {
-		Candidate cand1 = new Candidate();
-		cand1.setAge(21);
-		cand1.setCandidateName("Yash");
-		
-		
-		candao.save(cand1);
-		//System.out.println(cand1.getCandidateId());
-		cand1.setAge(25);
-		candao.save(cand1);
-		
-		Candidate cn = service.findById(i);
-		assertNotNull(cn);
-		
-	
-	
-	}
-	
+//
+//	@ParameterizedTest
+//	@ValueSource(ints = {1})
+//	void findbyidTest(int i) {
+//		Candidate cand1 = new Candidate();
+//		cand1.setAge(21);
+//		cand1.setCandidateName("Yash");
+//		
+//		
+//		candao.save(cand1);
+//		//System.out.println(cand1.getCandidateId());
+//		cand1.setAge(25);
+//		candao.save(cand1);
+//		
+//		Candidate cn = service.findById(i);
+//		assertNotNull(cn);
+//		
+//	
+//	
+//	}
+//	
 	@ParameterizedTest
 	@ValueSource(ints = {0})
-	@Nullable
+
 	void findbyidTest0(int i) {
 		Candidate cand1 = new Candidate();
 		cand1.setAge(21);

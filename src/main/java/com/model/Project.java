@@ -2,12 +2,17 @@ package com.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name="Project_TBL")
 @NoArgsConstructor
 
 public class Project {
@@ -25,8 +31,12 @@ public class Project {
 	private String projectName;
 	private String projectDescription;
 	
-	@JsonBackReference
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            })
+  @JsonIgnore
 	private Candidate candidate;
 
 	

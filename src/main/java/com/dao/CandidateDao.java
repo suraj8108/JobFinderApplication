@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.model.Candidate;
 @Repository
-public interface CandidateDao extends JpaRepository<Candidate, Integer>{
+public interface CandidateDAO extends JpaRepository<Candidate, Integer>{
 
 	public Candidate findByCandidateName(String candidateName);
 	

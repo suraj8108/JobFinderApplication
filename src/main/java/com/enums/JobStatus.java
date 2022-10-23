@@ -1,4 +1,4 @@
-package com.model;
+package com.enums;
 
 public enum JobStatus{
 	OPENED,

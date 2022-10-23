@@ -58,53 +58,38 @@ public class Candidate {
 	
 	
 	//relations
-	
-	
-	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
-	private List<Project> projectList;
-	
-	
-	
-	  @ManyToMany(fetch = FetchType.LAZY,
 
-		      cascade = {
-		          CascadeType.PERSIST,
-		          CascadeType.MERGE
-		      })
-
-	  @JoinTable(name="CANDIDATE_SKILL_TABLE",
-
-			joinColumns= {
-					@JoinColumn(name="candidate_id")
-			},
-			inverseJoinColumns = {
-					@JoinColumn(name="skill_id")
-			})
-	
+    
+	  @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	  @JoinTable(
+	             name="CANDIDATE_SKILL_TABLE",
+	             joinColumns= {@JoinColumn(name="candidate_id")},
+	             inverseJoinColumns = {@JoinColumn(name="skill_id")}
+	             )
 	private Set<Skill> skillSet = new HashSet<>();
 	  
-	  @ManyToMany(fetch = FetchType.LAZY,
-		      cascade = {
-		          CascadeType.PERSIST,
-		          CascadeType.MERGE
-		      })
-	  @JoinTable(name="CANDIDATE_JOB_TABLE",
-			joinColumns= {
-					@JoinColumn(name="candidate_id")
-			},
-			inverseJoinColumns = {
-					@JoinColumn(name="job_id")
-			})
+	  @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	  @JoinTable(
+	      name="CANDIDATE_JOB_TABLE",
+	      joinColumns= {@JoinColumn(name="candidate_id")},
+	      inverseJoinColumns = {@JoinColumn(name="job_id")}
+	             )
 	private Set<Job> jobSet = new HashSet<>();
 	  
 	  
-	@JsonManagedReference
+	@JsonManagedReference(value="candidate_interview")
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
-	private List<Interview> interview;
+	private List<Interview> interviewList;
 	  
 	
-	
+	   
+	 @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+     @JoinTable(
+         name="CANDIDATE_PROJECT_TABLE",
+         joinColumns= {@JoinColumn(name="candidate_id")},
+         inverseJoinColumns = {@JoinColumn(name="project_Id")}
+                )
+    private List<Project> projectList;
 
 	  
 	  

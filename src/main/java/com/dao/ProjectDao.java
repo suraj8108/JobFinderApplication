@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.model.Project;
 
-public interface ProjectDao extends JpaRepository<Project, Integer> {
+public interface ProjectDAO extends JpaRepository<Project, Integer> {
+
+ 
 
 }

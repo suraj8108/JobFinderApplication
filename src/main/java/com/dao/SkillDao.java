@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.model.Skill;
 @Repository
-public interface SkillDao extends JpaRepository<Skill, Integer> {
+public interface SkillDAO extends JpaRepository<Skill, Integer> {
 
 	
 	//public List<Skill> findBySkillName(String skillName );

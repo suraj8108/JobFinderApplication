@@ -1,13 +1,25 @@
 package com.model;
 
+
 import java.util.*;
 
 import javax.persistence.*;
+
+import com.enums.JobStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.*;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -22,13 +34,12 @@ public class Job {
 	private int jobId;
 	
 	@Enumerated(EnumType.STRING)
-	private JobStatus jobStatus = JobStatus.CLOSED;
-	
-	@Column
-	private String jobDescription;
-
+	private JobStatus jobStatus = JobStatus.OPENED;
 	
 	
+	//@NotNull
+    private String jobDescription;
+    private String industry;
 	
 	
 	
@@ -41,19 +52,31 @@ public class Job {
 	@JsonIgnore
 	private Set<Candidate>  candidateSet = new HashSet<>();
 	
+	@JsonManagedReference(value="job_interview")
+	    @OneToMany(cascade = CascadeType.ALL,mappedBy = "job")
+	private List<Interview> interviewList;
 	
-	@JsonBackReference
-	@ManyToOne
-	private Employer employer;
-	
-	
-	
-	
-	
+	@JsonBackReference(value="employer_job")
+	@ManyToOne(cascade = CascadeType.ALL)
+    private Employer createdBy;
 	
 	
-	
-	
+
+    
+   
+  
+    
+    
+    
+
+    public Job(String desc, String industry) {
+      super();
+      this.jobDescription = desc;
+      this.industry = industry;
+      this.jobStatus = JobStatus.OPENED;
+    }
+   
+ 
 	
 	
 }
