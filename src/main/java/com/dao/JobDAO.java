@@ -9,5 +9,8 @@ import com.model.Job;
 
 @Repository
 public interface JobDAO extends JpaRepository<Job, Integer> {
+	
 	List<Job> findByIndustry(String industry);
+	List<Job> findByLocation(String location);
+	
 }

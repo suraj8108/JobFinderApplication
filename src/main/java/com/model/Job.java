@@ -40,6 +40,11 @@ public class Job {
 	//@NotNull
     private String jobDescription;
     private String industry;
+    
+    private String location;
+    
+    @NotNull
+    private float salaryPackage;
 	
 	
 	
@@ -59,24 +64,13 @@ public class Job {
 	@JsonBackReference(value="employer_job")
 	@ManyToOne(cascade = CascadeType.ALL)
     private Employer createdBy;
-	
-	
 
-    
-   
-  
-    
-    
-    
-
-    public Job(String desc, String industry) {
-      super();
-      this.jobDescription = desc;
-      this.industry = industry;
-      this.jobStatus = JobStatus.OPENED;
-    }
-   
- 
-	
-	
+	public Job(String jobDescription, String industry, String location, @NotNull float salaryPackage) {
+		super();
+		this.jobDescription = jobDescription;
+		this.industry = industry;
+		this.location = location;
+		this.salaryPackage = salaryPackage;
+	}
+		
 }
