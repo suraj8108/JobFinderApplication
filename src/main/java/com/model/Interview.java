@@ -33,7 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="Interview_TBL")
+@Table(name="interview_table")
 @ToString
 public class Interview {
 

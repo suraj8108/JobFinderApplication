@@ -82,17 +82,19 @@ public class EmployerController {
 	}
 
 	@GetMapping("/closeJob")
-	public ResponseEntity<?> selectCandidateAndCloseJob(@RequestParam("candidate") String candidateId, @RequestParam("job") String jobId) {
+	public ResponseEntity<?> selectCandidateAndCloseJob(@RequestParam("candidate") String candidateId, @RequestParam("employerId") String employerId, @RequestParam("jobId") String jobId) {
 	  try {
   	    // employer will execute this method, so employerId is available
   	    // the job for which a candidate is selected should be provided
-  	    Employer e = employerService.getEmployerById(1);
+		  
+  	    Employer e = employerService.getEmployerById(Integer.parseInt(employerId));
   	    Job j = jobService.getJobById(Integer.parseInt(jobId));
+  	    
   	    // the candidate who is selected should be provided
-  	    String candidateIdStr = "C1";
+  	    Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
   
   	    // find the interview conducted for THIS particular candidate for THIS particular job
-  	    Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidateIdStr, e, j);
+  	    Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, e, j);
 
 	    // select the candidate
 	    employerService.selectCandidateForJobAfterInterview(interview);
@@ -100,7 +102,7 @@ public class EmployerController {
 	    // close the job
 	    jobService.closeJob(j);
 
-	    return new ResponseEntity<>("candidate selected successfully", HttpStatus.OK);
+	    return new ResponseEntity<>("Candidate selected successfully", HttpStatus.OK);
 	  } catch (NoSuchEmployerFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
       } catch (NoSuchJobFoundException exception) {
@@ -123,48 +125,5 @@ public class EmployerController {
 	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	  }
 	}
-	
-	
-	// OM check this method and sync with ur user story to be removed from here  
-	@PostMapping("/candidateAppliesForJob")
-	public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) {
-	  
-	  try {	    
-	    // assuming the candidate is already created,
-	    // find the candidate, employer and job using the ids
-	    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-	    Job j = jobService.getJobById(Integer.parseInt(jobId));
-	    Employer e = j.getCreatedBy();
-	    
-	    
-	    j.getCandidateSet().add(c);
-	    
-//	    // first, add the candidate to the candidatelist of that job object
-//	    //	  j.getCandidateList().add(candidateId);
-//	    if (j.getCandidateSet() == null) //eddited by yash
-//	            j.getCandidateSet().add(c); //eddited by yash
-//	    else 
-//	        j.getCandidateSet().add(c); //eddited by yash
-	    // then, add the job to the appliedlist of that candidate object
-	    // then, create a new interview object with that employer, candidate, job
-	    
-	    Interview i = new Interview();
-	    i.setCandidate(c);
-	    i.setJob(j);
-	    i.setEmployer(j.getCreatedBy());
-	    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
-	    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-	    
-	    jobDAO.save(j);
-	    interviewDAO.save(i);
-	    
-	    // now add the newly created interview to interviewlist of employer
-	    e.getInterviewList().add(i);
-	    employerDAO.save(e);
-	  } catch (Exception e) {
-	    System.out.println(e.getMessage());
-	  }
-	  
-	  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-	}
+		
 }

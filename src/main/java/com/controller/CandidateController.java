@@ -18,22 +18,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dao.EmployerDAO;
+import com.dao.InterviewDAO;
+import com.dao.JobDAO;
 import com.dto.ProfileDTO;
 import com.dto.ProjectDTO;
 import com.dto.RatingFeedbackDTO;
+import com.enums.PostInterviewStatus;
+import com.enums.PreInterviewStatus;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
 import com.exception.ProjectNotFoundException;
 import com.exceptions.NoSuchInterviewFoundException;
 import com.model.Candidate;
+import com.model.Employer;
 import com.model.Interview;
 
 import com.model.Skill;
 import com.service.CandidateService;
 import com.service.InterviewService;
+import com.service.JobService;
 import com.service.ProjectService;
 
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +61,18 @@ public class CandidateController {
 	InterviewService interviewService;
 	@Autowired
 	ProjectService projectService;
+	
+	@Autowired
+	EmployerDAO employerDAO;
+
+	@Autowired
+	JobDAO jobDAO;
+
+	@Autowired
+	InterviewDAO interviewDAO;
+	
+	@Autowired
+    JobService jobService;
 	
 	
 	//user Story 2 -able to add profile 
@@ -267,7 +287,41 @@ public class CandidateController {
 	}
 
 
-//	
+	//Naman
+	// OM check this method and sync with ur user story to be removed from here  
+	@PostMapping("/candidateAppliesForJob")
+	public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) {
+  
+			  try {	    
+			    // assuming the candidate is already created,
+			    // find the candidate, employer and job using the ids
+			    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
+			    Job j = jobService.getJobById(Integer.parseInt(jobId));
+			    Employer e = j.getCreatedBy();
+			    
+			    
+			    j.getCandidateSet().add(c);
+			    
+			    Interview i = new Interview();
+			    i.setCandidate(c);
+			    i.setJob(j);
+			    i.setEmployer(j.getCreatedBy());
+			    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+			    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+			    
+			    jobDAO.save(j);
+			    interviewDAO.save(i);
+			    
+			    // now add the newly created interview to interviewlist of employer
+			    e.getInterviewList().add(i);
+			    employerDAO.save(e);
+			  } catch (Exception e) {
+			    System.out.println(e.getMessage());
+			  }
+			  
+			  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+		}
+	
 //	@PatchMapping("/removeskillbyid/{id}")
 //	public ResponseEntity removeskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {
 //

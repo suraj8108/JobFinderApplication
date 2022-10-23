@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name="JOB_TBL")
+@Table(name="job_table")
 @Getter
 @Setter
 @NoArgsConstructor

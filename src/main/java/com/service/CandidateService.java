@@ -9,15 +9,23 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dao.CandidateDAO;
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
 import com.dto.ProfileDTO;
+import com.enums.PostInterviewStatus;
+import com.enums.PreInterviewStatus;
 import com.exceptions.NoSuchEmployerFoundException;
 import com.model.Candidate;
 import com.model.Employer;
+import com.model.Interview;
+import com.model.Job;
 import com.model.Project;
 import com.model.Skill;
 
@@ -29,6 +37,7 @@ public class CandidateService {
 	SkillDAO skilldao;
 	@Autowired
 	ProjectDAO projectDao;
+
 	
 	//for addwhilecheckingskill
 	public void addAndCheckSkill(Candidate c) {
@@ -199,13 +208,8 @@ public class CandidateService {
 
   
 
-  
 	
-	
-	
-	
-	
-	
+
 	
 	
 	
