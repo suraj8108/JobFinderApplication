@@ -21,6 +21,8 @@ import com.model.Candidate;
 import com.model.Project;
 import com.model.Skill;
 
+import io.jsonwebtoken.lang.Collections;
+
 @Service
 public class CandidateService {
 	@Autowired
@@ -63,15 +65,16 @@ public class CandidateService {
 	       c.setEmailId(profile.getEmailId());
 	       c.setPassword(profile.getPassword());
 	       
-	       
-	       c.setProjectList(profile.getProjectList());
-	       
-	       for(Project pro : profile.getProjectList() ) {
-	    	   
-	    	   pro.setCandidate(c);
-	    	   
+	       if(profile.getProjectList() != null) {
+
+		       System.out.println(c.getProjectList());
+		       for(Project pro : profile.getProjectList() ) {
+		    	   
+		    	   pro.setCandidate(c);
+		    	   
+		       }
+		       
 	       }
-	       
 	       addAndCheckSkill(c);
 	       
 	        
@@ -193,7 +196,10 @@ public class CandidateService {
 	}
 	
 	
-	
+	public String deleteAllCandidate() {
+		candao.deleteAll();
+		return "Successfully deleted all the Candidate";
+	}
 	
 
 	//rating  by id and interview id
