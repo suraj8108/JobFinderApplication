@@ -10,4 +10,7 @@ import com.model.Employer;
 @Repository
 public interface EmployerDAO extends JpaRepository<Employer, Integer> {
 	List<Employer> findByLocation(String location);
+	
+	Employer findByEmailId(String emailId);
+	
 }

@@ -37,6 +37,8 @@ public class EmployerService {
     Employer employer = new Employer();
     employer.setEmployerName(dto.getEmployerName());
     employer.setLocation(dto.getLocation());
+    employer.setEmailId(dto.getEmailId());
+    employer.setPassword(dto.getPassword());
     employerDAO.save(employer);
   }
   
