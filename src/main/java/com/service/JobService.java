@@ -35,6 +35,14 @@ public class JobService {
     }
   }
   
+  public Job findJobById(int id) throws NoSuchJobFoundException {	    
+      Job j = jobDAO.findById(id).get();
+      if (j==null) {
+    	  throw new NoSuchJobFoundException(id);
+      }
+      return j;
+  }
+  
   public List<Job> getJobBySkillName(String skillNames){
 	  List<Job> result = new ArrayList<>();
   	

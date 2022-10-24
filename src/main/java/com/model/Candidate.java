@@ -30,12 +30,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.ToString;
 
 @Entity
 @Setter
-@Getter
+@Getter 
 @NoArgsConstructor
 @Table(name="candidate_table")
 public class Candidate {

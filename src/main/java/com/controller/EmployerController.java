@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
 import com.model.Job;
+import com.model.Skill;
 import com.service.CandidateService;
 import com.service.EmployerService;
 import com.service.InterviewService;
@@ -125,5 +127,5 @@ public class EmployerController {
 	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	  }
 	}
-		
+	
 }
