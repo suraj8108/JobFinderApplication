@@ -44,7 +44,6 @@ public class JobController {
     @Autowired
     JobDAO jobDAO;
     
-    
     @Autowired
     EmployerDAO employerDAO;
     
@@ -93,16 +92,10 @@ public class JobController {
 	@ApiOperation(value = "Add a job", notes = "Adding a new job", nickname = "add-job")
     @PostMapping("/employerAddjob")
     public ResponseEntity<String> addJobManually(@RequestBody JobDTO jobDTO) {
-        Employer e = employerDAO.getById(jobDTO.getEid());
-
-        Job job = new Job(jobDTO.getJobDescription(), jobDTO.getIndustry(), jobDTO.getLocation(), jobDTO.getSalaryPackage());
-
-        job.setCreatedBy(e);
-        jobDAO.save(job);
         
-        e.getJobList().addAll(Arrays.asList(job));
-        employerDAO.save(e);
-        return new ResponseEntity<>("Job added successfully", HttpStatus.ACCEPTED);
+		String response = jobService.addJobByEmployer(jobDTO);
+		
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 	
 	
@@ -122,7 +115,7 @@ public class JobController {
 	public ResponseEntity deleteJob(@PathVariable("id") String jobId) {
 		
 		jobDAO.deleteById(Integer.parseInt(jobId));
-		return new ResponseEntity("job deleted successfully", HttpStatus.FOUND);
+		return new ResponseEntity("Job deleted successfully", HttpStatus.FOUND);
 	
 	}
 

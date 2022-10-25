@@ -50,11 +50,21 @@ public class EmployerService {
   
   public Employer getEmployerById(int id) throws NoSuchEmployerFoundException {
     try {      
-      Employer employer = employerDAO.getById(id);
+      Employer employer = employerDAO.findById(id).get();
       return employer;
     } catch (Exception e) {
       throw new NoSuchEmployerFoundException(id);
     }
+  }
+  
+  public Employer getEmployerByEmailId(String emailId) throws NoSuchEmployerFoundException{
+	  try {
+		  Employer employer = employerDAO.findByEmailId(emailId);
+		  return employer;
+	  }
+	  catch(Exception e) {
+		  throw new NoSuchEmployerFoundException(emailId);
+	  }
   }
   
   public void selectCandidateForJobAfterInterview(Interview interview) throws JobAlreadyClosedWithCandidateSelectedException, AllInterviewsNotCompletedException {
@@ -78,6 +88,11 @@ public class EmployerService {
       i.setPostInterviewStatus(PostInterviewStatus.REJECTED);
       interviewDAO.save(i);
     }      
+  }
+  
+  public String deleteAllEmployer() {
+	  employerDAO.deleteAll();
+	  return "Successfully deletet all the Employer";
   }
 
 }
