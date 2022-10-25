@@ -32,18 +32,20 @@ import com.service.CandidateService;
 class AuthenticationTest {
 
 	@Autowired
-	CandidateDAO canDao;
+	CandidateService candidateService;
 	
 	@Autowired
 	JwtUtil jwtUtil;
 
-	
-	static String commonToken;
+	String commonToken;
 	
 	Candidate cand1 = new Candidate(); 
 	
 	@BeforeEach
 	void startConnection() {
+		
+		candidateService.deleteAllCandidate();
+		
 		cand1.setAge(22);
 		cand1.setCandidateName("yash");
 		cand1.setEducationQualification("B.tech");
@@ -51,19 +53,6 @@ class AuthenticationTest {
 		cand1.setLocation("sfs");
 		cand1.setEmailId("suraj@gmail.com");
 		cand1.setPassword("121aaa");
-		
-		List<Project> pl = new ArrayList<>();
-		
-		
-		pl.add(new Project("yjbabv","happened"));
-		pl.add(new Project("slnacncs","happened"));
-		
-		Set<Skill> css = new HashSet<>() ;
-		css.add(new Skill("Tyons"));
-		css.add(new Skill("sflndskn"));
-		
-		cand1.setProjectList(pl);
-		cand1.setSkillSet(css);
 		
 		//Register Candidate
 		String url = "http://localhost:9989/registerCandidate";
@@ -74,8 +63,6 @@ class AuthenticationTest {
 		HttpEntity<Candidate> request = new HttpEntity<>(cand1, headers);
 		
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-		
-		System.out.println("Login =>" + response);
 		
 		//Get The Token to access all the APIS
 		JwtRequest jwtRequest = new JwtRequest("suraj@gmail.com", "121aaa");
@@ -90,13 +77,7 @@ class AuthenticationTest {
 		JwtResponse resp = response1.getBody();
 		
 		commonToken = "Bearer " + resp.getJwtToken();
-		
 	}
-	
-//	@BeforeEach
-//	void deleteAllEntries(){
-//		canDao.deleteAll();
-//	}
 	
 	@Test
 	void testAuthenticateCandidate() {
@@ -111,34 +92,10 @@ class AuthenticationTest {
 		ResponseEntity<JwtResponse> response = restTemplate.postForEntity(url, request, JwtResponse.class);
 		
 		JwtResponse resp = response.getBody();
-		System.out.println("Token Body =>" + response.getBody());
 		
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(jwtRequest.getUsername(), jwtUtil.extractUsername(resp.getJwtToken()));
 		
 	}
-	
-//	@Test
-//	void testRegisterCandidate() {
-//		
-//		String url = "http://localhost:9989/registerCandidate";
-//		RestTemplate restTemplate = new RestTemplate();
-//		
-//		Candidate cand = new Candidate("Suraj", 12, "BE", 12, "Mumbai", "suraj@gmail.com", "121aaa");
-//		
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.add("Authorization", commonToken);
-//		
-//		HttpEntity<Candidate> request = new HttpEntity<>(cand, headers);
-//		
-//		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-//		System.out.println("Login =>" + response);
-//		
-//		assertEquals(HttpStatus.OK, response.getStatusCode());
-//		
-//	}
-	
-	
-	
 
 }

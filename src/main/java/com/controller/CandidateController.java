@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
 
 import javax.validation.ValidationException;
 
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,6 +64,9 @@ public class CandidateController {
 	@Autowired
 	ProjectService projectService;
 	 
+	@Autowired
+	CandidateDAO candidateDAO;
+	
 	@Autowired
 	EmployerDAO employerDAO;
 
@@ -335,27 +335,40 @@ public class CandidateController {
 			    Job j = jobService.getJobById(Integer.parseInt(jobId));
 			    Employer e = j.getCreatedBy();
 			    
+			    candidateService.checkIfAlreadySelectedByEmployer(c, e);
 			    
+			    // add the candidate to the candidate set of the job
 			    j.getCandidateSet().add(c);
+			    jobDAO.save(j);
 			    
+			    // create a new interview object unique to the employer, candidate, and job
 			    Interview i = new Interview();
 			    i.setCandidate(c);
 			    i.setJob(j);
-			    i.setEmployer(j.getCreatedBy());
+			    i.setEmployer(e);
 			    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
 			    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-			    
-			    jobDAO.save(j);
 			    interviewDAO.save(i);
 			    
-			    // now add the newly created interview to interviewlist of employer
+			    
+			    // now add the newly created interview to the interview list of employer
 			    e.getInterviewList().add(i);
 			    employerDAO.save(e);
+			    
+			    // also add this interview to the interview list of the employer
+			    c.getInterviewList().add(i);
+                candidateDAO.save(c);
+                
+                // and add it to interview list of the job
+                j.getInterviewList().add(i);
+                jobDAO.save(j);
+			    
+			    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
 			  } catch (Exception e) {
-			    System.out.println(e.getMessage());
+			    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 			  }
 			  
-			  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+			  
 		}
 	
 //	@PatchMapping("/removeskillbyid/{id}")

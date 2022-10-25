@@ -17,11 +17,17 @@ import com.dao.CandidateDAO;
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
 import com.dto.ProfileDTO;
-
+import com.enums.PostInterviewStatus;
+import com.exception.AlreadySelectedBySameEmployerException;
+import com.exception.MoonLightingException;
 import com.model.Candidate;
 import com.model.Job;
+import com.model.Employer;
+import com.model.Interview;
 import com.model.Project;
 import com.model.Skill;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class CandidateService {
@@ -65,15 +71,16 @@ public class CandidateService {
 	       c.setEmailId(profile.getEmailId());
 	       c.setPassword(profile.getPassword());
 	       
-	       
-	       c.setProjectList(profile.getProjectList());
-	       
-	       for(Project pro : profile.getProjectList() ) {
-	    	   
-	    	   pro.setCandidate(c);
-	    	   
+	       if(profile.getProjectList() != null) {
+
+		       System.out.println(c.getProjectList());
+		       for(Project pro : profile.getProjectList() ) {
+		    	   
+		    	   pro.setCandidate(c);
+		    	   
+		       }
+		       
 	       }
-	       
 	       addAndCheckSkill(c);
 	       
 	        
@@ -195,7 +202,10 @@ public class CandidateService {
 	}
 	
 	
-	
+	public String deleteAllCandidate() {
+		candao.deleteAll();
+		return "Successfully deleted all the Candidate";
+	}
 	
 
 	//rating  by id and interview id
@@ -203,6 +213,19 @@ public class CandidateService {
 	public void ratetheinterview(float rate,String id) {
 		
 		
+	}
+	
+	public void checkIfAlreadySelectedByEmployer(Candidate candidate, Employer employer) throws AlreadySelectedBySameEmployerException, MoonLightingException {
+	  List<Interview> interviewList = candidate.getInterviewList();
+	  for (Interview i: interviewList) {
+	    if (i.getPostInterviewStatus().equals(PostInterviewStatus.SELECTED)) {
+	      Employer e = i.getEmployer();
+	      if (e.getEmployerId() == employer.getEmployerId())
+	        throw new AlreadySelectedBySameEmployerException(i.getEmployer().getEmployerName());
+	      else
+	        throw new MoonLightingException();
+	    }
+	  }
 	}
 
   
