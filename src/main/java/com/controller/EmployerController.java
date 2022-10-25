@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
 import com.model.Job;
+import com.model.Skill;
 import com.service.CandidateService;
 import com.service.EmployerService;
 import com.service.InterviewService;
@@ -82,25 +84,31 @@ public class EmployerController {
 	}
 
 	@GetMapping("/closeJob")
-	public ResponseEntity<?> selectCandidateAndCloseJob(@RequestParam("candidate") String candidateId, @RequestParam("employerId") String employerId, @RequestParam("jobId") String jobId) {
+	public ResponseEntity<?> selectCandidateAndCloseJob(
+	  @RequestParam("candidateId") String selectedCandidateId,
+	  @RequestParam("employerId") String employerId,
+	  @RequestParam("jobId") String jobId
+	) {
 	  try {
   	    // employer will execute this method, so employerId is available
   	    // the job for which a candidate is selected should be provided
 		  
-  	    Employer e = employerService.getEmployerById(Integer.parseInt(employerId));
-  	    Job j = jobService.getJobById(Integer.parseInt(jobId));
+  	    Employer employer = employerService.getEmployerById(Integer.parseInt(employerId));
+  	    
+  	    // the job corresponding to the interview
+  	    Job job = jobService.getJobById(Integer.parseInt(jobId));
   	    
   	    // the candidate who is selected should be provided
-  	    Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
+  	    Candidate candidate = candidateService.getCandidateById(Integer.parseInt(selectedCandidateId));
   
-  	    // find the interview conducted for THIS particular candidate for THIS particular job
-  	    Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, e, j);
+  	    // find the interview conducted for THIS particular candidate for THIS particular job and employer
+  	    Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
 
 	    // select the candidate
 	    employerService.selectCandidateForJobAfterInterview(interview);
 	    
 	    // close the job
-	    jobService.closeJob(j);
+	    jobService.closeJob(job);
 
 	    return new ResponseEntity<>("Candidate selected successfully", HttpStatus.OK);
 	  } catch (NoSuchEmployerFoundException exception) {
@@ -122,6 +130,47 @@ public class EmployerController {
 	      interviewService.provideEmployerFeedback(i, dto);
 	      return new ResponseEntity<>("Feedback and rating by employer saved", HttpStatus.OK);
 	  } catch (NoSuchInterviewFoundException e) {
+	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+	  }
+	}
+	
+	
+	// the method for conducting interview should handle exceptions such that
+	// if the candidate has not been short-listed, and even then if the employer
+	// tries to conduct an interview with that candidate, it should throw error
+	
+	
+	// before conducting even one interview for a particular job, there has to be
+	// a check for the list of candidates who applied for that job. if even one
+	// of them has pre-interview status as 'invalid', it means that the employer
+	// has not yet decided whether to short-list him/her or not. In such case,
+	// commencing interviews is not allowed and doing so should throw error
+	
+	
+	// for both an employer and a candidate, participating in an interview
+	// should happen only if they have provided rating and feedback to all
+	// their previous interviews. If even one interview corresponding to
+	// the employer or candidate is missing their rating or feedback,
+	// conducting a new interview should throw error
+	
+	@GetMapping("/closeJobPostingForcefully")
+	public ResponseEntity<?> closeJobPosting(@RequestParam("jobId") String jobId) {
+	  // employer doesn't wish to interview candidates any longer, nor does he/she wish to hire anyone
+	  // so the job should be closed without selecting any candidates, and they all are rejected
+	  
+	  try {
+	    // find the job object
+	    Job job = jobService.getJobById(Integer.parseInt(jobId));
+	    
+	    // close the job
+	    jobService.closeJob(job);
+	    
+	    // reject all the candidates for this job
+	    interviewService.rejectAllInterviewsForJob(job);
+	    
+	    return new ResponseEntity<>("Job posting forcefully closed", HttpStatus.OK);
+	    
+	  } catch (NoSuchJobFoundException e) {
 	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	  }
 	}

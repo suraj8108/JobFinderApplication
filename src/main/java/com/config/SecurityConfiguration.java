@@ -42,7 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             // other public endpoints of your API may be appended to this array
             "/authenticate",
             "/registerCandidate",
-            "/addEmployer"
+            "/addEmployer",
+            "/addProfile"
     };
 	
 	@Override

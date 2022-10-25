@@ -13,6 +13,7 @@ import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
 import com.model.ExceptionResponse;
+import com.exception.NoSuchJobFoundException;
 
 
 
@@ -49,4 +50,8 @@ public class ControllerAdvices {
         return  new ResponseEntity<>(excpResp,HttpStatus.NOT_FOUND);
    }
     
+    @ExceptionHandler(NoSuchJobFoundException.class)
+    public ResponseEntity<Object> handleNoSuchJobFoundException(NoSuchJobFoundException e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
+    }
 }
