@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.dto.RatingFeedbackDTO;
 import com.enums.PostInterviewStatus;
+import com.enums.PreInterviewStatus;
 import com.exception.NoSuchInterviewFoundException;
 
 
@@ -59,6 +60,15 @@ public class InterviewService {
         interviewDAO.save(i);
       }
     }
+    
+    public List<Interview> getAllShorttlistedCandidate(PreInterviewStatus preStatus, Job job)
+    {
+    	return interviewDAO.findByPreInterviewStatusAndJob(PreInterviewStatus.SHORTLISTED, job);
+    }
   
+    public List<Interview> getAllNotShortListedCandidate(PreInterviewStatus preStaus, Job job){
+    	
+    	return interviewDAO.findByPreInterviewStatusAndJob(PreInterviewStatus.NOT_SHORTLISTED, job);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,8 @@ import com.dao.JobDAO;
 import com.dto.EmployerDTO;
 import com.dto.RatingFeedbackDTO;
 
+
+
 import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
 import com.exception.AllInterviewsNotCompletedException;
@@ -28,6 +32,7 @@ import com.exception.NoEmployersException;
 import com.exception.NoSuchEmployerFoundException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NoSuchJobFoundException;
+import com.exception.NotShortlistedException;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -63,6 +68,7 @@ public class EmployerController {
 	
 	@Autowired
 	CandidateService candidateService;
+	
 	
 
 	@ApiOperation(value = "add an employer", notes = "Adding a new employer", nickname = "add-employer")
@@ -123,6 +129,8 @@ public class EmployerController {
 	}
 
 
+	
+	
 	@PostMapping("/feedbackRating/{interviewId}")
 	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) {
 	  try {
@@ -133,6 +141,110 @@ public class EmployerController {
 	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	  }
 	}
+	
+	
+	//Pawanesh
+	
+	@PatchMapping("/shortlistCandidate/{candidateId}/{employerId}/{jobId}")
+	public ResponseEntity<String> updateShortlistedInterview(@PathVariable String candidateId, @PathVariable String employerId,@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
+	{
+		
+		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		Job job = jobService.getJobById(Integer.parseInt(jobId));
+		Employer employer = employerService.getEmployerById(Integer.parseInt(jobId));
+		
+		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
+		
+		interview.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+		
+		interviewDAO.save(interview);
+		
+		return new ResponseEntity<>("Successfully Updated Shortlisted candidate", HttpStatus.OK);
+		
+		
+	}
+	
+	
+	@GetMapping("getAllShortListedCandidate/{jobId}")
+	public ResponseEntity<List> notificationforShortlisted(@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException 
+	{
+		Job job = jobService.findJobById(Integer.parseInt(jobId));
+		List<Interview> interviews = interviewService.getAllShorttlistedCandidate(PreInterviewStatus.SHORTLISTED, job);
+		
+		List<Candidate> shortListCandidate = new ArrayList();
+		for(Interview interview : interviews) {
+			shortListCandidate.add(interview.getCandidate());
+		}
+		
+		return new ResponseEntity<> (shortListCandidate, HttpStatus.OK);
+		
+	}
+	
+	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
+	public ResponseEntity<String> updateSelectedInterview(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId)
+			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException
+	{
+		
+		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		Job job = jobService.getJobById(Integer.parseInt(jobId));
+		Employer employer= employerService.getEmployerById(Integer.parseInt(employerId));
+		
+		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
+		
+		if(interview.getPreInterviewStatus() == PreInterviewStatus.INVALID) {
+			
+			throw new NotShortlistedException(candidate.getCandidateId());
+		
+		}
+		if(interview.getPreInterviewStatus() == PreInterviewStatus.NOT_SHORTLISTED) {
+			throw new NotShortlistedException("Candidate is not Shortlisted for this Job ");
+		}
+		
+		interview.setPostInterviewStatus(PostInterviewStatus.WAITING);
+		
+		interviewDAO.save(interview);
+		
+		return new ResponseEntity<> ("Successfully Updated Waiting candidate",HttpStatus.OK);
+		
+	}
+	
+	
+	@PatchMapping("/rejectedCandidate/{candidateId}/{employerId}/{jobId}")
+	public ResponseEntity<String> updateSelectedInterview1(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
+	{
+		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		Job job = jobService.getJobById(Integer.parseInt(jobId));
+		Employer employer= employerService.getEmployerById(Integer.parseInt(employerId));
+		
+		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
+		
+		interview.setPreInterviewStatus(PreInterviewStatus.NOT_SHORTLISTED);
+		interview.setPostInterviewStatus(PostInterviewStatus.REJECTED);
+		
+		interviewDAO.save(interview);
+		
+		return new ResponseEntity<> ("Successfully Updated Rejected candidate",HttpStatus.OK);
+		
+	}
+	
+	
+	
+//	@GetMapping("getAllNotShortListedCandidate/{jobId}")
+//	public ResponseEntity<List> notificationforNotShortListed(@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException
+//	{
+//		Job job =jobService.findJobById(Integer.parseInt(jobId));
+//		List<Interview> interviews = interviewService.getAllNotShortListedCandidate(PreInterviewStatus.NOT_SHORTLISTED,job);
+//		
+//		List<Candidate> notShortListed = new ArrayList();
+//		for(Interview interview : interviews)
+//		{
+//			notShortListed.add(interview.getCandidate());
+//		}
+//		
+//		return new ResponseEntity<> (notShortListed, HttpStatus.OK);
+//	}
+	
+	//Pawanesh
 	
 	
 	// the method for conducting interview should handle exceptions such that
