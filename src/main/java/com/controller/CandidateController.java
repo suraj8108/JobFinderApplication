@@ -451,11 +451,11 @@ public class CandidateController {
 			    candidateService.updateCandidate(c);
 			    
 //			    jobDAO.save(j);
-			    interviewDAO.save(i);
+//			    interviewDAO.save(i);
 			    
 			    // now add the newly created interview to interviewlist of employer
-			    e.getInterviewList().add(i);
-			    employerDAO.save(e);
+//			    e.getInterviewList().add(i);
+//			    employerDAO.save(e);
 			  } catch (Exception e) {
 			    
 				System.out.println(e.getMessage());
