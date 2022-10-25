@@ -1,7 +1,8 @@
 package com.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -20,6 +21,7 @@ import com.enums.PostInterviewStatus;
 import com.exception.AlreadySelectedBySameEmployerException;
 import com.exception.MoonLightingException;
 import com.model.Candidate;
+import com.model.Job;
 import com.model.Employer;
 import com.model.Interview;
 import com.model.Project;
@@ -227,9 +229,42 @@ public class CandidateService {
 	}
 
   
-
+	public List<Candidate> getAllCandidatesByExperience(int experience) {
+		return candao.findAllByExperience(experience);
+	}
 	
+	
+	public List<Candidate> getAllCandidatesByQualification(String qualification) {
+		return candao.findAllByEducationQualification(qualification);
+	}
+	
+	public List<Candidate> getAllCandidatesBySkillSet(String skills){
+		List<Candidate> result = new ArrayList<>();
+		
+		List<Candidate> candidates= candao.findAll();
+		
+		String [] skillsRequired = skills.split(",");
 
+		System.out.println(Arrays.toString(skillsRequired));
+		System.out.println(skills);
+		
+		
+		for(Candidate c: candidates) {
+			
+			Set<String> candSkills = new HashSet<>();
+			for (Skill skill : c.getSkillSet()) {
+				candSkills.add(skill.getSkillName());
+			}
+			
+			for(String skill : skillsRequired) {	
+				if( candSkills.contains(skill)) {
+					result.add(c);
+					break;	
+				}	
+			}	
+		}
+		return result;
+	}
 	
 	
 	

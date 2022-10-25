@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
+import com.exception.NoSuchJobFoundException;
 
 
 
@@ -36,5 +37,11 @@ public class ControllerAdvices {
     public ResponseEntity<Object> handleFormatException(FormatException v,WebRequest req){
         
          return  new ResponseEntity<>(v.toString(),HttpStatus.FORBIDDEN);
+    }
+    
+    
+    @ExceptionHandler(NoSuchJobFoundException.class)
+    public ResponseEntity<Object> handleNoSuchJobFoundException(NoSuchJobFoundException e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
     }
 }
