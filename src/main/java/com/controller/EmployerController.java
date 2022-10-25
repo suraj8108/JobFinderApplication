@@ -32,6 +32,7 @@ import com.exception.NoEmployersException;
 import com.exception.NoSuchEmployerFoundException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NoSuchJobFoundException;
+import com.exception.NotShortlistedException;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -144,7 +145,7 @@ public class EmployerController {
 	
 	//Pawanesh
 	
-	@PatchMapping("/shortlistedCandidate/{candidateId}/{employerId}/{jobId}")
+	@PatchMapping("/shortlistCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateShortlistedInterview(@PathVariable String candidateId, @PathVariable String employerId,@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
 	{
 		
@@ -180,13 +181,24 @@ public class EmployerController {
 	}
 	
 	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
-	public ResponseEntity<String> updateSelectedInterview(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
+	public ResponseEntity<String> updateSelectedInterview(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId)
+			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException
 	{
+		
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
 		Job job = jobService.getJobById(Integer.parseInt(jobId));
 		Employer employer= employerService.getEmployerById(Integer.parseInt(employerId));
 		
 		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
+		
+		if(interview.getPreInterviewStatus() == PreInterviewStatus.INVALID) {
+			
+			throw new NotShortlistedException(candidate.getCandidateId());
+		
+		}
+		if(interview.getPreInterviewStatus() == PreInterviewStatus.NOT_SHORTLISTED) {
+			throw new NotShortlistedException("Candidate is not Shortlisted for this Job ");
+		}
 		
 		interview.setPostInterviewStatus(PostInterviewStatus.WAITING);
 		
@@ -206,6 +218,7 @@ public class EmployerController {
 		
 		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
 		
+		interview.setPreInterviewStatus(PreInterviewStatus.NOT_SHORTLISTED);
 		interview.setPostInterviewStatus(PostInterviewStatus.REJECTED);
 		
 		interviewDAO.save(interview);
