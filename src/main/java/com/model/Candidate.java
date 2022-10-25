@@ -50,9 +50,12 @@ public class Candidate {
 	private int experience;
 	private String location;
 	private String educationQualification;
+	
 	@Column(unique = true)
+	@NotNull
 	private String emailId;
 	
+	@NotNull
 	private String password;
 	
 	//relations

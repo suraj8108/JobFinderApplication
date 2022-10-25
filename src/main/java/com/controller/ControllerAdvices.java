@@ -1,7 +1,9 @@
 package com.controller;
 
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
+import com.model.ExceptionResponse;
 import com.exception.NoSuchJobFoundException;
 
 
@@ -39,6 +42,13 @@ public class ControllerAdvices {
          return  new ResponseEntity<>(v.toString(),HttpStatus.FORBIDDEN);
     }
     
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleCandidateAuthenticationException(BadCredentialsException v,WebRequest req){
+        
+    	ExceptionResponse excpResp = new ExceptionResponse(false, v.getMessage(), String.valueOf(HttpStatus.NOT_FOUND));
+    	
+        return  new ResponseEntity<>(excpResp,HttpStatus.NOT_FOUND);
+   }
     
     @ExceptionHandler(NoSuchJobFoundException.class)
     public ResponseEntity<Object> handleNoSuchJobFoundException(NoSuchJobFoundException e, WebRequest req){

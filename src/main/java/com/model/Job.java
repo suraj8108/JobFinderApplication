@@ -72,5 +72,12 @@ public class Job {
 		this.location = location;
 		this.salaryPackage = salaryPackage;
 	}
-		
+
+	@Override
+	public String toString() {
+		return "Job [jobStatus=" + jobStatus + ", jobDescription=" + jobDescription + ", industry=" + industry
+				+ ", location=" + location + ", salaryPackage=" + salaryPackage + "]";
+	}
+	
+	
 }
