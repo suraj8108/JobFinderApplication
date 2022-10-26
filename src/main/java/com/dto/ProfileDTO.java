@@ -29,8 +29,10 @@ public class ProfileDTO {
     
     private String educationQualification;
     
+    @NotNull
     private String emailId;
     
+    @NotNull
     private String password;
     
     private List<ProjectDTO> projectDTOList;

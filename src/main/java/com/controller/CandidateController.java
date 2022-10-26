@@ -1,9 +1,11 @@
 package com.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.NoSuchElementException;
-
-
+import java.util.Set;
 import javax.validation.ValidationException;
 
 
@@ -32,7 +34,9 @@ import com.enums.PreInterviewStatus;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
+import com.exception.JobNotFoundException;
 import com.exception.NoSuchInterviewFoundException;
+import com.exception.NoSuchJobFoundException;
 import com.exception.ProjectNotFoundException;
 import com.exception.exceptions;
 import com.exception.feedbackException;
@@ -67,6 +71,9 @@ public class CandidateController {
 	InterviewService interviewService;
 	@Autowired
 	ProjectService projectService;
+	 
+	@Autowired
+	CandidateDAO candidateDAO;
 	
 	@Autowired
 	EmployerDAO employerDAO;
@@ -278,34 +285,45 @@ public class CandidateController {
    @PostMapping("/candidateAppliesForJob")
    public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
    
-             try {     
-               // assuming the candidate is already created,
-               // find the candidate, employer and job using the ids
-               Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-               Job j = jobService.getJobById(Integer.parseInt(jobId));
-               Employer e = j.getCreatedBy();
-               
-               
-               j.getCandidateSet().add(c);
-               
-               Interview i = new Interview();
-               i.setCandidate(c);
-               i.setJob(j);
-               i.setEmployer(j.getCreatedBy());
-               i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
-               i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-               
-               jobService.addJob(j);
-               interviewDAO.save(i);
-               
-               // now add the newly created interview to interviewlist of employer
-               e.getInterviewList().add(i);
-               employerDAO.save(e);
-               return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-
-             } catch (Exception e) {
-              throw new exceptions(e.getMessage());
-             }
+	   try {	    
+		    // assuming the candidate is already created,
+		    // find the candidate, employer and job using the ids
+		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		    Job j = jobService.getJobById(Integer.parseInt(jobId));
+		    Employer e = j.getCreatedBy();
+		    
+		    candidateService.checkIfAlreadySelectedByEmployer(c, e);
+		    
+		    // add the candidate to the candidate set of the job
+		    j.getCandidateSet().add(c);
+		    jobDAO.save(j);
+		    
+		    // create a new interview object unique to the employer, candidate, and job
+		    Interview i = new Interview();
+		    i.setCandidate(c);
+		    i.setJob(j);
+		    i.setEmployer(e);
+		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+		    interviewDAO.save(i);
+		    
+		    
+		    // now add the newly created interview to the interview list of employer
+		    e.getInterviewList().add(i);
+		    employerDAO.save(e);
+		    
+		    // also add this interview to the interview list of the employer
+		    c.getInterviewList().add(i);
+           candidateDAO.save(c);
+           
+           // and add it to interview list of the job
+           j.getInterviewList().add(i);
+           jobDAO.save(j);
+		    
+		    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+		  } catch (Exception e) {
+		    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+		  }
              
        }
 	
@@ -325,11 +343,57 @@ public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws Ca
        catch(ValidationException v) {
            throw new CandidateValidationExceptioncheck("validation error");
        }
+ }
+	
+	
+	@PatchMapping("/updateCandidate2")
+	public void updateCandidate(@RequestBody Candidate cand ){
+		candidateService.updateCandidate(cand);
+	}
+	
+//	OM
+	@PostMapping("/candidateApplication")
+	public ResponseEntity<String> candidateApplication(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId){
+		try {
+		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		    Job j = jobService.getJobById(Integer.parseInt(jobId));		
+		    Employer e = j.getCreatedBy();
+		    
+		    Set<Candidate> updatedCandSet = j.getCandidateSet();
+		    updatedCandSet.add(c);
+		    j.setCandidateSet(updatedCandSet);
+		    
+		    Interview i = new Interview();
+		    i.setCandidate(c);
+		    i.setJob(j);
+		    i.setEmployer(j.getCreatedBy());
+		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+		    
+		    jobDAO.save(j);
 
-       
-   }
-  
-   
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+
+	}
+	
+//	@PatchMapping("/removeskillbyid/{id}")
+//	public ResponseEntity removeskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {
+//
+//	service.removeSkillbyId(id, cs);
+//	
+//	return new	ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
+//	}
+//	@PatchMapping("/addprojectbyid/{id}")
+//	public ResponseEntity addProjectbyid(@RequestBody Project pr,@PathVariable int id) {
+//
+//	service.addProjectbyId(id, pr);
+//	
+//	return new	ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
+//	}
 
  
  @GetMapping("/getjobstatus/{id}")
@@ -341,5 +405,95 @@ public List<Interview> findjob(@PathVariable  int id) {
   
 	   
 
+/*
+ * *************OM start******************
+ */
 	
+	@GetMapping("/getCandidateApplicationStatus/{id}")
+	public List<Interview> getCandidateInterviews(@PathVariable  int id) throws CandidateNotFoundException {
+		Candidate candidate = candidateService.findById(id);
+		if (candidate==null) {
+			throw new CandidateNotFoundException("id: "+id +"not found");
+		}
+		List<Interview> interviewStatus = candidate.getInterviewList();
+		return  interviewStatus;
 	}
+	
+	@GetMapping("/getAllCandidatesByExperience/{experience}")
+	    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience){
+	    	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience),HttpStatus.OK);
+		}
+	    
+	
+    @GetMapping("/getAllCandidatesByQualification/{qualification}")
+	    public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
+	    	return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
+		}
+	    
+    @PostMapping("/getAllCandidatesBySkillSet")
+	    public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
+	    	return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
+	    }
+	
+	
+	@GetMapping("/getAllCandidatesByJobId/{jobId}")
+	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+		Job job= null;
+		try {
+			job = jobService.findJobById(jobId);
+			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+		} catch (NoSuchJobFoundException e) {
+			throw e;
+		}
+	}
+	
+	@PostMapping("/candidateApplicationForJob")
+	public ResponseEntity<String> candidateApplicationForJob(@RequestParam("candidateId") int candidateId, @RequestParam("jobId") int jobId) throws CandidateNotFoundException, NoSuchJobFoundException{
+			  Candidate c = null;
+			  Job j = null;
+			  
+			  c = candidateService.getCandidateById(candidateId);
+			  if (c==null) {
+				  throw new CandidateNotFoundException("Candidate with id : "+candidateId+" not found");
+			  }
+			  
+			  j = jobService.getJobById(jobId);
+			  if (j==null) {
+				  throw new NoSuchJobFoundException(jobId);
+			  }
+			  
+			  try {
+			    Employer e = j.getCreatedBy();
+			    
+//			    j.getCandidateSet().add(c);
+			    
+			    Interview i = new Interview();
+			    i.setCandidate(c);
+			    i.setJob(j);
+			    i.setEmployer(j.getCreatedBy());
+			    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+			    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+			    
+			    c.getInterviewList().add(i);
+			    c.getJobSet().add(j);
+			    candidateService.updateCandidate(c);
+			    
+//			    jobDAO.save(j);
+//			    interviewDAO.save(i);
+			    
+			    // now add the newly created interview to interviewlist of employer
+//			    e.getInterviewList().add(i);
+//			    employerDAO.save(e);
+			  } catch (Exception e) {
+			    
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Candidate could not apply for this job", HttpStatus.OK);
+
+			  }
+			  
+			  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+	}
+	/*
+	 * ********OM end***********
+	 */
+}

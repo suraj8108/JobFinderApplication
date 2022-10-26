@@ -16,6 +16,7 @@ import com.dto.EmployerDTO;
 
 import com.enums.JobStatus;
 import com.enums.PostInterviewStatus;
+import com.enums.PreInterviewStatus;
 import com.exception.AllInterviewsNotCompletedException;
 import com.exception.JobAlreadyClosedWithCandidateSelectedException;
 import com.exception.NoEmployersException;
@@ -37,6 +38,8 @@ public class EmployerService {
     Employer employer = new Employer();
     employer.setEmployerName(dto.getEmployerName());
     employer.setLocation(dto.getLocation());
+    employer.setEmailId(dto.getEmailId());
+    employer.setPassword(dto.getPassword());
     employerDAO.save(employer);
   }
   
@@ -48,11 +51,21 @@ public class EmployerService {
   
   public Employer getEmployerById(int id) throws NoSuchEmployerFoundException {
     try {      
-      Employer employer = employerDAO.getById(id);
+      Employer employer = employerDAO.findById(id).get();
       return employer;
     } catch (Exception e) {
       throw new NoSuchEmployerFoundException(id);
     }
+  }
+  
+  public Employer getEmployerByEmailId(String emailId) throws NoSuchEmployerFoundException{
+	  try {
+		  Employer employer = employerDAO.findByEmailId(emailId);
+		  return employer;
+	  }
+	  catch(Exception e) {
+		  throw new NoSuchEmployerFoundException(emailId);
+	  }
   }
   
   public void selectCandidateForJobAfterInterview(Interview interview) throws JobAlreadyClosedWithCandidateSelectedException, AllInterviewsNotCompletedException {
@@ -60,7 +73,7 @@ public class EmployerService {
     if (j.getJobStatus().equals(JobStatus.CLOSED)) {
       throw new JobAlreadyClosedWithCandidateSelectedException();
     }
-    List<Interview> pendingInterviewsForJob = interviewDAO.findByJobAndPostInterviewStatus(j, PostInterviewStatus.INVALID);
+    List<Interview> pendingInterviewsForJob = interviewDAO.findByJobAndPreInterviewStatusAndPostInterviewStatus(j, PreInterviewStatus.SHORTLISTED, PostInterviewStatus.INVALID);
     if (pendingInterviewsForJob.size() != 0) {
       List<String> candidateList = pendingInterviewsForJob.stream().map((i) -> i.getCandidate().getCandidateName()).collect(Collectors.toList());
       throw new AllInterviewsNotCompletedException(j.getJobId(), candidateList);
@@ -76,6 +89,11 @@ public class EmployerService {
       i.setPostInterviewStatus(PostInterviewStatus.REJECTED);
       interviewDAO.save(i);
     }      
+  }
+  
+  public String deleteAllEmployer() {
+	  employerDAO.deleteAll();
+	  return "Successfully deletet all the Employer";
   }
 
 }

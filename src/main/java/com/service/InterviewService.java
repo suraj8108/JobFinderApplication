@@ -8,6 +8,8 @@ import org.springframework.transaction.TransactionSystemException;
 import com.dao.InterviewDAO;
 
 import com.model.Interview;
+import com.model.Job;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -26,14 +28,14 @@ public class InterviewService {
 	@Autowired
 	InterviewDAO interviewDAO;
 
-	  public Interview getInterviewById(int id) throws NoSuchInterviewFoundException {
-	      try {
-	        Interview i = interviewDAO.findById(id).get();
-	        return i;
-	      } catch (NoSuchElementException e) {
-	        throw new NoSuchInterviewFoundException(id);
-	      }
+	public Interview getInterviewById(int id) throws NoSuchInterviewFoundException {
+	    try {
+	      Interview i = interviewDAO.findById(id).get();
+	      return i;
+	    } catch (Exception e) {
+	      throw new NoSuchInterviewFoundException(id);
 	    }
+	  }
 	    
 	  public void provideCandidateFeedback(int j, RatingFeedbackDTO dto) throws feedbackException  {
 	      try {
@@ -89,9 +91,26 @@ public class InterviewService {
   
   
 
-  public List<Interview> getAllInterviews() {
-    return interviewDAO.findAll();
-  }
+    public List<Interview> getAllInterviews() {
+      return interviewDAO.findAll();
+    }
+    
+    public void rejectAllInterviewsForJob(Job job) {
+      List<Interview> interviewsNotRejected = interviewDAO.findByJobAndPostInterviewStatusIsNot(job, PostInterviewStatus.REJECTED);
+      for (Interview i: interviewsNotRejected) {
+        i.setPostInterviewStatus(PostInterviewStatus.REJECTED);
+        interviewDAO.save(i);
+      }
+    }
+    
+    public List<Interview> getAllShorttlistedCandidate(PreInterviewStatus preStatus, Job job)
+    {
+    	return interviewDAO.findByPreInterviewStatusAndJob(PreInterviewStatus.SHORTLISTED, job);
+    }
   
+    public List<Interview> getAllNotShortListedCandidate(PreInterviewStatus preStaus, Job job){
+    	
+    	return interviewDAO.findByPreInterviewStatusAndJob(PreInterviewStatus.NOT_SHORTLISTED, job);
+    }
 
 }

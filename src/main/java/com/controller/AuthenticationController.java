@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,7 +52,7 @@ public class AuthenticationController {
 	}
 	
 	@RequestMapping(value = "/authenticate", headers = "Accept=application/json", method = RequestMethod.POST)
-	public JwtResponse authenticateCand(@RequestBody JwtRequest jwtRequest) throws Exception {
+	public JwtResponse authenticateCand(@RequestBody JwtRequest jwtRequest) throws UsernameNotFoundException, Exception {
 		
 		System.out.println(jwtRequest);
 		
@@ -66,8 +67,11 @@ public class AuthenticationController {
 		catch (BadCredentialsException e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
-			throw new Exception("INVALID_CREDENTIALS");
+			throw new BadCredentialsException("INVALID_CREDENTIALS");
 		}
+//		catch(Exception e) {
+//			throw new Exception(e.getMessage());
+//		}
 		
 		final UserDetails userDetails = candidateService.loadUserByUsername(jwtRequest.getUsername());
 		

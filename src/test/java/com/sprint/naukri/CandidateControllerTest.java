@@ -2,6 +2,7 @@ package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import com.service.CandidateService;
 
 @SpringBootTest
 public class CandidateControllerTest {
+
     @Autowired
 	CandidateDAO candao ;
     @Autowired
@@ -120,14 +122,12 @@ public class CandidateControllerTest {
         JwtResponse resp = response1.getBody();
        
         commonToken = "Bearer " + resp.getJwtToken();
-		
-		
+
 	}
 	@AfterEach
 	void setdown() throws Exception {
+		
 		candao.deleteAll();
-		
-		
 	}
 	
     
@@ -153,7 +153,7 @@ public class CandidateControllerTest {
   
         HttpHeaders headers=new HttpHeaders();
         headers.add("Authorization", commonToken);
-         
+
          headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
          
          HttpEntity entity=new HttpEntity(dto,headers);
@@ -166,7 +166,6 @@ public class CandidateControllerTest {
        Assertions.assertEquals(202, result.getStatusCodeValue());
        Assertions.assertEquals("Candidate added successfully", result.getBody());
     }
-	
 	
 	@Test
     public void addProfiletestfailed() throws URISyntaxException 
@@ -411,7 +410,6 @@ public class CandidateControllerTest {
 	          template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 	          
 	             ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
-	     
 
 	         String expectedMessage = "Candidate updated location";
 	         
@@ -456,8 +454,7 @@ public class CandidateControllerTest {
 //         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
 //         System.out.println(p.get(0).getProjectId());
 //         System.out.println(p.get(0).getCandidate());
-
-           
+  
            
            String url2 = "http://localhost:9989/addSkillById/"+c.getCandidateId();
            
