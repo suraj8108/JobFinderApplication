@@ -1,10 +1,12 @@
 package com.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,12 +19,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name="employer_table")
 @NoArgsConstructor
+@ToString
 public class Employer {
 
 	@Id
@@ -40,11 +44,11 @@ public class Employer {
 	
 	@JsonManagedReference(value="employer_job")
 	@OneToMany(cascade = {CascadeType.ALL},mappedBy = "createdBy")
-	private List<Job> jobList;
+	private List<Job> jobList = new ArrayList<>();
 	
 	@JsonManagedReference(value="employer_interview")
 	@OneToMany(cascade = {CascadeType.ALL},mappedBy = "employer")
-	private List<Interview> interviewList;
+	private List<Interview> interviewList = new ArrayList<>();
 	
 	
 	
