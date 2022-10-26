@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Range;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,8 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class RatingFeedbackDTO {
-  @Range(min = 0, max = 10)
+
   private int rating;
   private String feedback;
 }

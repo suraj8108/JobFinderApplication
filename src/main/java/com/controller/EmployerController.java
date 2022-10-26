@@ -27,6 +27,7 @@ import com.exception.NoEmployersException;
 import com.exception.NoSuchEmployerFoundException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NoSuchJobFoundException;
+import com.exception.feedbackException;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -116,7 +117,7 @@ public class EmployerController {
 
 
 	@PostMapping("/feedbackRating/{interviewId}")
-	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) {
+	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws feedbackException {
 	  try {
 	    Interview i = interviewService.getInterviewById(Integer.parseInt(id));
 	      interviewService.provideEmployerFeedback(i, dto);

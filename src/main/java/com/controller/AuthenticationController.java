@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dao.CandidateDAO;
+import com.dto.ProfileDTO;
 import com.helper.JwtUtil;
 import com.model.Candidate;
 import com.model.JwtRequest;
 import com.model.JwtResponse;
 import com.service.CandidateJwtService;
+import com.service.CandidateService;
 
 
 @RestController
@@ -31,6 +33,8 @@ public class AuthenticationController {
 
 	@Autowired
 	CandidateDAO candDao;
+	@Autowired
+	CandidateService service;
 	
 	@Autowired
 	private JwtUtil jwtUtility; 
@@ -76,7 +80,7 @@ public class AuthenticationController {
 	@PostMapping("/registerCandidate")
 	public ResponseEntity<String> registerCandidate(@RequestBody Candidate candidate) {
 		
-		candDao.save(candidate);
+	    candDao.save(candidate);
 		return new ResponseEntity<>("Added Successfully", HttpStatus.OK);
 		
 	}

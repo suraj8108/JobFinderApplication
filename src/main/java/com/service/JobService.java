@@ -63,4 +63,9 @@ public class JobService {
 		return result;
   	}
 
+public void addJob(Job j) {
+   jobDAO.save(j);
+    
+}
+
 }
