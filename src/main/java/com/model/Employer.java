@@ -17,12 +17,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name="employer_table")
 @NoArgsConstructor
+@ToString
 public class Employer {
 
 	@Id

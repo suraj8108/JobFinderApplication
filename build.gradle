@@ -18,6 +18,16 @@ jacocoTestReport {
      reports {
       xml.enabled true
    }
+   
+   afterEvaluate {
+     classDirectories.setFrom(files(classDirectories.files.collect {
+       fileTree(dir: it, exclude: [
+         "com/model/*.java.*",
+         "com/enums/*.java.*",
+         "com/exception/*.java.*"
+       ])
+     }))
+   }
 }
 
 
