@@ -128,17 +128,6 @@ public class TransactionalCandidateControllerTest {
    }
     
 
-   @Test
-   public void removeProject() throws URISyntaxException, CandidateNotFoundException{
-     
-     Candidate c = candao.findById(cand1.getCandidateId()).get();
-     
-     
-   }
-    
-    
-    
-
   
     
     

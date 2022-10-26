@@ -65,46 +65,53 @@ public class CandidateServiceTest {
 	
 	 
 
-	static Candidate cand1 = new Candidate();
-	static List<Project> pl = new ArrayList<>();
-	static Set<Skill> css = new HashSet<>() ;
-	static List<ProjectDTO> pdtl = new ArrayList<>();
-	static Set<SkillDTO> csdts = new HashSet<>() ;
+	 Candidate cand1 = new Candidate();
+	 List<Project> pl = new ArrayList<>();
+	 Set<Skill> css = new HashSet<>() ;
+	 List<ProjectDTO> pdtl = new ArrayList<>();
+	 Set<SkillDTO> csdts = new HashSet<>() ;
 	//rest controller test
 	@BeforeEach
 	public  void setUp() throws Exception {
-		candao.deleteAll();
-		
-		candao.flush();
-		
-		 
-		cand1.setAge(22);
-		cand1.setCandidateName("yashss");
-		cand1.setEducationQualification("extra");
-		cand1.setExperience(2);
-		cand1.setLocation("here");
-		cand1.setEmailId("emailid");
-		cand1.setPassword("password");
-		
-		
-		
-		
-		
-		
-		
-		pl.add(new Project("yjbabv","happened"));
-		pl.add(new Project("slnacncs","happened"));
-		pdtl.add(new ProjectDTO("yjbabv","happened"));
-		pdtl.add(new ProjectDTO("slnacncs","happened"));
-		
-		cand1.setProjectList(pl);
-        cand1.setSkillSet(css); 
+	    candao.deleteAll();
+	    sdao.deleteAll();
+	         
+	        cand1.setAge(22);
+	        cand1.setCandidateName("yashss");
+	        cand1.setEducationQualification("extra");
+	        cand1.setExperience(2);
+	        cand1.setLocation("here");
+	        cand1.setEmailId("emailid");
+	        cand1.setPassword("password");
+	        
+	        
+	        
+	        
+	        Project p1 = new Project("yjbabv","happened");
+	        p1.setCandidate(cand1);
+	        Project p2 = new Project("slnacncs","happened");
+	        p2.setCandidate(cand1);
+	        pl.add(p1);
+	        pl.add(p2);
+	        cand1.setProjectList(pl);
+	       
+	        Skill s1 = new Skill("Json");
+	        Skill s2 = new Skill("Java");
+	        Set<Candidate> dummySet = new HashSet<>();
+	        dummySet.add(cand1);
+	       
+	        css.add(s1);
+	        css.add(s2);
+	        cand1.setSkillSet(css);
+	  
+	        
         
 		
 	}
 	@AfterEach
 	void setdown() throws Exception {
 		candao.deleteAll();
+		sdao.deleteAll();
 	}
 	
 	@Test 
@@ -163,67 +170,31 @@ public class CandidateServiceTest {
         
     }
 	
+	
 	 @Test
-	    public void removeProjectByProjectIdTest() throws ProjectNotFoundException{
-	        
-	         Candidate cand2 = new Candidate();
-	         cand2.setAge(22);
-	         cand2.setCandidateName("aysbb");
-	          List<Project> pl2 = new ArrayList<>();
-	          
-	         Project p1 = new Project("yjzcascbabv","happened");
-	         p1.setCandidate(cand2);
-	         Project p2 = new Project("slnaascasccncs","happened");
-	         p2.setCandidate(cand2);
-	         pl2.add(p1);
-	         pl2.add(p2);
-	         cand2.setProjectList(pl2);
-	         
+	 public void removeProjectByProjectIdTest() throws ProjectNotFoundException{
+	      
 	       
-	        candao.save(cand2);
-//	        System.out.println(cand2.getProjectList().get(0).getProjectId());
-//	      
-//	      System.out.println(cand2.getProjectList());
+	        candao.save(cand1);
 
 	      int length = (int) projectdao.count();
 	        
-	        projectService.removeById(cand2.getProjectList().get(0).getProjectId());
+	        projectService.removeById(cand1.getProjectList().get(0).getProjectId());
 	       
 	        int lengthafter = (int) projectdao.count();
 	        
-//	        System.out.println(cand2.getProjectList());
-	       
+       
 	        Assertions.assertNotEquals(length, lengthafter);
 	  }
 	 @Test
-     public void removeProjectByProjectIdTestFailed(){
-         
-          Candidate cand2 = new Candidate();
-          cand2.setAge(22);
-          cand2.setCandidateName("aysbb");
-           List<Project> pl2 = new ArrayList<>();
-           
-          Project p1 = new Project("yjzcascbabv","happened");
-          p1.setCandidate(cand2);
-          Project p2 = new Project("slnaascasccncs","happened");
-          p2.setCandidate(cand2);
-          pl2.add(p1);
-          pl2.add(p2);
-          cand2.setProjectList(pl2);
-          
-        
-         candao.save(cand2);
-//         System.out.println(cand2.getProjectList().get(0).getProjectId());
-//       
-//       System.out.println(cand2.getProjectList());
-
-       int length = (int) projectdao.count();
+	 public void removeProjectByProjectIdTestFailed(){
+	     candao.save(cand1);
+	     int length = (int) projectdao.count();
          
          
         
          int lengthafter = (int) projectdao.count();
          
-         //System.out.println(cand2.getProjectList());
          Exception exception = Assertions.assertThrows(ProjectNotFoundException.class, 
          () -> {projectService.removeById(55);
          });
@@ -237,87 +208,44 @@ public class CandidateServiceTest {
 	 
 	 @Test
      public void getallCandidates() throws ProjectNotFoundException{
-         
-          Candidate cand2 = new Candidate();
-          cand2.setAge(22);
-          cand2.setCandidateName("aysbb");
-           List<Project> pl2 = new ArrayList<>();
-           
-          Project p1 = new Project("yjzcascbabv","happened");
-          p1.setCandidate(cand2);
-          Project p2 = new Project("slnaascasccncs","happened");
-          p2.setCandidate(cand2);
-          pl2.add(p1);
-          pl2.add(p2);
-          cand2.setProjectList(pl2);
-          
-        
-         candao.save(cand2);
-//       System.out.println(cand2.getProjectList().get(0).getProjectId());
-//     
-//     System.out.println(cand2.getProjectList());
+	     candao.save(cand1);
 
-       int length = (int) candao.count();
+
+	     int length = (int) candao.count();
          
-    
-         
-//       System.out.println(cand2.getProjectList());
+
         
          Assertions.assertEquals(length, 1);
    }
 	 
 	 
 	 @Test
-	    public void provideCandidateFeedbackTestfailed2(){
+	 public void provideCandidateFeedbackTestfailed2(){
 	        
-	        Candidate cand2 = new Candidate();
-	        cand2.setAge(22);
-	        cand2.setCandidateName("aysbb");
-	         List<Project> pl2 = new ArrayList<>();
-	         
-	        Project p1 = new Project("yjzcascbabv","happened");
-	        p1.setCandidate(cand2);
-	        Project p2 = new Project("slnaascasccncs","happened");
-	        p2.setCandidate(cand2);
-	        pl2.add(p1);
-	        pl2.add(p2);
-	        cand2.setProjectList(pl2);
-	        
-	        List<Interview> interviews = new ArrayList<>();
-	        Interview inter = new Interview();
-//	        inter.setCandidate(cand2);
-//	        inter.setCandidateRating(15);
-	        inter.setCandidateFeedback("ssome gibberish");
-	        inter.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
-	        inter.setPostInterviewStatus(PostInterviewStatus.SELECTED);
-	        interviews.add(inter);
-	        cand2.setInterviewList(interviews);
-	        candao.save(cand2);
-	        RatingFeedbackDTO dtoshit = new RatingFeedbackDTO(22, "ssome gibberish");
-	      
-	        
-	       
-	       
-	       
-	     
-	       
-	         
-	         
-	       
-	        
-	        Exception exception = Assertions.assertThrows(feedbackException.class, 
-	                () -> {
-	                    interviewService.provideCandidateFeedback(inter.getInterviewId(),dtoshit);
-	                    });
-	        
+        
+        
+        List<Interview> interviews = new ArrayList<>();
+        Interview inter = new Interview();
 
-	               String expectedMessage = 
-	                       "caught transaction exception might be an validation error"
-	                     
-	               ;
-	               String actualMessage = exception.getMessage();
-	System.out.println(actualMessage);
-	               Assertions.assertTrue(actualMessage.equals(expectedMessage));
+        inter.setCandidateFeedback("ssome gibberish");
+        inter.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+        inter.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+        interviews.add(inter);
+        cand1.setInterviewList(interviews);
+        candao.save(cand1);
+        RatingFeedbackDTO dtoshit = new RatingFeedbackDTO(22, "ssome gibberish");
+        
+        Exception exception = Assertions.assertThrows(feedbackException.class, 
+                () -> {
+                    interviewService.provideCandidateFeedback(inter.getInterviewId(),dtoshit);
+                    });
+        
+
+       String expectedMessage = 
+               "caught transaction exception might be an validation error";
+       String actualMessage = exception.getMessage();
+
+       Assertions.assertTrue(actualMessage.equals(expectedMessage));
 	        
 	     
 	        

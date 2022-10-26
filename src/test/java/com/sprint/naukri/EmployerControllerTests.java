@@ -78,7 +78,7 @@ public class EmployerControllerTests {
 	  RestTemplate template = new RestTemplate();
 	  HttpHeaders headers = new HttpHeaders();
 	  HttpEntity<Candidate> entity = new HttpEntity<>(candidate, headers);
-	  ResponseEntity<String> response = template.postForEntity("http://localhost:8081/registerCandidate", entity, String.class);
+	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/registerCandidate", entity, String.class);
 	  System.out.println(response.getBody());
 	  System.out.println("=============");
 	  assertEquals("Added Successfully", response.getBody());
@@ -88,7 +88,7 @@ public class EmployerControllerTests {
 	  RestTemplate template2 = new RestTemplate();
 	  HttpHeaders headers2 = new HttpHeaders();
 	  HttpEntity<JwtRequest> entity2 = new HttpEntity<>(jwtRequest, headers2);
-	  ResponseEntity<JwtResponse> response2 = template.postForEntity("http://localhost:8081/authenticate", entity2, JwtResponse.class);
+	  ResponseEntity<JwtResponse> response2 = template.postForEntity("http://localhost:9989/authenticate", entity2, JwtResponse.class);
 	  commonToken = "Bearer " + response2.getBody().getJwtToken();
 	}
 	
@@ -112,7 +112,7 @@ public class EmployerControllerTests {
 //	  HttpHeaders headers = new HttpHeaders();
 //	  headers.add("Authorization", commonToken);
 //	  HttpEntity<String> entity = new HttpEntity<>(headers);
-//	  ResponseEntity<String> response = template.postForEntity("http://localhost:8081/login", entity, String.class);
+//	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/login", entity, String.class);
 //	  System.out.println(response.getBody());
 ////	  String loginResponse = authController.login();
 ////	  System.out.println(loginResponse);
@@ -132,7 +132,7 @@ public class EmployerControllerTests {
 	  HttpHeaders headers = new HttpHeaders();
 	  headers.add("Authorization", commonToken);
 	  HttpEntity<EmployerDTO> entity = new HttpEntity<>(employerDTO, headers);
-	  ResponseEntity<String> response = template.postForEntity("http://localhost:8081/addEmployer", employerDTO, String.class);
+	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/addEmployer", employerDTO, String.class);
 	  System.out.println(response.getBody());
 	  
 //	  String addEmployerResponse = employerController.addEmployer(employerDTO).getBody();
@@ -145,7 +145,7 @@ public class EmployerControllerTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", commonToken);
 		HttpEntity<List<Employer>> entity = new HttpEntity<>(headers);
-		ResponseEntity<List> response = template.exchange("http://localhost:8081/getAllEmployers", HttpMethod.GET, entity, List.class);
+		ResponseEntity<List> response = template.exchange("http://localhost:9989/getAllEmployers", HttpMethod.GET, entity, List.class);
 		List<Employer> employerList = response.getBody();
 		System.out.println(";;;;;;;;;;;;;;;;;;;;");
 		System.out.println(employerList);
@@ -177,9 +177,9 @@ public class EmployerControllerTests {
 		HttpHeaders headersNewCan = new HttpHeaders();
 		headersNewCan.add("Authorization", commonToken);
 		HttpEntity<Candidate> entityC2 = new HttpEntity<>(candidate2, headersNewCan);
-		ResponseEntity<String> responseC2 = templateNewCan.postForEntity("http://localhost:8081/registerCandidate", entityC2, String.class);
+		ResponseEntity<String> responseC2 = templateNewCan.postForEntity("http://localhost:9989/registerCandidate", entityC2, String.class);
 		HttpEntity<Candidate> entityC3 = new HttpEntity<>(candidate3, headersNewCan);
-		ResponseEntity<String> responseC3 = templateNewCan.postForEntity("http://localhost:8081/registerCandidate", entityC3, String.class);
+		ResponseEntity<String> responseC3 = templateNewCan.postForEntity("http://localhost:9989/registerCandidate", entityC3, String.class);
 		
 		
 		JobDTO j1 = new JobDTO();
@@ -201,9 +201,9 @@ public class EmployerControllerTests {
 		HttpHeaders headersNewJob = new HttpHeaders();
 		headersNewJob.add("Authorization", commonToken);
 		HttpEntity<JobDTO> entityJ1 = new HttpEntity<>(j1, headersNewCan);
-		ResponseEntity<String> responseJ1 = templateNewCan.exchange("http://localhost:8081/employerAddjob", HttpMethod.POST, entityJ1, String.class);
+		ResponseEntity<String> responseJ1 = templateNewCan.exchange("http://localhost:9989/employerAddjob", HttpMethod.POST, entityJ1, String.class);
 		HttpEntity<JobDTO> entityJ2 = new HttpEntity<>(j2, headersNewCan);
-		ResponseEntity<String> responseJ2 = templateNewCan.exchange("http://localhost:8081/employerAddjob", HttpMethod.POST, entityJ2, String.class);
+		ResponseEntity<String> responseJ2 = templateNewCan.exchange("http://localhost:9989/employerAddjob", HttpMethod.POST, entityJ2, String.class);
 		
 		RestTemplate templateApplyJob = new RestTemplate();
 		HttpHeaders headersApplyJob = new HttpHeaders();
@@ -216,11 +216,11 @@ public class EmployerControllerTests {
 		int c3 = candidateList.get(2).getCandidateId();
 		int jb1 = jobList.get(0).getJobId();
 		int jb2 = jobList.get(0).getJobId();
-		ResponseEntity<String> responseC1J1 = templateApplyJob.exchange("http://localhost:8081/candidateApplicationForJob?candidateId="+c1+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
-		ResponseEntity<String> responseC2J1 = templateApplyJob.exchange("http://localhost:8081/candidateApplicationForJob?candidateId="+c2+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
-		ResponseEntity<String> responseC3J1 = templateApplyJob.exchange("http://localhost:8081/candidateApplicationForJob?candidateId="+c3+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
-		ResponseEntity<String> responseC1J2 = templateApplyJob.exchange("http://localhost:8081/candidateApplicationForJob?candidateId="+c1+"&jobId="+jb2, HttpMethod.POST, entityCJ, String.class);
-		ResponseEntity<String> responseC3J2 = templateApplyJob.exchange("http://localhost:8081/candidateApplicationForJob?candidateId="+c3+"&jobId="+jb2, HttpMethod.POST, entityCJ, String.class);
+		ResponseEntity<String> responseC1J1 = templateApplyJob.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+c1+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
+		ResponseEntity<String> responseC2J1 = templateApplyJob.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+c2+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
+		ResponseEntity<String> responseC3J1 = templateApplyJob.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+c3+"&jobId="+jb1, HttpMethod.POST, entityCJ, String.class);
+		ResponseEntity<String> responseC1J2 = templateApplyJob.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+c1+"&jobId="+jb2, HttpMethod.POST, entityCJ, String.class);
+		ResponseEntity<String> responseC3J2 = templateApplyJob.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+c3+"&jobId="+jb2, HttpMethod.POST, entityCJ, String.class);
 		
 		
 		
@@ -249,11 +249,11 @@ public class EmployerControllerTests {
 		} catch (Exception e) {
 			
 		}
-//		templateShortlist.exchange("http://localhost:8081/shortlistCandidate/4/1/1", HttpMethod.POST, entityShortlist, String.class);
-//		templateShortlist.exchange("http://localhost:8081/shortlistCandidate/5/1/1", HttpMethod.POST, entityShortlist, String.class);
-//		templateShortlist.exchange("http://localhost:8081/shortlistCandidate/6/1/1", HttpMethod.POST, entityShortlist, String.class);
-//		templateShortlist.exchange("http://localhost:8081/shortlistCandidate/4/1/2", HttpMethod.POST, entityShortlist, String.class);
-//		ResponseEntity<String> responseShortlist = templateShortlist.exchange("http://localhost:8081/shortlistCandidate/6/1/2", HttpMethod.POST, entityShortlist, String.class);
+//		templateShortlist.exchange("http://localhost:9989/shortlistCandidate/4/1/1", HttpMethod.POST, entityShortlist, String.class);
+//		templateShortlist.exchange("http://localhost:9989/shortlistCandidate/5/1/1", HttpMethod.POST, entityShortlist, String.class);
+//		templateShortlist.exchange("http://localhost:9989/shortlistCandidate/6/1/1", HttpMethod.POST, entityShortlist, String.class);
+//		templateShortlist.exchange("http://localhost:9989/shortlistCandidate/4/1/2", HttpMethod.POST, entityShortlist, String.class);
+//		ResponseEntity<String> responseShortlist = templateShortlist.exchange("http://localhost:9989/shortlistCandidate/6/1/2", HttpMethod.POST, entityShortlist, String.class);
 //		assertEquals("Successfully Updated Shortlisted candidate", responseShortlist.getBody());
 	}
 	
@@ -272,11 +272,11 @@ public class EmployerControllerTests {
 		} catch (Exception e) {
 			
 		}
-//		templateWaiting.exchange("http://localhost:8081/waitingCandidate/4/1/1", HttpMethod.PATCH, entityWaiting, String.class);
-//		templateWaiting.exchange("http://localhost:8081/waitingCandidate/5/1/1", HttpMethod.PATCH, entityWaiting, String.class);
-//		templateWaiting.exchange("http://localhost:8081/waitingCandidate/6/1/1", HttpMethod.PATCH, entityWaiting, String.class);
-//		templateWaiting.exchange("http://localhost:8081/waitingCandidate/5/1/2", HttpMethod.PATCH, entityWaiting, String.class);
-//		ResponseEntity<String> responseWaiting = templateWaiting.exchange("http://localhost:8081/waitingCandidate/6/1/2", HttpMethod.PATCH, entityWaiting, String.class);
+//		templateWaiting.exchange("http://localhost:9989/waitingCandidate/4/1/1", HttpMethod.PATCH, entityWaiting, String.class);
+//		templateWaiting.exchange("http://localhost:9989/waitingCandidate/5/1/1", HttpMethod.PATCH, entityWaiting, String.class);
+//		templateWaiting.exchange("http://localhost:9989/waitingCandidate/6/1/1", HttpMethod.PATCH, entityWaiting, String.class);
+//		templateWaiting.exchange("http://localhost:9989/waitingCandidate/5/1/2", HttpMethod.PATCH, entityWaiting, String.class);
+//		ResponseEntity<String> responseWaiting = templateWaiting.exchange("http://localhost:9989/waitingCandidate/6/1/2", HttpMethod.PATCH, entityWaiting, String.class);
 //		assertEquals("Successfully Updated Shortlisted candidate", responseWaiting.getBody());
 	}
 
@@ -291,7 +291,7 @@ public class EmployerControllerTests {
 		} catch (Exception e) {
 			
 		}
-//		ResponseEntity<String> responseReject = templateReject.exchange("http://localhost:8081/rejectedCandidate/5/1/1", HttpMethod.PATCH, entityReject, String.class);
+//		ResponseEntity<String> responseReject = templateReject.exchange("http://localhost:9989/rejectedCandidate/5/1/1", HttpMethod.PATCH, entityReject, String.class);
 //		assertEquals("Successfully Updated Rejected candidate", responseReject.getBody());
 	}
 
