@@ -96,4 +96,9 @@ public class JobService {
   		return "Successfully deleted all Jobs";
   	}
 
+public void addJob(Job j) {
+   jobDAO.save(j);
+    
+}
+
 }

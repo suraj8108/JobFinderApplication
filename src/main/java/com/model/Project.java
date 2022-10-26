@@ -31,11 +31,8 @@ public class Project {
 	private String projectName;
 	private String projectDescription;
 	
-	@ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                CascadeType.PERSIST,
-                CascadeType.MERGE
-            })
+	@ManyToOne(fetch = FetchType.LAZY
+           )
   @JsonIgnore
 	private Candidate candidate;
 

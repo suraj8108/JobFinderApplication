@@ -1,11 +1,15 @@
 package com.service;
 
 import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import javax.validation.ValidationException;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -17,6 +21,11 @@ import com.dao.CandidateDAO;
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
 import com.dto.ProfileDTO;
+import com.dto.ProjectDTO;
+import com.dto.SkillDTO;
+import com.exception.CandidateNotFoundException;
+import com.exception.CandidateValidationExceptioncheck;
+import com.exception.skillNotFoundException;
 import com.enums.PostInterviewStatus;
 import com.exception.AlreadySelectedBySameEmployerException;
 import com.exception.MoonLightingException;
@@ -38,91 +47,180 @@ public class CandidateService {
 	SkillDAO skilldao;
 	@Autowired
 	ProjectDAO projectDao;
+	
+	@Autowired
+	SkillService skillService;
+	
+	@Autowired
+	ProjectService projectService;
+	
+	
+	public Skill convertSkillDtoToSkill(SkillDTO dto) {
+	    Skill skill = new Skill();
+	    skill.setSkillName(dto.getSkillName());
+	    return skill;
+	}
+	
+	public  Project convertProjectDtoToProject(ProjectDTO dto) {
+	    Project project= new Project();
+	    project.setProjectName(dto.getProjectName());
+	    project.setProjectDescription(dto.getProjectDescription());
+	    
+	    
+	    return project;
+	}
 
+	public Candidate findCandidateByName(String name) {
+        return candao.findByCandidateName(name);
+	    
+	}
+	
+	
 	
 	//for addwhilecheckingskill
-	public void addAndCheckSkill(Candidate c) {
-        
-        //Stream<Skill> stream = alreadyExits.stream();
-        if(!c.getSkillSet().isEmpty()) {
-        Set<Skill> temp =c.getSkillSet();
-        for(Skill s : temp) {
-            s.setSkillName(s.getSkillName().toUpperCase());
-            Skill alreadyExits= skilldao.findBySkillNameIgnoreCase(s.getSkillName().toUpperCase());
-            if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(s.getSkillName())) {
-                
-                c.getSkillSet().remove(s);
-                c.getSkillSet().add(alreadyExits);
-            }
-        }
-        }
-        
-        candao.save(c);
-    
-    }
+
 	//dealing with profile userstory
 	public void addProfile(ProfileDTO profile) {
 	       Candidate c = new Candidate();
+	       
 	       c.setCandidateName(profile.getCandidateName());
 	       c.setAge(profile.getAge());
 	       c.setEducationQualification(profile.getEducationQualification());
 	       c.setLocation(profile.getLocation());
-	       c.setSkillSet(profile.getSkillSet());
+	       
 	       c.setEmailId(profile.getEmailId());
 	       c.setPassword(profile.getPassword());
 	       
-	       if(profile.getProjectList() != null) {
-
-		       System.out.println(c.getProjectList());
-		       for(Project pro : profile.getProjectList() ) {
-		    	   
-		    	   pro.setCandidate(c);
-		    	   
-		       }
-		       
-	       }
-	       addAndCheckSkill(c);
+	       List<Project> projectList = new ArrayList<>();
 	       
-	        
-	    }
-	  //just an extra thing adding project id
-	public void addProjectbyId(int id, List<Project> pr ) throws NoSuchElementException{
-	    
-	      Candidate c = candao.findById(id).get();
+	      for (ProjectDTO pdt : profile.getProjectDTOList()) {
+	          projectList.add(convertProjectDtoToProject(pdt));
+	      }
 	      
-	      for(Project pro : pr) {
+//	       System.out.println(c);
+	      c.setProjectList(projectList);
+	       
+	       for(Project pro : projectList ) {
 	    	   
 	    	   pro.setCandidate(c);
 	    	   
 	       }
 	      
-	      c.getProjectList().addAll(pr);
-	      candao.save(c);
-    
-	}
+	       Set<Skill> skillSet = new HashSet<>();
+	       
+	       for (SkillDTO pdt : profile.getSkillDTOSet()) {
+	           skillSet.add(convertSkillDtoToSkill(pdt));
+	          }
+
+	       
+	       
+	       
+	       Set<Skill> noRepSkills = skillService.addingSkillsWithNoRepetation(skillSet);
+	      
+	       
+	      c.setSkillSet(noRepSkills);
+	      try {
+	       candao.save(c);
+	      }
+	      catch(ValidationException v)
+	      {
+	          throw new CandidateValidationExceptioncheck("hey there check the docs for validation errors");
+	      }
+	        
+	    }
 	
-//	 public void removePojectbyName(int candidateId, int projectId, Project project)throws NoSuchElementException  {
-//         Candidate c = candao.findById(candidateId).get();
-//         List<Project> temp = c.getProjectList();
-//         if(temp.isEmpty()) {
-//             throw new NoSuchElementException("Your project list is empty");
-//         }
-//         Stream<Project> stream = temp.stream();
-//         Project p = stream.findFirst((a)->a.);
-//         projectDao.delete(project);
-//         
-//           
-//       }
+	
+	
+	
+	
+	
+	
+	  //just an extra thing adding project id
+	public void addProjectbyId(int id, List<ProjectDTO> project ) throws CandidateNotFoundException  {
+	    
+	    try {
+	        
+	      Candidate c = candao.findById(id).get();
+	      List<Project> listPro = new ArrayList<>();
+          for(ProjectDTO proDTO : project) {
+              Project p1 = new Project();
+              p1.setProjectName(proDTO.getProjectName());
+              p1.setProjectDescription(proDTO.getProjectDescription());
+              p1.setCandidate(c);
+              listPro.add(p1);
+              
+          }
+	      c.getProjectList().addAll(listPro);
+	     candao.save(c);
+	    }
+	    catch(NoSuchElementException n) {
+	        throw new CandidateNotFoundException("Check the id entered");
+	        
+	    }
+	      
+	     
+	}
+
+  
+	
+
    
-	//just an extra thing updating location 
-	 public void updateLocation( int id,String loc) throws NoSuchElementException {
-	        Candidate c = candao.findById(id).get();
+	//just an extra thing updating location by candidate id 
+	 public void updateLocationByCandidateId( int CandidateId,String loc) throws NoSuchElementException {
+	        Candidate c = candao.findById(CandidateId).get();
 
 	        
 	        c.setLocation(loc);
 	        candao.save(c);
 	        
 	    }
+	 
+	 
+	 
+	 
+	 
+	  //adding skill by id
+	    public void addSkillDTOByCandidateId(int id, SkillDTO cs) throws CandidateNotFoundException {
+	        try {
+	        Skill skill = convertSkillDtoToSkill(cs);
+	        
+	         Candidate c = candao.findById(id).get();
+	         
+	   
+	         
+	         
+	         
+	         Set<Skill> skillSet = new HashSet<>();
+	         skillSet.add(skill);
+
+	         Set<Skill> noRepSkills = skillService.addingSkillsWithNoRepetation(skillSet);
+	        c.getSkillSet().addAll(noRepSkills);
+	            
+	                candao.save(c);
+	        }
+	        catch(NoSuchElementException n) {
+	            throw new CandidateNotFoundException("Candidate User Not Found");
+	            
+	        }
+
+	    }   
+	    
+	    
+	  public void removeSkillbyCanidateIdAndSkillName(int candidateId,String skillName) throws skillNotFoundException, CandidateNotFoundException {
+	      try {
+	      Candidate c = candao.findById(candidateId).get();
+      
+      Skill skill = skilldao.findBySkillNameIgnoreCase(skillName);
+      if(skill==null) {
+          throw new skillNotFoundException("No such skill is linked with candidate");
+      }
+      c.getSkillSet().remove(skill);
+      candao.save(c);
+	      }
+	      catch(NoSuchElementException e) {
+	          throw new CandidateNotFoundException("No candidate is found while checking skill");
+	      }
+  }
 	    
 	
 
@@ -137,34 +235,62 @@ public class CandidateService {
 	 
 	   
      //get all candidates
-	    public List<Candidate> getAllCandidates() {
-	        return candao.findAll();
+	    public List<Candidate> getAllCandidates() throws CandidateNotFoundException {
+	        List<Candidate> temp =candao.findAll();
+	        if (temp.isEmpty()) {
+	            throw new CandidateNotFoundException("Data Base is Empty");
+	        }
+	        return temp;
 	        
 	    }
 	 
-	    //adding skil by id
-	    public void addSkillById(int id,Skill cs) throws NoSuchElementException {
-	    	 Candidate c = candao.findById(id).get();
-
-	            if(!c.getSkillSet().isEmpty()) {
-	                Set<Skill> temp =c.getSkillSet();
-	            
-	                    cs.setSkillName(cs.getSkillName().toUpperCase());
-	                    Skill alreadyExits= skilldao.findBySkillNameIgnoreCase(cs.getSkillName().toUpperCase());
-	                 
-	                    if(alreadyExits!=null && alreadyExits.getSkillName().equalsIgnoreCase(cs.getSkillName())) {
-	     
-	                        c.getSkillSet().add(alreadyExits);
-	                    
-	                }
-	                    
-	                    else {
-	                        c.getSkillSet().add(cs);
-	                    }
-	                }
-	                candao.save(c);
-
-	    }	
+	    public void updateProfle(ProfileDTO profile) {
+	        Candidate c = new Candidate();
+	           
+	           c.setCandidateName(profile.getCandidateName());
+	           c.setAge(profile.getAge());
+	           c.setEducationQualification(profile.getEducationQualification());
+	           c.setLocation(profile.getLocation());
+	           
+	           c.setEmailId(profile.getEmailId());
+	           c.setPassword(profile.getPassword());
+	           
+	           List<Project> projectList = new ArrayList<>();
+	           
+	          for (ProjectDTO pdt : profile.getProjectDTOList()) {
+	              projectList.add(convertProjectDtoToProject(pdt));
+	          }
+	          
+//	         System.out.println(c);
+	          c.setProjectList(projectList);
+	           
+	           for(Project pro : projectList ) {
+	               
+	               pro.setCandidate(c);
+	               
+	           }
+	          
+	           Set<Skill> skillSet = new HashSet<>();
+	           
+	           for (SkillDTO pdt : profile.getSkillDTOSet()) {
+	               skillSet.add(convertSkillDtoToSkill(pdt));
+	              }
+	           
+	           
+	           
+	           Set<Skill> noRepSkills = skillService.addingSkillsWithNoRepetation(skillSet);
+	          
+	           
+	          c.setSkillSet(noRepSkills);
+	          try {
+	           candao.save(c);
+	          }
+	          catch(ValidationException v)
+	          {
+	              throw new CandidateValidationExceptioncheck("hey there check the docs for validation errors");
+	          }
+	    }
+	    
 
 	
 	public Candidate findById(int id) {
@@ -227,6 +353,18 @@ public class CandidateService {
 	    }
 	  }
 	}
+
+
+
+    public void save(Candidate cand2) {
+       candao.save(cand2);
+    }
+
+   
+
+   
+
+  
 
   
 	public List<Candidate> getAllCandidatesByExperience(int experience) {

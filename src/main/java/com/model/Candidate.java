@@ -84,12 +84,7 @@ public class Candidate {
 	  
 	
 	   
-	 @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-     @JoinTable(
-         name="CANDIDATE_PROJECT_TABLE",
-         joinColumns= {@JoinColumn(name="candidate_id")},
-         inverseJoinColumns = {@JoinColumn(name="project_Id")}
-                )
+	 @OneToMany(orphanRemoval = true,fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE},mappedBy = "candidate")
     private List<Project> projectList;
 
 

@@ -35,8 +35,26 @@ public class ProfileDTO {
     @NotNull
     private String password;
     
-    private List<Project> projectList;
+    private List<ProjectDTO> projectDTOList;
     
-    private Set<Skill> skillSet;
+    private Set<SkillDTO> skillDTOSet;
+
+    public ProfileDTO(@NotNull String candidateName, @Min(20) int age, int experience, String location,
+            String educationQualification, String emailId, String password, List<ProjectDTO> projectDTOList,
+            Set<SkillDTO> skillDTOSet) {
+        super();
+        this.candidateName = candidateName;
+        this.age = age;
+        this.experience = experience;
+        this.location = location;
+        this.educationQualification = educationQualification;
+        this.emailId = emailId;
+        this.password = password;
+        this.projectDTOList = projectDTOList;
+        this.skillDTOSet = skillDTOSet;
+    }
+
+    
+    
     
 }

@@ -1,9 +1,9 @@
 package com.exception;
 
-public class CandidateValidationExceptioncheck  extends Exception{
-	public CandidateValidationExceptioncheck(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
 
+public class CandidateValidationExceptioncheck  extends RuntimeException{
+	public CandidateValidationExceptioncheck(String message)  {
+        
+  super(message);
+	}
 }

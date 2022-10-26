@@ -24,6 +24,7 @@ import com.dao.JobDAO;
 import com.dto.EmployerDTO;
 import com.dto.JobDTO;
 import com.dto.RatingFeedbackDTO;
+import com.exception.feedbackException;
 import com.helper.JwtUtil;
 import com.model.Candidate;
 import com.model.Employer;
@@ -293,27 +294,13 @@ public class EmployerControllerTests {
 //		ResponseEntity<String> responseReject = templateReject.exchange("http://localhost:8081/rejectedCandidate/5/1/1", HttpMethod.PATCH, entityReject, String.class);
 //		assertEquals("Successfully Updated Rejected candidate", responseReject.getBody());
 	}
-	
-//	@Test
-//	void testCloseJob() {
-//		
-//	}
-
-//
-//	@Test
-//	void testCloseJob() {
-//	  System.out.println(employerController.selectCandidateAndCloseJob("1", "1", "1").getBody());
-//	}
 
 	@Test
-	void testEmployerFeedbackRating() {
+	void testEmployerFeedbackRating() throws feedbackException {
 	  RatingFeedbackDTO rfbDTO = new RatingFeedbackDTO();
 	  rfbDTO.setFeedback("good");
 	  rfbDTO.setRating(3);
 	  System.out.println(employerController.feedbackRating("1", rfbDTO).getBody());
 	}
-//	@Test
-//	void testCloseJobPosting() {
-//	  System.out.println(employerController.closeJobPosting("2").getBody());
-//	}
+
 }
