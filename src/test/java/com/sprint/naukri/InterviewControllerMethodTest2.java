@@ -27,10 +27,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.controller.InterviewController;
 import com.controller.JobController;
+import com.dao.InterviewDAO;
 import com.dto.EmployerDTO;
 import com.dto.InterviewDTO;
 import com.dto.JobDTO;
 import com.enums.JobStatus;
+import com.exception.CandidateNotFoundException;
 import com.exception.NoSuchEmployerFoundException;
 import com.helper.JwtUtil;
 import com.model.Candidate;
@@ -66,6 +68,9 @@ public class InterviewControllerMethodTest2 {
 	@Autowired
 	InterviewService interviewService;
 	
+	@Autowired
+	InterviewDAO interviewDao;
+	
 	String commonToken;
 
 	EmployerDTO emplDTO = new EmployerDTO();
@@ -78,9 +83,10 @@ public class InterviewControllerMethodTest2 {
 	 */
 	
 	@BeforeEach
-	void startConnection() throws NoSuchEmployerFoundException {
+	void startConnection() throws NoSuchEmployerFoundException, CandidateNotFoundException {
 		
 		candidateService.deleteAllCandidate();
+		interviewDao.deleteAll();
 		
 		cand1.setAge(30);
 		cand1.setCandidateName("om");
@@ -98,6 +104,7 @@ public class InterviewControllerMethodTest2 {
 	
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 		
+		Candidate candy = candidateService.getAllCandidates().get(0);
 		// Authenticate and get token
 		JwtRequest jwtRequest = new JwtRequest("om", "pass");
 		String url1 = "http://localhost:9989/authenticate";
@@ -136,6 +143,8 @@ public class InterviewControllerMethodTest2 {
 		
 		System.out.println(res);
 		
+		Job jobAct = jobService.getAllJob().get(0);
+		
 		
 		// Candidate apply for interview
 		RestTemplate template3 = new RestTemplate();
@@ -144,13 +153,14 @@ public class InterviewControllerMethodTest2 {
 		template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());	
 		HttpEntity<Object> entity3 = new HttpEntity(headers);		
 	
-		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+1+"&jobId="+1, HttpMethod.POST, entity3, String.class);
+		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+candy.getCandidateId()+"&jobId="+jobAct.getJobId(), HttpMethod.POST, entity3, String.class);
 
 	}
 	
 	  @Test
 	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
 
+		  
 		  RestTemplate template3 = new RestTemplate();
 		  HttpHeaders headers3 = new HttpHeaders();
 		  headers3.add("Authorization", commonToken);

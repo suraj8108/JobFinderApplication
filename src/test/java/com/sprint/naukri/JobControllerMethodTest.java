@@ -53,7 +53,7 @@ class JobControllerMethodTest {
 		
 		employerService.deleteAllEmployer();
 		
-		emplDTO = new EmployerDTO("Pankaj Patil", "Mumbai", "pankaj@gmail.com", "121aaa");
+		emplDTO = new EmployerDTO("Pankaj Patil", "Mumbai", "pankaj121@gmail.com", "121aaa");
 		
 		employerService.addEmployer(emplDTO);
 		
