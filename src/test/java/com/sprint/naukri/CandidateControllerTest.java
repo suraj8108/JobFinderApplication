@@ -259,8 +259,9 @@ public class CandidateControllerTest {
 	}
 
 //	@Test
-//    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
-//      
+
+////    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
+
 //     ProfileDTO dto = new ProfileDTO();
 //            dto.setAge(22);
 //            dto.setCandidateName("yashss");
@@ -288,7 +289,9 @@ public class CandidateControllerTest {
 //          //real test starts from here
 //          
 //          Candidate c= candao.findByCandidateName("yashss");
-//          String url2 = "http://localhost:9989/addProjectById/"+11;
+
+//          String url2 = "http://localhost:9989/addProjectById";
+
 //          
 //         
 //          
@@ -337,7 +340,9 @@ public class CandidateControllerTest {
 //          //real test starts from here
 //          
 //          Candidate c= candao.findByCandidateName("yashss");
-//          String url2 = "http://localhost:9989/addProjectById/"+"11a";
+
+//          String url2 = "http://localhost:9989/addProjectById";
+
 //          
 //         
 //          
@@ -356,7 +361,9 @@ public class CandidateControllerTest {
 //            //System.out.println(actualMessage);
 //          Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //    }
-	
+
+//	
+
 	
 	
 	 @Test
@@ -400,7 +407,7 @@ public class CandidateControllerTest {
 
 	         
 	         
-	         String url2 = "http://localhost:9989/updateLocationById/"+c.getCandidateId();
+	         String url2 = "http://localhost:9989/updateLocation";
 	         
 	        
 	         
@@ -451,12 +458,9 @@ public class CandidateControllerTest {
            //real test starts from here
            
            Candidate c= candao.findByCandidateName("yashkmlwfes");
-//         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
-//         System.out.println(p.get(0).getProjectId());
-//         System.out.println(p.get(0).getCandidate());
-  
+
            
-           String url2 = "http://localhost:9989/addSkillById/"+c.getCandidateId();
+           String url2 = "http://localhost:9989/addSkillToCandidate";
            
           SkillDTO sk = new SkillDTO("Klingon");
            
@@ -515,7 +519,7 @@ public class CandidateControllerTest {
 
            
            
-           String url2 = "http://localhost:9989/removeskillbyCanidateIdAndSkillName/"+c.getCandidateId()+"/Java";
+           String url2 = "http://localhost:9989/removeskillbyCanidateIdAndSkillName"+"/Java";
            
           
            

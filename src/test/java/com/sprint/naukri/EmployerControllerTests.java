@@ -1,3 +1,4 @@
+
 package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -97,31 +98,83 @@ public class EmployerControllerTests {
 	
 //	@Test
 //	void register() {
+
 //	  
-//	  String response = authController.registerCandidate(candidate).getBody();
+//	  // create candidate
+//	  Candidate candidate = new Candidate();
+//	  candidate.setAge(25);
+//	  candidate.setCandidateName("name");
+//	  candidate.setEducationQualification("qual");
+//	  candidate.setExperience(5);
+//	  candidate.setLocation("Mumbai");
+//	  candidate.setEmailId("email");
+//	  candidate.setPassword("password");
+//	  RestTemplate template = new RestTemplate();
+//	  HttpHeaders headers = new HttpHeaders();
+//	  HttpEntity<Candidate> entity = new HttpEntity<>(candidate, headers);
+//	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/registerCandidate", entity, String.class);
+//	  System.out.println(response.getBody());
+//	  System.out.println("=============");
+//	  assertEquals("Added Successfully", response.getBody());
+//	  
+//	  // generate token
+//	  JwtRequest jwtRequest = new JwtRequest("email", "password");
+//	  RestTemplate template2 = new RestTemplate();
+//	  HttpHeaders headers2 = new HttpHeaders();
+//	  HttpEntity<JwtRequest> entity2 = new HttpEntity<>(jwtRequest, headers2);
+//	  ResponseEntity<JwtResponse> response2 = template.postForEntity("http://localhost:9989/authenticate", entity2, JwtResponse.class);
+//	  commonToken = "Bearer " + response2.getBody().getJwtToken();
 //	}
-	
-	
-//	@Test
-//	void authenticate() {
-//	}
-	
-	
+//	
 ////	@Test
-//	void testLogin() {
-////	  this.register();
-////	  this.authenticate();
+////	void register() {
+////	  
+////	  String response = authController.registerCandidate(candidate).getBody();
+////	}
+//	
+//	
+////	@Test
+////	void authenticate() {
+////	}
+//	
+//	
+//////	@Test
+////	void testLogin() {
+//////	  this.register();
+//////	  this.authenticate();
+////	  RestTemplate template = new RestTemplate();
+////	  HttpHeaders headers = new HttpHeaders();
+////	  headers.add("Authorization", commonToken);
+////	  HttpEntity<String> entity = new HttpEntity<>(headers);
+////	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/login", entity, String.class);
+////	  System.out.println(response.getBody());
+//////	  String loginResponse = authController.login();
+//////	  System.out.println(loginResponse);
+////	  System.out.println("login successful");
+//////	  assertEquals("Successfully Landed to the Page", loginResponse);
+////	}
+//	
+//	// -------------------------------------------------
+//	@Test
+//	void testAddEmployer() {
+//	  employerDAO.deleteAll();
+//	  EmployerDTO employerDTO = new EmployerDTO();
+//	  employerDTO.setEmployerName("Employer2");
+//	  employerDTO.setLocation("Pune");
+//	  
 //	  RestTemplate template = new RestTemplate();
 //	  HttpHeaders headers = new HttpHeaders();
 //	  headers.add("Authorization", commonToken);
+
 //	  HttpEntity<String> entity = new HttpEntity<>(headers);
 //	  ResponseEntity<String> response = template.postForEntity("http://localhost:9989/login", entity, String.class);
+
 //	  System.out.println(response.getBody());
-////	  String loginResponse = authController.login();
-////	  System.out.println(loginResponse);
-//	  System.out.println("login successful");
-////	  assertEquals("Successfully Landed to the Page", loginResponse);
+//	  
+////	  String addEmployerResponse = employerController.addEmployer(employerDTO).getBody();
+//	  assertEquals("Employer added successfully", response.getBody());
 //	}
+
 	
 	// -------------------------------------------------
 	@Test
@@ -167,6 +220,7 @@ public class EmployerControllerTests {
 		assertEquals(1, employerList.size());
 	}
 	
+
 //	@Test
 //	void setupApplyJob() {
 //		Candidate candidate2 = new Candidate();
@@ -240,7 +294,7 @@ public class EmployerControllerTests {
 //		
 //		assertTrue(true);
 //	}
-	
+
 	@Test
 	void testShortlistCandidates() {
 		RestTemplate templateShortlist = new RestTemplate();

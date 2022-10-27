@@ -37,36 +37,36 @@ public class InterviewService {
 	    }
 	  }
 	    
-	public void provideCandidateFeedback(int j, RatingFeedbackDTO dto) throws feedbackException  {
-        try {
-        Interview i = interviewDAO.findById(j).get();
-     
-        if(i.getPostInterviewStatus().equals(PostInterviewStatus.WAITING)||i.getPostInterviewStatus().equals(PostInterviewStatus.INVALID)||(i.getPreInterviewStatus().equals(PreInterviewStatus.APPLIED))) {
-            System.out.println("in the if");
-            throw new feedbackException("candidate need to complete his interview or data corrupted");
-        }
-        
-        i.setCandidateRating(dto.getRating());
-        System.out.println(dto.getRating());
-        System.out.println(i.getCandidateRating());
-        i.setCandidateFeedback(dto.getFeedback());
-        interviewDAO.save(i);
-        }
-        catch(ValidationException v) {
-            throw new feedbackException("check the rating validation error"); 
-        }
-       
-        catch(feedbackException f) {
-            throw new feedbackException(f.getMessage());
-        }
-        catch(TransactionSystemException t) {
-            throw new feedbackException("caught transaction exception might be an validation error");
-        }
-        catch(NoSuchElementException k) {
-            throw new feedbackException("no such interview found");
-        }
-       
-      }
+	  public void provideCandidateFeedback(int j, RatingFeedbackDTO dto) throws feedbackException  {
+	      try {
+	      Interview i = interviewDAO.findById(j).get();
+	   
+	      if(i.getPostInterviewStatus().equals(PostInterviewStatus.WAITING)||i.getPostInterviewStatus().equals(PostInterviewStatus.INVALID)||(!i.getPreInterviewStatus().equals(PreInterviewStatus.SHORTLISTED))) {
+	          System.out.println("in the if");
+	          throw new feedbackException("candidate need to complete his interview or data corrupted");
+	      }
+	      
+	      i.setCandidateRating(dto.getRating());
+	      System.out.println(dto.getRating());
+	      System.out.println(i.getCandidateRating());
+	      i.setCandidateFeedback(dto.getFeedback());
+	      interviewDAO.save(i);
+	      }
+	      catch(ValidationException v) {
+              throw new feedbackException("check the rating validation error"); 
+          }
+	     
+	      catch(feedbackException f) {
+	          throw new feedbackException(f.getMessage());
+	      }
+	      catch(TransactionSystemException t) {
+	          throw new feedbackException("caught transaction exception might be an validation error");
+	      }
+	      catch(NoSuchElementException k) {
+	          throw new feedbackException("no such interview found");
+	      }
+	     
+	    }
 
   
 

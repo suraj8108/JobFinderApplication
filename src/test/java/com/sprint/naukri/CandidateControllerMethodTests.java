@@ -47,6 +47,7 @@ import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
 import com.exception.NoSuchInterviewFoundException;
+import com.exception.ProjectNotFoundException;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
 import com.model.Candidate;
@@ -70,9 +71,11 @@ public class CandidateControllerMethodTests {
     
     @Autowired
     SkillService skillService;
-
+    
     @Autowired
-	AuthenticationController authController;
+    AuthenticationController authController;
+
+   
     
     String commonToken;
     
@@ -114,14 +117,6 @@ public class CandidateControllerMethodTests {
         
         candidateService.addProfile(dto);
        
-        JwtRequest jwtRequest = new JwtRequest(dto.getEmailId(), dto.getPassword());
-	    try {
-	    	JwtResponse jwtResponse = authController.authenticateCand(jwtRequest);
-	    	commonToken = "Bearer " + jwtResponse.getJwtToken();
-			System.out.println(commonToken);
-	    } catch (Exception e) {
-	    	
-	    }
     
         cand1.setAge(21);
         List<Project> projectList = new ArrayList<>();
@@ -140,11 +135,14 @@ public class CandidateControllerMethodTests {
         cand2.setEmailId("suraj@gmail.com");
         cand2.setPassword("121aaa");
         cand2.setProjectList(projectList);
-     
         
-        
-   
-     
+
+        JwtRequest jwtRequest = new JwtRequest(dto.getEmailId(), dto.getPassword());
+      
+            JwtResponse jwtResponse = authController.authenticateCand(jwtRequest);
+            commonToken = "Bearer " + jwtResponse.getJwtToken();
+            System.out.println(commonToken);
+
         
     }
     @AfterEach
@@ -200,10 +198,7 @@ public class CandidateControllerMethodTests {
     @Transactional
     @Test
     public void addProjectbyIdTest() throws URISyntaxException, CandidateNotFoundException, FormatException{
-      
-     
-       
-        
+ 
       
              Candidate c= candao.findByCandidateName("yashs");
 
@@ -211,7 +206,7 @@ public class CandidateControllerMethodTests {
           //real test starts from here
           
        
-          String url2 = "http://localhost:9989/addProjectById/";
+          String url2 = "http://localhost:9989/addProjectById";
           
          
           
@@ -219,17 +214,18 @@ public class CandidateControllerMethodTests {
           List<ProjectDTO> pdt = new ArrayList<>();
            pdt.add(new ProjectDTO("kjsnv","skjnvk"));
 
+
            MockHttpServletRequest request = new MockHttpServletRequest();
            request.addHeader("Authorization", commonToken);
-           
+
               ResponseEntity<String> result = candidateController.addProject(request, pdt);
          
           Assertions.assertEquals("Project added successfully",result.getBody());
      
     }
    
-    
-//    @Transactional
+//    
+//   @Transactional
 //    @Test
 //    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
 //      
@@ -237,17 +233,20 @@ public class CandidateControllerMethodTests {
 //       
 //          
 //          //real test starts from here
-//
+//          
+//          
+//       MockHttpServletRequest request = new MockHttpServletRequest();
+//       request.addHeader("Authorization",commonToken );
+//      
+//       
+//          
 //          
 //          List<ProjectDTO> pdt = new ArrayList<>();
 //           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
 //
 //                  
-//           MockHttpServletRequest request = new MockHttpServletRequest();
-//           request.addHeader("Authorization", commonToken);
-//           
 //          Exception exception = Assertions.assertThrows(CandidateNotFoundException.class, () -> {
-//              ResponseEntity<String> result = candidateController.addProject(request, pdt);
+//              ResponseEntity<String> result = candidateController.addProject(request,pdt);
 //                  });
 //
 //          String expectedMessage = "Check the id entered";
@@ -255,23 +254,27 @@ public class CandidateControllerMethodTests {
 //            //System.out.println(actualMessage);
 //          Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //    }
+//    
     
-    
-    
+
+
 //    @Test
 //    @Transactional
 //    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
 //      
-//     
+
+
 //                   
 //
 //        List<ProjectDTO> pdt = new ArrayList<>();
 //         pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+
 //
 //         MockHttpServletRequest request = new MockHttpServletRequest();
 //         request.addHeader("Authorization", commonToken);
 //        Exception exception = Assertions.assertThrows(FormatException.class, () -> {
 //            ResponseEntity<String> result = candidateController.addProject(request, pdt);
+
 //                });
 //
 //        String expectedMessage = "Check the format of the input or wrong user id";
@@ -279,13 +282,77 @@ public class CandidateControllerMethodTests {
 //          //System.out.println(actualMessage);
 //        Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //    }
-    
-    
+
+
+    @Test
+    @Transactional
+    public void removeProjectByProjectId() throws URISyntaxException, CandidateNotFoundException, ProjectNotFoundException, FormatException{
+      
+     
+                   
+        Candidate c= candao.findByCandidateName("yashs");
+        
+                
+            ResponseEntity<String> result = candidateController.removeProjectByProjectId(c.getProjectList().get(0).getProjectId()+"");
+         
+
+        String expectedMessage = "Candidate project removed successfully";
+       
+          //System.out.println(actualMessage);
+        Assertions.assertTrue(expectedMessage.contains(result.getBody()));
+    }
+    @Test
+    @Transactional
+    public void removeProjectByProjectIdfalied() throws URISyntaxException, CandidateNotFoundException, ProjectNotFoundException, FormatException{
+      
+     
+                   
+        Candidate c= candao.findByCandidateName("yashs");
+        
+                
+         
+            Exception exception = Assertions.assertThrows(FormatException.class, () -> {
+                ResponseEntity<String> result = candidateController.removeProjectByProjectId(c.getProjectList().get(0).getProjectId()+"a");
+                    });
+
+            String expectedMessage = "Check the format of the input or wrong user id";
+            String actualMessage = exception.getMessage();
+              //System.out.println(actualMessage);
+            Assertions.assertTrue(actualMessage.contains(expectedMessage));
+            }
+//    @Test
+//    @Transactional
+//    public void removeProjectByProjectIdfalied2() throws URISyntaxException, CandidateNotFoundException, ProjectNotFoundException, FormatException{
+//      
+//     
+// 
+//                Candidate c = new Candidate();
+//                c.setAge(22);
+//                c.setCandidateName("skdvn");
+//                c.setEmailId("sdbkbs");
+//                c.setPassword("skdbvhkds");
+//                c.setProjectList(new ArrayList<>());
+//                
+//                
+//                candao.save(c);
+//         
+//            Exception exception = Assertions.assertThrows(ProjectNotFoundException.class, () -> {
+//                ResponseEntity<String> result = candidateController.removeProjectByProjectId(c.getProjectList().get(0).getProjectId()+"a");
+//                    });
+//
+//            String expectedMessage = "Check the format of the input or wrong user id";
+//            String actualMessage = exception.getMessage();
+//              //System.out.println(actualMessage);
+//            Assertions.assertTrue(actualMessage.contains(expectedMessage));
+//            }
+//    
+
  
     @Test
     public void updateLocationById() throws URISyntaxException, CandidateNotFoundException{
          
-        
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization",commonToken );
 
              //real test starts from here
              
@@ -293,7 +360,7 @@ public class CandidateControllerMethodTests {
 
 
               
-             ResponseEntity<?> result = candidateController.updateLocationById("Location", c.getCandidateId());
+             ResponseEntity<?> result = candidateController.updateLocationById(request,"Location");
          
 
              String expectedMessage = "Candidate updated location";
@@ -312,9 +379,10 @@ public class CandidateControllerMethodTests {
            Candidate c= candao.findByCandidateName("yashs");
            
           SkillDTO sk = new SkillDTO("Klingon");
-           
+          MockHttpServletRequest request = new MockHttpServletRequest();
+          request.addHeader("Authorization",commonToken );
        
-          ResponseEntity<String> result = candidateController.addSkillByCandidateId(sk, ""+c.getCandidateId());
+          ResponseEntity<String> result = candidateController.addSkillByCandidateId(request,sk);
        
 
            
@@ -323,33 +391,35 @@ public class CandidateControllerMethodTests {
      }
   
      
-//     @Test
-//     @Transactional
-//     public void removeSkillbyCanidateIdAndSkillName() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, skillNotFoundException{
-//       
-//    
-//             
-//         
-//           
-//           Candidate c= candao.findByCandidateName("yashs");
-//           Set<Skill> skillSet = new HashSet<>();
-//           skillSet.add(new Skill("JAVA"));
-//           c.setSkillSet(skillSet);
-//           candao.save(c);
-//           
-//           
-//          
-//           
-//  
-//
-//            
-//         ResponseEntity<String> result = candidateController.removeSkillbyCanidateIdAndSkillName(c.getCandidateId()+"", "java");
-//
-//           
-//           Assertions.assertEquals(200, result.getStatusCodeValue());
-//            Assertions.assertEquals("Candidate skill removed succefully ", result.getBody());  
-//     }
+
+     @Test
+     @Transactional
+     public void removeSkillbyCanidateIdAndSkillName() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, skillNotFoundException{
+       
+    
+         MockHttpServletRequest request = new MockHttpServletRequest();
+         request.addHeader("Authorization",commonToken );
+         
+           
+           Candidate c= candao.findByCandidateName("yashs");
+           Set<Skill> skillSet = new HashSet<>();
+           skillSet.add(new Skill("JAVA"));
+           c.setSkillSet(skillSet);
+           candao.save(c);
+           
+           
+          
+           
   
+
+            
+         ResponseEntity<String> result = candidateController.removeSkillbyCanidateIdAndSkillName(request, "java");
+
+           
+           Assertions.assertEquals(200, result.getStatusCodeValue());
+            Assertions.assertEquals("Candidate skill removed succefully ", result.getBody());  
+     }
+
     
      @Test
      @Transactional

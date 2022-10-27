@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DecryptUserDetails {
 
+
 	@Autowired
 	JwtUtil jwtUtil;
 	
@@ -19,3 +20,4 @@ public class DecryptUserDetails {
 	}
 	
 }
+

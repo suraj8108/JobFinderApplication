@@ -1,3 +1,4 @@
+
 package com.sprint.naukri;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -286,7 +287,5 @@ public class EmployerControllerMethodTests {
 //		assertTrue(true);
 //	}
 	
-	@Test
-	void testEmployerFeedback() {
-	}
+
 }
