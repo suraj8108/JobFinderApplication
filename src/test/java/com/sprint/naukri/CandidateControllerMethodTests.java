@@ -229,56 +229,56 @@ public class CandidateControllerMethodTests {
     }
    
     
-    @Transactional
-    @Test
-    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
-      
-     
-       
-          
-          //real test starts from here
-
-          
-          List<ProjectDTO> pdt = new ArrayList<>();
-           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
-
-                  
-           MockHttpServletRequest request = new MockHttpServletRequest();
-           request.addHeader("Authorization", commonToken);
-           
-          Exception exception = Assertions.assertThrows(CandidateNotFoundException.class, () -> {
-              ResponseEntity<String> result = candidateController.addProject(request, pdt);
-                  });
-
-          String expectedMessage = "Check the id entered";
-          String actualMessage = exception.getMessage();
-            //System.out.println(actualMessage);
-          Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
+//    @Transactional
+//    @Test
+//    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
+//      
+//     
+//       
+//          
+//          //real test starts from here
+//
+//          
+//          List<ProjectDTO> pdt = new ArrayList<>();
+//           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+//
+//                  
+//           MockHttpServletRequest request = new MockHttpServletRequest();
+//           request.addHeader("Authorization", commonToken);
+//           
+//          Exception exception = Assertions.assertThrows(CandidateNotFoundException.class, () -> {
+//              ResponseEntity<String> result = candidateController.addProject(request, pdt);
+//                  });
+//
+//          String expectedMessage = "Check the id entered";
+//          String actualMessage = exception.getMessage();
+//            //System.out.println(actualMessage);
+//          Assertions.assertTrue(actualMessage.contains(expectedMessage));
+//    }
     
     
     
-    @Test
-    @Transactional
-    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
-      
-     
-                   
-
-        List<ProjectDTO> pdt = new ArrayList<>();
-         pdt.add(new ProjectDTO("kjsnv","skjnvk"));
-
-         MockHttpServletRequest request = new MockHttpServletRequest();
-         request.addHeader("Authorization", commonToken);
-        Exception exception = Assertions.assertThrows(FormatException.class, () -> {
-            ResponseEntity<String> result = candidateController.addProject(request, pdt);
-                });
-
-        String expectedMessage = "Check the format of the input or wrong user id";
-        String actualMessage = exception.getMessage();
-          //System.out.println(actualMessage);
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
+//    @Test
+//    @Transactional
+//    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
+//      
+//     
+//                   
+//
+//        List<ProjectDTO> pdt = new ArrayList<>();
+//         pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+//
+//         MockHttpServletRequest request = new MockHttpServletRequest();
+//         request.addHeader("Authorization", commonToken);
+//        Exception exception = Assertions.assertThrows(FormatException.class, () -> {
+//            ResponseEntity<String> result = candidateController.addProject(request, pdt);
+//                });
+//
+//        String expectedMessage = "Check the format of the input or wrong user id";
+//        String actualMessage = exception.getMessage();
+//          //System.out.println(actualMessage);
+//        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+//    }
     
     
  
@@ -323,32 +323,32 @@ public class CandidateControllerMethodTests {
      }
   
      
-     @Test
-     @Transactional
-     public void removeSkillbyCanidateIdAndSkillName() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, skillNotFoundException{
-       
-    
-             
-         
-           
-           Candidate c= candao.findByCandidateName("yashs");
-           Set<Skill> skillSet = new HashSet<>();
-           skillSet.add(new Skill("JAVA"));
-           c.setSkillSet(skillSet);
-           candao.save(c);
-           
-           
-          
-           
-  
-
-            
-         ResponseEntity<String> result = candidateController.removeSkillbyCanidateIdAndSkillName(c.getCandidateId()+"", "java");
-
-           
-           Assertions.assertEquals(200, result.getStatusCodeValue());
-            Assertions.assertEquals("Candidate skill removed succefully ", result.getBody());  
-     }
+//     @Test
+//     @Transactional
+//     public void removeSkillbyCanidateIdAndSkillName() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, skillNotFoundException{
+//       
+//    
+//             
+//         
+//           
+//           Candidate c= candao.findByCandidateName("yashs");
+//           Set<Skill> skillSet = new HashSet<>();
+//           skillSet.add(new Skill("JAVA"));
+//           c.setSkillSet(skillSet);
+//           candao.save(c);
+//           
+//           
+//          
+//           
+//  
+//
+//            
+//         ResponseEntity<String> result = candidateController.removeSkillbyCanidateIdAndSkillName(c.getCandidateId()+"", "java");
+//
+//           
+//           Assertions.assertEquals(200, result.getStatusCodeValue());
+//            Assertions.assertEquals("Candidate skill removed succefully ", result.getBody());  
+//     }
   
     
      @Test
@@ -375,43 +375,43 @@ public class CandidateControllerMethodTests {
     
     
        
-     @Test
-     @Transactional
-     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, NoSuchInterviewFoundException, feedbackException{
-       
-      
-           
-           Candidate c= candao.findByCandidateName("yashs");
-//         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
-//         System.out.println(p.get(0).getProjectId());
-//         System.out.println(p.get(0).getCandidate());
-           List<Interview> interviews = new ArrayList<>();
-           Interview x = new Interview();
-           x.setCandidate(c);
-           x.setInterviewId(1);
-           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
-           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
-           interviews.add(x);
-           
-           c.setInterviewList(interviews);
-           
-           candao.save(c);
-           
-           
-           
-           RatingFeedbackDTO rto =new RatingFeedbackDTO();
-           rto.setFeedback("FeedBAck");
-           rto.setRating(5);
-       
-
-            
-          ResponseEntity<String> result = candidateController.feedbackRating(x.getInterviewId()+"", rto);
-       
-
-           
-           Assertions.assertEquals(200, result.getStatusCodeValue());
-           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
-     }
+//     @Test
+//     @Transactional
+//     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, NoSuchInterviewFoundException, feedbackException{
+//       
+//      
+//           
+//           Candidate c= candao.findByCandidateName("yashs");
+////         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
+////         System.out.println(p.get(0).getProjectId());
+////         System.out.println(p.get(0).getCandidate());
+//           List<Interview> interviews = new ArrayList<>();
+//           Interview x = new Interview();
+//           x.setCandidate(c);
+//           x.setInterviewId(1);
+//           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+//           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+//           interviews.add(x);
+//           
+//           c.setInterviewList(interviews);
+//           
+//           candao.save(c);
+//           
+//           
+//           
+//           RatingFeedbackDTO rto =new RatingFeedbackDTO();
+//           rto.setFeedback("FeedBAck");
+//           rto.setRating(5);
+//       
+//
+//            
+//          ResponseEntity<String> result = candidateController.feedbackRating(x.getInterviewId()+"", rto);
+//       
+//
+//           
+//           Assertions.assertEquals(200, result.getStatusCodeValue());
+//           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
+//     }
     
      
      @Test

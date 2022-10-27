@@ -155,34 +155,34 @@ public class InterviewControllerTest1 {
 		
 	}
 	  
-	  @Test 
-	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
-		  List<Job> jobs = jobDAO.findAll();
-		  System.out.println(jobs);
-		  
-		  System.out.println(interviewDAO.findAll());
-		  
-		  startConnection();
-		  RestTemplate template3 = new RestTemplate();
-		  HttpHeaders headers3 = new HttpHeaders();
-		  headers3.add("Authorization", commonToken);
-
-		  //Get All Interviews
-		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
-		  
-		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-		  
-		  Interview expected = interviewService.getAllInterviews().get(0);
-		  
-		  expected.setCandidate(null);
-		  expected.setEmployer(null);
-		  expected.setJob(null);
-		  
-		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
-		  
-		 		  
-		  assertEquals(expected.toString(), actual.toString());
-	  }
+//	  @Test 
+//	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
+//		  List<Job> jobs = jobDAO.findAll();
+//		  System.out.println(jobs);
+//		  
+//		  System.out.println(interviewDAO.findAll());
+//		  
+//		  startConnection();
+//		  RestTemplate template3 = new RestTemplate();
+//		  HttpHeaders headers3 = new HttpHeaders();
+//		  headers3.add("Authorization", commonToken);
+//
+//		  //Get All Interviews
+//		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
+//		  
+//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
+//		  
+//		  Interview expected = interviewService.getAllInterviews().get(0);
+//		  
+//		  expected.setCandidate(null);
+//		  expected.setEmployer(null);
+//		  expected.setJob(null);
+//		  
+//		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
+//		  
+//		 		  
+//		  assertEquals(expected.toString(), actual.toString());
+//	  }
 	  
 //	  @Test
 //	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {

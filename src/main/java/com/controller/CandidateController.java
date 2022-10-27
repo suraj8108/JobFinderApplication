@@ -256,25 +256,25 @@ public class CandidateController {
   
      
      @PostMapping("/candidateFeedbackRating/{interviewId}")
-      public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, feedbackException {
-         try {
-          
-            
-                interviewService.provideCandidateFeedback(Integer.parseInt(id), dto);
-            
-                // TODO Auto-generated catch block
-               
-          
-            
-          return new ResponseEntity<>("Feedback and rating by candidate saved", HttpStatus.OK);
-     }
-     catch (feedbackException e) {
-     
-         throw new feedbackException(e.getMessage());
-     }
-      
+     public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, feedbackException {
+        try {
          
-     }
+           
+               interviewService.provideCandidateFeedback(Integer.parseInt(id), dto);
+           
+               // TODO Auto-generated catch block
+              
+         
+           
+         return new ResponseEntity<>("Feedback and rating by candidate saved", HttpStatus.OK);
+    }
+    catch (feedbackException e) {
+    
+        throw new feedbackException(e.getMessage());
+    }
+     
+   
+    }
      
      
      

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.model.JwtResponse;
 import com.model.Skill;
 import com.service.CandidateService;
 
+@SpringBootTest
 class SkillControllerTest {
 
 	@Autowired
@@ -75,15 +77,21 @@ class SkillControllerTest {
 		sk.setSkillName("Java");
 		
 		
-		String url = "http://localhost:9989/addSkill";
+		String url = "http://localhost:9989/addSkills";
+		
+		Set<Skill> skills = new HashSet<>();
+		
+		skills.add(sk);
 		RestTemplate restTemplate = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", commonToken);
 		
-		HttpEntity<Candidate> request = new HttpEntity<>(cand1, headers);
+		HttpEntity<Set<Skill>> request = new HttpEntity<>(skills, headers);
 		
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 		
+		assertEquals("Added Successfully", response.getBody());
 	}
 
 }

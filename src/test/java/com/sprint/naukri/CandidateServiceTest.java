@@ -169,6 +169,8 @@ public class CandidateServiceTest {
 	         Candidate cand2 = new Candidate();
 	         cand2.setAge(22);
 	         cand2.setCandidateName("aysbb");
+	         cand2.setEmailId("yash@gmail.com");
+	          cand2.setPassword("admin");
 	          List<Project> pl2 = new ArrayList<>();
 	          
 	         Project p1 = new Project("yjzcascbabv","happened");
@@ -201,6 +203,8 @@ public class CandidateServiceTest {
           Candidate cand2 = new Candidate();
           cand2.setAge(22);
           cand2.setCandidateName("aysbb");
+          cand2.setEmailId("yash@gmail.com");
+          cand2.setPassword("admin");
            List<Project> pl2 = new ArrayList<>();
            
           Project p1 = new Project("yjzcascbabv","happened");
@@ -241,6 +245,8 @@ public class CandidateServiceTest {
           Candidate cand2 = new Candidate();
           cand2.setAge(22);
           cand2.setCandidateName("aysbb");
+          cand2.setEmailId("yash@gmail.com");
+          cand2.setPassword("admin");
            List<Project> pl2 = new ArrayList<>();
            
           Project p1 = new Project("yjzcascbabv","happened");
@@ -273,6 +279,8 @@ public class CandidateServiceTest {
 	        Candidate cand2 = new Candidate();
 	        cand2.setAge(22);
 	        cand2.setCandidateName("aysbb");
+	        cand2.setEmailId("yash@gmail.com");
+	          cand2.setPassword("admin");
 	         List<Project> pl2 = new ArrayList<>();
 	         
 	        Project p1 = new Project("yjzcascbabv","happened");
