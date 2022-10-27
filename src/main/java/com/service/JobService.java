@@ -24,6 +24,7 @@ public class JobService {
   EmployerDAO employerDAO;
 
   public void closeJob(Job j) {
+	
     j.setJobStatus(JobStatus.CLOSED);
     jobDAO.save(j);
   }
@@ -76,15 +77,15 @@ public class JobService {
   	}
   
   	public String addJobByEmployer(JobDTO jobDTO) {
-  		Employer e = employerDAO.getById(jobDTO.getEid());
+  		Employer e = employerDAO.findById(jobDTO.getEid()).get();
 
         Job job = new Job(jobDTO.getJobDescription(), jobDTO.getIndustry(), jobDTO.getLocation(), jobDTO.getSalaryPackage());
 
         job.setCreatedBy(e);
         jobDAO.save(job);
         
-        e.getJobList().addAll(Arrays.asList(job));
-        employerDAO.save(e);
+//        e.getJobList().addAll(Arrays.asList(job));
+//        employerDAO.save(e);
         
   		return "Job Added Successfully";
   	}

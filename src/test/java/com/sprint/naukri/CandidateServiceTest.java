@@ -179,9 +179,11 @@ public class CandidateServiceTest {
 	
 	
 	 @Test
+
 	 public void removeProjectByProjectIdTest() throws ProjectNotFoundException{
 	      
-	       
+
+
 	        candao.save(cand1);
 
 	      int length = (int) projectdao.count();
@@ -193,11 +195,11 @@ public class CandidateServiceTest {
        
 	        Assertions.assertNotEquals(length, lengthafter);
 	  }
+	 
 	 @Test
 	 public void removeProjectByProjectIdTestFailed(){
 	     candao.save(cand1);
 	     int length = (int) projectdao.count();
-         
          
         
          int lengthafter = (int) projectdao.count();
@@ -215,7 +217,9 @@ public class CandidateServiceTest {
 	 
 	 @Test
      public void getallCandidates() throws ProjectNotFoundException{
+
 	     candao.save(cand1);
+
 
 
 	     int length = (int) candao.count();
@@ -227,10 +231,9 @@ public class CandidateServiceTest {
 	 
 	 
 	 @Test
+
 	 public void provideCandidateFeedbackTestfailed2(){
-	        
-        
-        
+
         List<Interview> interviews = new ArrayList<>();
         Interview inter = new Interview();
 
@@ -595,7 +598,7 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTest() {
 	     candao.save(cand1);
-	     List<Candidate> experience = candidateService.getAllCandidatesByExperience(cand1.getExperience());
+	     List<Candidate> experience = candidateService.getAllCandidatesByExperience(0,cand1.getExperience());
 	     Assertions.assertTrue(1==experience.size());
 	 }
 	 
@@ -603,7 +606,7 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTestfailed() {
          
-         List<Candidate> experience = candidateService.getAllCandidatesByExperience(6513);
+         List<Candidate> experience = candidateService.getAllCandidatesByExperience(5665,6513);
          System.out.println(experience);
          Assertions.assertTrue(experience.size()==0);
          

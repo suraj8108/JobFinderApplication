@@ -1,5 +1,6 @@
 package com.dto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,9 +36,9 @@ public class ProfileDTO {
     @NotNull
     private String password;
     
-    private List<ProjectDTO> projectDTOList;
+    private List<ProjectDTO> projectDTOList = new ArrayList<>();
     
-    private Set<SkillDTO> skillDTOSet;
+    private Set<SkillDTO> skillDTOSet = new HashSet<>();
 
     public ProfileDTO(@NotNull String candidateName, @Min(20) int age, int experience, String location,
             String educationQualification, String emailId, String password, List<ProjectDTO> projectDTOList,

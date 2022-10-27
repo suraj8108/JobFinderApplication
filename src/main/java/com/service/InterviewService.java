@@ -41,7 +41,7 @@ public class InterviewService {
 	      try {
 	      Interview i = interviewDAO.findById(j).get();
 	   
-	      if(i.getPostInterviewStatus().equals(PostInterviewStatus.WAITING)||i.getPostInterviewStatus().equals(PostInterviewStatus.INVALID)||(i.getPreInterviewStatus().equals(PreInterviewStatus.APPLIED))) {
+	      if(i.getPostInterviewStatus().equals(PostInterviewStatus.WAITING)||i.getPostInterviewStatus().equals(PostInterviewStatus.SELECTED)||(i.getPreInterviewStatus().equals(PreInterviewStatus.APPLIED))) {
 	          System.out.println("in the if");
 	          throw new feedbackException("candidate need to complete his interview or data corrupted");
 	      }

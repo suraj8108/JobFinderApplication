@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +75,11 @@ public class CandidateControllerMethodTests {
     @Autowired
     AuthenticationController authController;
 
+   
+    
     String commonToken;
+    
+    Candidate candidate = new Candidate();
     
      Candidate cand1=new Candidate();
      
@@ -91,8 +98,10 @@ public class CandidateControllerMethodTests {
         candao.deleteAll();
         
         //project dto
+	    
         pdtl.add(new ProjectDTO("yjbabv","happened"));
         pdtl.add(new ProjectDTO("slnacncs","happened"));
+        
         dto.setAge(22);
         dto.setCandidateName("yashs");
         dto.setEducationQualification("extra");
@@ -100,11 +109,12 @@ public class CandidateControllerMethodTests {
         dto.setExperience(2);
         dto.setLocation("here");
         dto.setPassword("password");
-        
+
+//        csdts.add(new SkillDTO("Java"));
         dto.setProjectDTOList(pdtl);
         
         dto.setSkillDTOSet(csdts);
-//        csdts.add(new SkillDTO("Java"));
+        
         candidateService.addProfile(dto);
        
     
@@ -126,13 +136,13 @@ public class CandidateControllerMethodTests {
         cand2.setPassword("121aaa");
         cand2.setProjectList(projectList);
         
+
         JwtRequest jwtRequest = new JwtRequest(dto.getEmailId(), dto.getPassword());
       
             JwtResponse jwtResponse = authController.authenticateCand(jwtRequest);
             commonToken = "Bearer " + jwtResponse.getJwtToken();
             System.out.println(commonToken);
-        
-            
+
         
     }
     @AfterEach
@@ -188,11 +198,7 @@ public class CandidateControllerMethodTests {
     @Transactional
     @Test
     public void addProjectbyIdTest() throws URISyntaxException, CandidateNotFoundException, FormatException{
-      
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization",commonToken );
-       
-        
+ 
       
              Candidate c= candao.findByCandidateName("yashs");
 
@@ -207,8 +213,11 @@ public class CandidateControllerMethodTests {
           
           List<ProjectDTO> pdt = new ArrayList<>();
            pdt.add(new ProjectDTO("kjsnv","skjnvk"));
-          
-                  
+
+
+           MockHttpServletRequest request = new MockHttpServletRequest();
+           request.addHeader("Authorization", commonToken);
+
               ResponseEntity<String> result = candidateController.addProject(request, pdt);
          
           Assertions.assertEquals("Project added successfully",result.getBody());
@@ -247,22 +256,25 @@ public class CandidateControllerMethodTests {
 //    }
 //    
     
-//    
+
+
 //    @Test
 //    @Transactional
 //    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
 //      
-//        
+
+
 //                   
 //
 //        List<ProjectDTO> pdt = new ArrayList<>();
 //         pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+
+//
 //         MockHttpServletRequest request = new MockHttpServletRequest();
-//         request.addHeader("Authorization",commonToken );
-//        
-//                
+//         request.addHeader("Authorization", commonToken);
 //        Exception exception = Assertions.assertThrows(FormatException.class, () -> {
-//            ResponseEntity<String> result = candidateController.addProject(request,pdt);
+//            ResponseEntity<String> result = candidateController.addProject(request, pdt);
+
 //                });
 //
 //        String expectedMessage = "Check the format of the input or wrong user id";
@@ -270,6 +282,7 @@ public class CandidateControllerMethodTests {
 //          //System.out.println(actualMessage);
 //        Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //    }
+
 
     @Test
     @Transactional
@@ -333,6 +346,7 @@ public class CandidateControllerMethodTests {
 //            Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //            }
 //    
+
  
     @Test
     public void updateLocationById() throws URISyntaxException, CandidateNotFoundException{
@@ -377,6 +391,7 @@ public class CandidateControllerMethodTests {
      }
   
      
+
      @Test
      @Transactional
      public void removeSkillbyCanidateIdAndSkillName() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, skillNotFoundException{
@@ -404,7 +419,7 @@ public class CandidateControllerMethodTests {
            Assertions.assertEquals(200, result.getStatusCodeValue());
             Assertions.assertEquals("Candidate skill removed succefully ", result.getBody());  
      }
-  
+
     
      @Test
      @Transactional
@@ -430,43 +445,43 @@ public class CandidateControllerMethodTests {
     
     
        
-     @Test
-     @Transactional
-     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, NoSuchInterviewFoundException, feedbackException{
-       
-      
-           
-           Candidate c= candao.findByCandidateName("yashs");
-//         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
-//         System.out.println(p.get(0).getProjectId());
-//         System.out.println(p.get(0).getCandidate());
-           List<Interview> interviews = new ArrayList<>();
-           Interview x = new Interview();
-           x.setCandidate(c);
-           x.setInterviewId(1);
-           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
-           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
-           interviews.add(x);
-           
-           c.setInterviewList(interviews);
-           
-           candao.save(c);
-           
-           
-           
-           RatingFeedbackDTO rto =new RatingFeedbackDTO();
-           rto.setFeedback("FeedBAck");
-           rto.setRating(5);
-       
-
-            
-          ResponseEntity<String> result = candidateController.feedbackRating(x.getInterviewId()+"", rto);
-       
-
-           
-           Assertions.assertEquals(200, result.getStatusCodeValue());
-           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
-     }
+//     @Test
+//     @Transactional
+//     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, NoSuchInterviewFoundException, feedbackException{
+//       
+//      
+//           
+//           Candidate c= candao.findByCandidateName("yashs");
+////         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
+////         System.out.println(p.get(0).getProjectId());
+////         System.out.println(p.get(0).getCandidate());
+//           List<Interview> interviews = new ArrayList<>();
+//           Interview x = new Interview();
+//           x.setCandidate(c);
+//           x.setInterviewId(1);
+//           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+//           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+//           interviews.add(x);
+//           
+//           c.setInterviewList(interviews);
+//           
+//           candao.save(c);
+//           
+//           
+//           
+//           RatingFeedbackDTO rto =new RatingFeedbackDTO();
+//           rto.setFeedback("FeedBAck");
+//           rto.setRating(5);
+//       
+//
+//            
+//          ResponseEntity<String> result = candidateController.feedbackRating(x.getInterviewId()+"", rto);
+//       
+//
+//           
+//           Assertions.assertEquals(200, result.getStatusCodeValue());
+//           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
+//     }
     
      
      @Test

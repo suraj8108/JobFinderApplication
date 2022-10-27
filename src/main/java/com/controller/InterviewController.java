@@ -36,23 +36,23 @@ public class InterviewController {
   @Autowired
   InterviewService interviewService;
   
-  @PostMapping("/addInterview")
-  public ResponseEntity<?> addInterview(@RequestBody InterviewDTO interviewDTO) {
-    
-    try {
-      Interview interview = new Interview();
-  //    Candidate c = new Candidate();
-      Employer e = new Employer();
-      Job j = new Job();
-      
-      interviewDAO.save(interview);
-      return new ResponseEntity<>("Interview added successfully", HttpStatus.ACCEPTED);  
-    } catch (Exception e) {
-      return new ResponseEntity<>("not found...", HttpStatus.NOT_FOUND);
-    }
-    
-    
-  }
+//  @PostMapping("/addInterview")
+//  public ResponseEntity<?> addInterview(@RequestBody InterviewDTO interviewDTO) {
+//    
+//    try {
+//      Interview interview = new Interview();
+//  //    Candidate c = new Candidate();
+//      Employer e = new Employer();
+//      Job j = new Job();
+//      
+//      interviewDAO.save(interview);
+//      return new ResponseEntity<>("Interview added successfully", HttpStatus.ACCEPTED);  
+//    } catch (Exception e) {
+//      return new ResponseEntity<>("not found...", HttpStatus.NOT_FOUND);
+//    }
+//    
+//    
+//  }
   
   @GetMapping("/getAllInterviews")
   public ResponseEntity<List<Interview>> getAllInterviews() {

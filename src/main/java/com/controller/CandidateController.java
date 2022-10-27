@@ -44,6 +44,9 @@ import com.exception.exceptions;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
 import com.helper.DecryptUserDetails;
+
+import com.helper.JwtUtil;
+
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -92,7 +95,6 @@ public class CandidateController {
     DecryptUserDetails decryptUser;
     
 	
-	
 	//user Story 2 -able to add profile 
     // - should be linked to user register
 	@ApiOperation(value = "Add",notes="Add profile",nickname = "addprofile" )
@@ -125,6 +127,7 @@ public class CandidateController {
             
            candidateService.addProjectbyId(candidateId, project);
             
+
         return new  ResponseEntity<>("Project added successfully"
                 ,HttpStatus.ACCEPTED);
         }
@@ -250,6 +253,7 @@ public class CandidateController {
     
            try {
                return new ResponseEntity<>(candidateService.getCandidateById(id),HttpStatus.FOUND);
+
            }
            catch (NoSuchElementException c) {
                
@@ -260,25 +264,25 @@ public class CandidateController {
   
      
      @PostMapping("/candidateFeedbackRating/{interviewId}")
-      public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, feedbackException {
-         try {
-          
-            
-                interviewService.provideCandidateFeedback(Integer.parseInt(id), dto);
-            
-                // TODO Auto-generated catch block
-               
-          
-            
-          return new ResponseEntity<>("Feedback and rating by candidate saved", HttpStatus.OK);
-     }
-     catch (feedbackException e) {
-     
-         throw new feedbackException(e.getMessage());
-     }
-      
+     public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, feedbackException {
+        try {
          
-     }
+           
+               interviewService.provideCandidateFeedback(Integer.parseInt(id), dto);
+           
+               // TODO Auto-generated catch block
+              
+         
+           
+         return new ResponseEntity<>("Feedback and rating by candidate saved", HttpStatus.OK);
+    }
+    catch (feedbackException e) {
+    
+        throw new feedbackException(e.getMessage());
+    }
+     
+   
+    }
      
      
      
@@ -293,6 +297,7 @@ public class CandidateController {
  
 	   
    
+
 //   // OM check this method and sync with ur user story to be removed from here  
 //   @PostMapping("/candidateAppliesForJob")
 //   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
@@ -315,7 +320,10 @@ public class CandidateController {
 //		    i.setCandidate(c);
 //		    i.setJob(j);
 //		    i.setEmployer(e);
+
 //		    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
+
+
 //		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
 //		    interviewDAO.save(i);
 //		    
@@ -338,8 +346,7 @@ public class CandidateController {
 //		  }
 //             
 //       }
-//	
-   
+ 
    //no service tests from here
  @PatchMapping("/updatecandidate")
 public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody ProfileDTO candDto ) throws CandidateValidationExceptioncheck, CandidateNotFoundException, FormatException {
@@ -374,34 +381,7 @@ public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody P
 	}
 	
 //	OM
-	@PostMapping("/candidateApplication")
-	public ResponseEntity<String> candidateApplication(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId){
-		try {
-		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-		    Job j = jobService.getJobById(Integer.parseInt(jobId));		
-		    Employer e = j.getCreatedBy();
-		    
-		    Set<Candidate> updatedCandSet = j.getCandidateSet();
-		    updatedCandSet.add(c);
-		    j.setCandidateSet(updatedCandSet);
-		    
-		    Interview i = new Interview();
-		    i.setCandidate(c);
-		    i.setJob(j);
-		    i.setEmployer(j.getCreatedBy());
-		    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
-		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-		    
-		    jobDAO.save(j);
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-
-	}
-	
 
  
  @GetMapping("/getjobstatus/{id}")
@@ -418,6 +398,20 @@ public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundEx
  */
 	
 	
+
+	
+	
+	@GetMapping("/getAllCandidatesByJobId/{jobId}")
+	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+		Job job= null;
+		try {
+			job = jobService.findJobById(jobId);
+			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+		} catch (NoSuchJobFoundException e) {
+			throw e;
+		}
+	}
+
 	
 	@PostMapping("/candidateApplicationForJob")
 	public ResponseEntity<String> candidateApplicationForJob(@RequestParam("candidateId") int candidateId, @RequestParam("jobId") int jobId) throws CandidateNotFoundException, NoSuchJobFoundException{

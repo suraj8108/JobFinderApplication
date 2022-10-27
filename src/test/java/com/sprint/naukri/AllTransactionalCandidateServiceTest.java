@@ -100,8 +100,7 @@ public class AllTransactionalCandidateServiceTest {
         css.add(s1);
         css.add(s2);
         cand1.setSkillSet(css);
- 
-        
+
         
     }
     @AfterEach

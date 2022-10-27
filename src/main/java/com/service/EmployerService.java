@@ -93,7 +93,7 @@ public class EmployerService {
   
   public String deleteAllEmployer() {
 	  employerDAO.deleteAll();
-	  return "Successfully deletet all the Employer";
+	  return "Successfully deleted all the Employer";
   }
 
 }

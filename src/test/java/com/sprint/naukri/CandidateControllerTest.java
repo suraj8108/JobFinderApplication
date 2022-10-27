@@ -259,8 +259,9 @@ public class CandidateControllerTest {
 	}
 
 //	@Test
+
 ////    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
-//      
+
 //     ProfileDTO dto = new ProfileDTO();
 //            dto.setAge(22);
 //            dto.setCandidateName("yashss");
@@ -288,7 +289,9 @@ public class CandidateControllerTest {
 //          //real test starts from here
 //          
 //          Candidate c= candao.findByCandidateName("yashss");
+
 //          String url2 = "http://localhost:9989/addProjectById";
+
 //          
 //         
 //          
@@ -337,7 +340,9 @@ public class CandidateControllerTest {
 //          //real test starts from here
 //          
 //          Candidate c= candao.findByCandidateName("yashss");
+
 //          String url2 = "http://localhost:9989/addProjectById";
+
 //          
 //         
 //          
@@ -356,7 +361,9 @@ public class CandidateControllerTest {
 //            //System.out.println(actualMessage);
 //          Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //    }
+
 //	
+
 	
 	
 	 @Test
@@ -592,77 +599,77 @@ public class CandidateControllerTest {
 	
 	
 	   
-     @Test
-     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException{
-       
-      ProfileDTO dto = new ProfileDTO();
-             dto.setAge(22);
-             dto.setCandidateName("yashkmlwfes");
-             dto.setEducationQualification("extra");
-             dto.setEmailId("csvsdv");
-             dto.setExperience(2);
-             dto.setLocation("here");
-             dto.setPassword("password");
-             List<ProjectDTO> pdt21 = new ArrayList<>();
-             Set<SkillDTO> csdt21 = new HashSet<>() ;
-             csdt21.add(new SkillDTO("Java"));
-             csdt21.add(new SkillDTO("Python"));
-             pdt21.add(new ProjectDTO("yjbabv","happened"));
-             pdt21.add(new ProjectDTO("slnacncs","happened"));
-             dto.setProjectDTOList(pdt21);
-             
-             dto.setSkillDTOSet(csdt21);
-             
-           String url  = "http://localhost:9989/addProfile";
-           RestTemplate template = new RestTemplate();
-           
-           
-           HttpHeaders headers = new HttpHeaders();
-           headers.add("Authorization", commonToken);
-           HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
-
-           String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
-           Assertions.assertEquals("Candidate added successfully", response);
-            
-           
-           //real test starts from here
-           
-           Candidate c= candao.findByCandidateName("yashkmlwfes");
-//         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
-//         System.out.println(p.get(0).getProjectId());
-//         System.out.println(p.get(0).getCandidate());
-           List<Interview> interviews = new ArrayList<>();
-           Interview x = new Interview();
-           x.setCandidate(c);
-           x.setInterviewId(1);
-           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
-           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
-           interviews.add(x);
-           candao.save(c);
-           interviewdao.save(x);
-           
-           c.setInterviewList(interviews);
-           
-           candao.save(c);
-           
-           
-           String url2 = "http://localhost:9989/candidateFeedbackRating/"+c.getInterviewList().get(0).getInterviewId();
-           
-           RatingFeedbackDTO rto =new RatingFeedbackDTO();
-           rto.setFeedback("FeedBAck");
-           rto.setRating(5);
-       
-            HttpEntity<RatingFeedbackDTO> entity2=new HttpEntity(rto,headers);
-
-            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            
-               ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
-       
-
-           
-           Assertions.assertEquals(200, result.getStatusCodeValue());
-           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
-     }
+//     @Test
+//     public void feedbackRating() throws URISyntaxException, CandidateNotFoundException{
+//       
+//      ProfileDTO dto = new ProfileDTO();
+//             dto.setAge(22);
+//             dto.setCandidateName("yashkmlwfes");
+//             dto.setEducationQualification("extra");
+//             dto.setEmailId("csvsdv");
+//             dto.setExperience(2);
+//             dto.setLocation("here");
+//             dto.setPassword("password");
+//             List<ProjectDTO> pdt21 = new ArrayList<>();
+//             Set<SkillDTO> csdt21 = new HashSet<>() ;
+//             csdt21.add(new SkillDTO("Java"));
+//             csdt21.add(new SkillDTO("Python"));
+//             pdt21.add(new ProjectDTO("yjbabv","happened"));
+//             pdt21.add(new ProjectDTO("slnacncs","happened"));
+//             dto.setProjectDTOList(pdt21);
+//             
+//             dto.setSkillDTOSet(csdt21);
+//             
+//           String url  = "http://localhost:9989/addProfile";
+//           RestTemplate template = new RestTemplate();
+//           
+//           
+//           HttpHeaders headers = new HttpHeaders();
+//           headers.add("Authorization", commonToken);
+//           HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
+//
+//           String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
+//           Assertions.assertEquals("Candidate added successfully", response);
+//            
+//           
+//           //real test starts from here
+//           
+//           Candidate c= candao.findByCandidateName("yashkmlwfes");
+////         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
+////         System.out.println(p.get(0).getProjectId());
+////         System.out.println(p.get(0).getCandidate());
+//           List<Interview> interviews = new ArrayList<>();
+//           Interview x = new Interview();
+//           x.setCandidate(c);
+//           x.setInterviewId(1);
+//           x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+//           x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+//           interviews.add(x);
+//           candao.save(c);
+//           interviewdao.save(x);
+//           
+//           c.setInterviewList(interviews);
+//           
+//           candao.save(c);
+//           
+//           
+//           String url2 = "http://localhost:9989/candidateFeedbackRating/"+c.getInterviewList().get(0).getInterviewId();
+//           
+//           RatingFeedbackDTO rto =new RatingFeedbackDTO();
+//           rto.setFeedback("FeedBAck");
+//           rto.setRating(5);
+//       
+//            HttpEntity<RatingFeedbackDTO> entity2=new HttpEntity(rto,headers);
+//
+//            template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+//            
+//               ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
+//       
+//
+//           
+//           Assertions.assertEquals(200, result.getStatusCodeValue());
+//           Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
+//     }
     
      
      @Test
