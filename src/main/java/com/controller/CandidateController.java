@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
 
@@ -41,7 +43,7 @@ import com.exception.ProjectNotFoundException;
 import com.exception.exceptions;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
-
+import com.helper.DecryptUserDetails;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -61,31 +63,34 @@ import com.model.Project;
 
 @RestController
 public class CandidateController {
-	
-	@Autowired
-	CandidateService candidateService;
-	
-	@Autowired
+    @Autowired
+    CandidateService candidateService;
+    
+    @Autowired
     CandidateDAO candao;
-	@Autowired
-	InterviewService interviewService;
-	@Autowired
-	ProjectService projectService;
-	 
-	@Autowired
-	CandidateDAO candidateDAO;
-	
-	@Autowired
-	EmployerDAO employerDAO;
+    @Autowired
+    InterviewService interviewService;
+    @Autowired
+    ProjectService projectService;
+     
+    @Autowired
+    CandidateDAO candidateDAO;
+    
+    @Autowired
+    EmployerDAO employerDAO;
 
-	@Autowired
-	JobDAO jobDAO;
+    @Autowired
+    JobDAO jobDAO;
 
-	@Autowired
-	InterviewDAO interviewDAO;
-	
-	@Autowired
+    @Autowired
+    InterviewDAO interviewDAO;
+    
+    @Autowired
     JobService jobService;
+    
+    @Autowired
+    DecryptUserDetails decryptUser;
+    
 	
 	
 	//user Story 2 -able to add profile 
@@ -103,25 +108,23 @@ public class CandidateController {
         catch(CandidateValidationExceptioncheck c) {
             throw new CandidateValidationExceptioncheck(c.getMessage());
         }
-        catch(ValidationException v) {
-            throw new CandidateValidationExceptioncheck("Check validation error");
-        }
        
-   
         
     }
 	 
 	//user Story 2 -able to add Project by Id
-	@PostMapping("/addProjectById/{candidateId}")
-    public ResponseEntity addProject(@RequestBody List<ProjectDTO> project,
-            @PathVariable(name = "candidateId") String id) throws CandidateNotFoundException, FormatException{
+	@ApiOperation(value = "Adding Project",notes="Candidate Id fetched from token",nickname = "Add Project By Candidate Id")
+    @PostMapping("/addProjectById")
+    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws CandidateNotFoundException, FormatException{
        
        try {
-        	System.out.println(id);
-        	
-        	
-        	candidateService.addProjectbyId(Integer.parseInt(id),project);
-        	
+           
+           String emailId = decryptUser.decryptEmailId(request);
+           
+           int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
+            
+           candidateService.addProjectbyId(candidateId, project);
+            
         return new  ResponseEntity<>("Project added successfully"
                 ,HttpStatus.ACCEPTED);
         }
@@ -142,14 +145,12 @@ public class CandidateController {
 	public ResponseEntity removeProjectByProjectId
 	(@PathVariable("projectid") String projectid ) throws ProjectNotFoundException, FormatException {
 	    try {
-	        projectService.removeById(Integer.parseInt(projectid));
+	        
+	        projectService.removeProjectById(Integer.parseInt(projectid));
 	        return new  ResponseEntity<>("Candidate project removed successfully"
 	                ,HttpStatus.ACCEPTED);
 	    }
-	    catch(NoSuchElementException v){
-	        throw new ProjectNotFoundException("Check the project details entered entered");
-	        
-	    }
+	    
 	    catch(ProjectNotFoundException p) {
 	    throw new ProjectNotFoundException(p.getMessage());
 	    }
@@ -162,11 +163,16 @@ public class CandidateController {
 	
 	
 	    
-	//user Story 2 -able to add profile 
-	   @PostMapping("/updateLocationById/{id}")
-	   public ResponseEntity updateLocationById(@RequestBody String str,@PathVariable int id)throws CandidateValidationExceptioncheck, CandidateNotFoundException {
+	@ApiOperation(value = "Add",notes="Add Location",nickname = "addLocation" )
+    @ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
+	   @PostMapping("/updateLocation")
+	   public ResponseEntity updateLocationById(HttpServletRequest request,@RequestBody String str)throws CandidateValidationExceptioncheck, CandidateNotFoundException {
 	        try {
-	        candidateService.updateLocationByCandidateId(id, str);
+	            String emailId = decryptUser.decryptEmailId(request);
+	            
+	            int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
+	        
+	            candidateService.updateLocationByCandidateId(candidateId, str);
 
             return new  ResponseEntity<>("Candidate updated location",HttpStatus.OK);
 	        }
@@ -182,13 +188,15 @@ public class CandidateController {
 	    }
 	   
      //add skill to a particular candidate
-     @ApiOperation(value = "Add",notes="Add Candidate Skill By Candidate Id",nickname = "Add Skill to Candidate" )
-     @PatchMapping("/addSkillById/{candidateId}")
-      public ResponseEntity addSkillByCandidateId(@RequestBody SkillDTO cs,@PathVariable String candidateId) throws CandidateNotFoundException {
+     @ApiOperation(value = "Add",notes="Add Candidate Skill",nickname = "Add Skill to Candidate" )
+     @PatchMapping("/addSkillToCandidate")
+      public ResponseEntity addSkillByCandidateId(HttpServletRequest request,@RequestBody SkillDTO cs) throws CandidateNotFoundException {
          try {
+             String emailId = decryptUser.decryptEmailId(request);
              
-             System.out.println(cs);
-              candidateService.addSkillDTOByCandidateId(Integer.parseInt(candidateId), cs);
+             int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
+           
+              candidateService.addSkillDTOByCandidateId(candidateId, cs);
       
              return new  ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
       }
@@ -198,10 +206,14 @@ public class CandidateController {
          
      }
      
-     @PatchMapping("/removeskillbyCanidateIdAndSkillName/{candidateId}/{skillName}")
-     public ResponseEntity removeSkillbyCanidateIdAndSkillName(@PathVariable("candidateId") String candidateId,@PathVariable("skillName") String skillName) throws NumberFormatException, skillNotFoundException, CandidateNotFoundException {
+     @ApiOperation(value = "Add",notes="Add Candidate Skill",nickname = "Add Skill to Candidate" ) 
+     @PatchMapping("/removeskillbyCanidateIdAndSkillName/{skillName}")
+     public ResponseEntity removeSkillbyCanidateIdAndSkillName(HttpServletRequest request,@PathVariable("skillName") String skillName) throws NumberFormatException, skillNotFoundException, CandidateNotFoundException {
          try {
-         candidateService.removeSkillbyCanidateIdAndSkillName(Integer.parseInt(candidateId),skillName);
+             String emailId = decryptUser.decryptEmailId(request);
+             
+             int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
+         candidateService.removeSkillbyCanidateIdAndSkillName(candidateId,skillName);
  
          return new  ResponseEntity<>("Candidate skill removed succefully ",HttpStatus.OK);
          }
@@ -219,7 +231,7 @@ public class CandidateController {
          }
  }
      
-     //user Story 2 -able to add profile 
+     @ApiOperation(value = "Add",notes="Get all Candidates",nickname = "Add Skill to Candidate" ) 
      @GetMapping("/getAllCandidates")
       public List<Candidate> getallCandidates() throws CandidateNotFoundException {
           try {
@@ -237,7 +249,7 @@ public class CandidateController {
    public ResponseEntity getCandidatebyid(@PathVariable int  id  ) throws CandidateNotFoundException{
     
            try {
-               return new ResponseEntity<>(candidateService.findById(id),HttpStatus.FOUND);
+               return new ResponseEntity<>(candidateService.getCandidateById(id),HttpStatus.FOUND);
            }
            catch (NoSuchElementException c) {
                
@@ -271,78 +283,88 @@ public class CandidateController {
      
      
      
-     @DeleteMapping("/deletecandidate/{id}")
-   public ResponseEntity deleteCandidatebyid(@PathVariable int  id ) {
+   @DeleteMapping("/deletecandidate/{id}")
+   public ResponseEntity deleteCandidatebyid(@PathVariable int  id ) throws CandidateNotFoundException {
  
-   candidateService.deletebyid(id);
+    candidateService.deletebyid(id);
  
    return new ResponseEntity("Candidate delete successfully",HttpStatus.FOUND);
    }
  
 	   
    
-   // OM check this method and sync with ur user story to be removed from here  
-   @PostMapping("/candidateAppliesForJob")
-   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
-   
-	   try {	    
-		    // assuming the candidate is already created,
-		    // find the candidate, employer and job using the ids
-		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-		    Job j = jobService.getJobById(Integer.parseInt(jobId));
-		    Employer e = j.getCreatedBy();
-		    
-		    candidateService.checkIfAlreadySelectedByEmployer(c, e);
-		    
-		    // add the candidate to the candidate set of the job
-		    j.getCandidateSet().add(c);
-		    jobDAO.save(j);
-		    
-		    // create a new interview object unique to the employer, candidate, and job
-		    Interview i = new Interview();
-		    i.setCandidate(c);
-		    i.setJob(j);
-		    i.setEmployer(e);
-		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
-		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-		    interviewDAO.save(i);
-		    
-		    
-		    // now add the newly created interview to the interview list of employer
-		    e.getInterviewList().add(i);
-		    employerDAO.save(e);
-		    
-		    // also add this interview to the interview list of the employer
-		    c.getInterviewList().add(i);
-           candidateDAO.save(c);
-           
-           // and add it to interview list of the job
-           j.getInterviewList().add(i);
-           jobDAO.save(j);
-		    
-		    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-		  } catch (Exception e) {
-		    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
-		  }
-             
-       }
-	
+//   // OM check this method and sync with ur user story to be removed from here  
+//   @PostMapping("/candidateAppliesForJob")
+//   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
+//   
+//	   try {	    
+//		    // assuming the candidate is already created,
+//		    // find the candidate, employer and job using the ids
+//		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
+//		    Job j = jobService.getJobById(Integer.parseInt(jobId));
+//		    Employer e = j.getCreatedBy();
+//		    
+//		    candidateService.checkIfAlreadySelectedByEmployer(c, e);
+//		    
+//		    // add the candidate to the candidate set of the job
+//		    j.getCandidateSet().add(c);
+//		    jobDAO.save(j);
+//		    
+//		    // create a new interview object unique to the employer, candidate, and job
+//		    Interview i = new Interview();
+//		    i.setCandidate(c);
+//		    i.setJob(j);
+//		    i.setEmployer(e);
+//		    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
+//		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+//		    interviewDAO.save(i);
+//		    
+//		    
+//		    // now add the newly created interview to the interview list of employer
+//		    e.getInterviewList().add(i);
+//		    employerDAO.save(e);
+//		    
+//		    // also add this interview to the interview list of the employer
+//		    c.getInterviewList().add(i);
+//           candidateDAO.save(c);
+//           
+//           // and add it to interview list of the job
+//           j.getInterviewList().add(i);
+//           jobDAO.save(j);
+//		    
+//		    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+//		  } catch (Exception e) {
+//		    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+//		  }
+//             
+//       }
+//	
    
    //no service tests from here
  @PatchMapping("/updatecandidate")
-public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws CandidateValidationExceptioncheck {
+public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody ProfileDTO candDto ) throws CandidateValidationExceptioncheck, CandidateNotFoundException, FormatException {
   
    
        try {
+           String emailId = decryptUser.decryptEmailId(request);
+           
+           int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
            
            
-           candidateService.addProfile(candDto);
+           candidateService.updateProfile(candidateId,candDto);
            return new  ResponseEntity<>("Candidate updation failed, check id "
                    ,HttpStatus.FORBIDDEN);
        }
        catch(ValidationException v) {
            throw new CandidateValidationExceptioncheck("validation error");
-       }
+       } 
+       catch (NumberFormatException e) {
+        throw new FormatException("Check the format ");
+    } 
+       catch (CandidateNotFoundException k) {
+           throw new CandidateNotFoundException(k.getMessage());
+
+    }
  }
 	
 	
@@ -367,7 +389,7 @@ public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws Ca
 		    i.setCandidate(c);
 		    i.setJob(j);
 		    i.setEmployer(j.getCreatedBy());
-		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+		    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
 		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
 		    
 		    jobDAO.save(j);
@@ -380,25 +402,11 @@ public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws Ca
 
 	}
 	
-//	@PatchMapping("/removeskillbyid/{id}")
-//	public ResponseEntity removeskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {
-//
-//	service.removeSkillbyId(id, cs);
-//	
-//	return new	ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
-//	}
-//	@PatchMapping("/addprojectbyid/{id}")
-//	public ResponseEntity addProjectbyid(@RequestBody Project pr,@PathVariable int id) {
-//
-//	service.addProjectbyId(id, pr);
-//	
-//	return new	ResponseEntity<>("Candidate skill added succefully ",HttpStatus.OK);
-//	}
 
  
  @GetMapping("/getjobstatus/{id}")
-public List<Interview> findjob(@PathVariable  int id) {
-   Candidate candidate = candidateService.findById(id);
+public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundException {
+   Candidate candidate = candidateService.getCandidateById(id);
    List<Interview> interviewStatus = candidate.getInterviewList();
    return  interviewStatus ;
 }
@@ -409,43 +417,7 @@ public List<Interview> findjob(@PathVariable  int id) {
  * *************OM start******************
  */
 	
-	@GetMapping("/getCandidateApplicationStatus/{id}")
-	public List<Interview> getCandidateInterviews(@PathVariable  int id) throws CandidateNotFoundException {
-		Candidate candidate = candidateService.findById(id);
-		if (candidate==null) {
-			throw new CandidateNotFoundException("id: "+id +"not found");
-		}
-		List<Interview> interviewStatus = candidate.getInterviewList();
-		return  interviewStatus;
-	}
 	
-	@GetMapping("/getAllCandidatesByExperience/{experience}")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience),HttpStatus.OK);
-		}
-	    
-	
-    @GetMapping("/getAllCandidatesByQualification/{qualification}")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
-		}
-	    
-    @PostMapping("/getAllCandidatesBySkillSet")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
-	    }
-	
-	
-	@GetMapping("/getAllCandidatesByJobId/{jobId}")
-	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
-		Job job= null;
-		try {
-			job = jobService.findJobById(jobId);
-			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
-		} catch (NoSuchJobFoundException e) {
-			throw e;
-		}
-	}
 	
 	@PostMapping("/candidateApplicationForJob")
 	public ResponseEntity<String> candidateApplicationForJob(@RequestParam("candidateId") int candidateId, @RequestParam("jobId") int jobId) throws CandidateNotFoundException, NoSuchJobFoundException{
@@ -471,7 +443,7 @@ public List<Interview> findjob(@PathVariable  int id) {
 			    i.setCandidate(c);
 			    i.setJob(j);
 			    i.setEmployer(j.getCreatedBy());
-			    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+			    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
 			    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
 			    
 			    c.getInterviewList().add(i);

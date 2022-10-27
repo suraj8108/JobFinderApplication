@@ -1,4 +1,4 @@
-package com.service;
+package com.exception;
 
 public class NoSuchCandidateFoundException extends Exception {
 

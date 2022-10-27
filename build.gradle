@@ -23,14 +23,14 @@ jacocoTestReport {
    }
    
    afterEvaluate {
-     classDirectories.setFrom(files(classDirectories.files.collect {
-       fileTree(dir: it, exclude: [
-         "com/model/*.java.*",
-         "com/enums/*.java.*",
-         "com/exception/*.java.*"
-       ])
-     }))
-   }
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                "com/baeldung/**/ExcludedPOJO.class",
+                "com/baeldung/**/*DTO.*",
+                "$buildDir/**/dto/*"
+            ])
+        }))
+    }
 }
 
 
@@ -86,7 +86,7 @@ dependencies {
 
 
    	implementation 'org.springframework.boot:spring-boot-starter-validation'
-   	
+   	//Not sure 
    	implementation 'org.springframework.boot:spring-boot-starter-batch'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.batch:spring-batch-test'

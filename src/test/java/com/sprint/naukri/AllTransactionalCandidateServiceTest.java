@@ -13,9 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.dao.CandidateDAO;
 import com.dao.ProjectDAO;
@@ -32,13 +36,15 @@ import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
 import com.model.Candidate;
 import com.model.Interview;
+import com.model.JwtRequest;
+import com.model.JwtResponse;
 import com.model.Project;
 import com.model.Skill;
 import com.service.CandidateService;
 import com.service.InterviewService;
 import com.service.ProjectService;
-@SpringBootTest
 
+@SpringBootTest
 public class AllTransactionalCandidateServiceTest {
     @Autowired
     CandidateDAO candao ;
@@ -55,7 +61,7 @@ public class AllTransactionalCandidateServiceTest {
     @Autowired
     InterviewService interviewService;
     
-    
+    String commonToken;
     
      Candidate cand1 = new Candidate();
      List<Project> pl = new ArrayList<>();
@@ -94,7 +100,7 @@ public class AllTransactionalCandidateServiceTest {
         css.add(s1);
         css.add(s2);
         cand1.setSkillSet(css);
-  
+ 
         
         
     }
@@ -382,25 +388,7 @@ public class AllTransactionalCandidateServiceTest {
        
   } 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     
     

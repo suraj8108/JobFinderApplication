@@ -2,5 +2,5 @@ projectKey=naukari
 serverUrl=http://localhost:9000
 serverVersion=8.9.9.56886
 dashboardUrl=http://localhost:9000/dashboard?id=naukari
-ceTaskId=AYQVEyuLg1n7nVgpOy3k
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQVEyuLg1n7nVgpOy3k
+ceTaskId=AYQXvEbD_EwJGcejQe9C
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQXvEbD_EwJGcejQe9C

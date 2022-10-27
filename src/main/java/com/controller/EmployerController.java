@@ -28,6 +28,7 @@ import com.dto.RatingFeedbackDTO;
 import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
 import com.exception.AllInterviewsNotCompletedException;
+import com.exception.CandidateNotFoundException;
 import com.exception.JobAlreadyClosedWithCandidateSelectedException;
 import com.exception.NoEmployersException;
 import com.exception.NoSuchEmployerFoundException;
@@ -96,7 +97,7 @@ public class EmployerController {
 	  @RequestParam("candidateId") String selectedCandidateId,
 	  @RequestParam("employerId") String employerId,
 	  @RequestParam("jobId") String jobId
-	) {
+	) throws NumberFormatException, CandidateNotFoundException {
 	  try {
   	    // employer will execute this method, so employerId is available
   	    // the job for which a candidate is selected should be provided
@@ -148,7 +149,7 @@ public class EmployerController {
 	//Pawanesh
 	
 	@PatchMapping("/shortlistCandidate/{candidateId}/{employerId}/{jobId}")
-	public ResponseEntity<String> updateShortlistedInterview(@PathVariable String candidateId, @PathVariable String employerId,@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
+	public ResponseEntity<String> updateShortlistedInterview(@PathVariable String candidateId, @PathVariable String employerId,@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, CandidateNotFoundException
 	{
 		
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
@@ -184,7 +185,7 @@ public class EmployerController {
 	
 	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateSelectedInterview(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId)
-			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException
+			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException, CandidateNotFoundException
 	{
 		
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
@@ -193,7 +194,7 @@ public class EmployerController {
 		
 		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
 		
-		if(interview.getPreInterviewStatus() == PreInterviewStatus.INVALID) {
+		if(interview.getPreInterviewStatus() == PreInterviewStatus.APPLIED) {
 			
 			throw new NotShortlistedException(candidate.getCandidateId());
 		
@@ -212,7 +213,7 @@ public class EmployerController {
 	
 	
 	@PatchMapping("/rejectedCandidate/{candidateId}/{employerId}/{jobId}")
-	public ResponseEntity<String> updateSelectedInterview1(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException
+	public ResponseEntity<String> updateSelectedInterview1(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, CandidateNotFoundException
 	{
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
 		Job job = jobService.getJobById(Integer.parseInt(jobId));
@@ -288,5 +289,47 @@ public class EmployerController {
 	    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	  }
 	}
+	
+	@GetMapping("/getCandidateApplicationStatus/{id}")
+    public List<Interview> getCandidateInterviews(@PathVariable  int id) throws CandidateNotFoundException {
+        Candidate candidate = candidateService.getCandidateById(id);
+        if (candidate==null) {
+            throw new CandidateNotFoundException("id: "+id +"not found");
+        }
+        List<Interview> interviewStatus = candidate.getInterviewList();
+        return  interviewStatus;
+    }
+    
+    @GetMapping("/getAllCandidatesByExperience/{experience}")
+        public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience){
+            return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience),HttpStatus.OK);
+        }
+        
+    
+    @GetMapping("/getAllCandidatesByQualification/{qualification}")
+        public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
+            return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
+        }
+        
+    @PostMapping("/getAllCandidatesBySkillSet")
+        public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
+            return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
+        }
+    
+    
+    @GetMapping("/getAllCandidatesByJobId/{jobId}")
+    public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+        Job job= null;
+        try {
+            job = jobService.findJobById(jobId);
+            return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+        } catch (NoSuchJobFoundException e) {
+            throw e;
+        }
+    }
+	
+	
+	
+	
 		
 }

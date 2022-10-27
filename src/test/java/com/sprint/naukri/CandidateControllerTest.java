@@ -240,7 +240,7 @@ public class CandidateControllerTest {
 	          //real test starts from here
 	          
 	       
-	          String url2 = "http://localhost:9989/addProjectById/"+c.getCandidateId();
+	          String url2 = "http://localhost:9989/addProjectById";
 	          
 	         
 	          
@@ -258,105 +258,105 @@ public class CandidateControllerTest {
 	     
 	}
 
-	@Test
-    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
-      
-     ProfileDTO dto = new ProfileDTO();
-            dto.setAge(22);
-            dto.setCandidateName("yashss");
-            dto.setEducationQualification("extra");
-            dto.setEmailId("emailid");
-            dto.setExperience(2);
-            dto.setLocation("here");
-            dto.setPassword("password");
-            
-            dto.setProjectDTOList(pdtl);
-            
-            dto.setSkillDTOSet(csdts);
-            
-          String url  = "http://localhost:9989/addProfile";
-          RestTemplate template = new RestTemplate();
-          
-          HttpHeaders headers = new HttpHeaders();
-          headers.add("Authorization", commonToken);
-          HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
-
-          String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
-          Assertions.assertEquals("Candidate added successfully", response);
-           
-          
-          //real test starts from here
-          
-          Candidate c= candao.findByCandidateName("yashss");
-          String url2 = "http://localhost:9989/addProjectById/"+11;
-          
-         
-          
-          
-          List<ProjectDTO> pdt = new ArrayList<>();
-           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
-           HttpEntity<List<ProjectDTO>> entity2=new HttpEntity(pdt,headers);
-
-                  
-          Exception exception = Assertions.assertThrows(HttpClientErrorException.class, () -> {
-              ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
-                  });
-
-          String expectedMessage = "Check the id entered";
-          String actualMessage = exception.getMessage();
-            //System.out.println(actualMessage);
-          Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
-	@Test
-    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
-      
-     ProfileDTO dto = new ProfileDTO();
-            dto.setAge(22);
-            dto.setCandidateName("yashss");
-            dto.setEducationQualification("extra");
-            dto.setEmailId("emailid");
-            dto.setExperience(2);
-            dto.setLocation("here");
-            dto.setPassword("password");
-            
-            dto.setProjectDTOList(pdtl);
-            
-            dto.setSkillDTOSet(csdts);
-            
-          String url  = "http://localhost:9989/addProfile";
-          RestTemplate template = new RestTemplate();
-          
-          HttpHeaders headers = new HttpHeaders();
-          headers.add("Authorization", commonToken);
-          HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
-
-          String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
-          Assertions.assertEquals("Candidate added successfully", response);
-           
-          
-          //real test starts from here
-          
-          Candidate c= candao.findByCandidateName("yashss");
-          String url2 = "http://localhost:9989/addProjectById/"+"11a";
-          
-         
-          
-          
-          List<ProjectDTO> pdt = new ArrayList<>();
-           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
-           HttpEntity<List<ProjectDTO>> entity2=new HttpEntity(pdt,headers);
-
-                  
-          Exception exception = Assertions.assertThrows(HttpClientErrorException.class, () -> {
-              ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
-                  });
-
-          String expectedMessage = "Check the format of the input or wrong user id";
-          String actualMessage = exception.getMessage();
-            //System.out.println(actualMessage);
-          Assertions.assertTrue(actualMessage.contains(expectedMessage));
-    }
-	
+//	@Test
+////    public void addProjectbyIdTestfailed1() throws URISyntaxException, CandidateNotFoundException{
+//      
+//     ProfileDTO dto = new ProfileDTO();
+//            dto.setAge(22);
+//            dto.setCandidateName("yashss");
+//            dto.setEducationQualification("extra");
+//            dto.setEmailId("emailid");
+//            dto.setExperience(2);
+//            dto.setLocation("here");
+//            dto.setPassword("password");
+//            
+//            dto.setProjectDTOList(pdtl);
+//            
+//            dto.setSkillDTOSet(csdts);
+//            
+//          String url  = "http://localhost:9989/addProfile";
+//          RestTemplate template = new RestTemplate();
+//          
+//          HttpHeaders headers = new HttpHeaders();
+//          headers.add("Authorization", commonToken);
+//          HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
+//
+//          String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
+//          Assertions.assertEquals("Candidate added successfully", response);
+//           
+//          
+//          //real test starts from here
+//          
+//          Candidate c= candao.findByCandidateName("yashss");
+//          String url2 = "http://localhost:9989/addProjectById";
+//          
+//         
+//          
+//          
+//          List<ProjectDTO> pdt = new ArrayList<>();
+//           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+//           HttpEntity<List<ProjectDTO>> entity2=new HttpEntity(pdt,headers);
+//
+//                  
+//          Exception exception = Assertions.assertThrows(HttpClientErrorException.class, () -> {
+//              ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
+//                  });
+//
+//          String expectedMessage = "Check the id entered";
+//          String actualMessage = exception.getMessage();
+//            //System.out.println(actualMessage);
+//          Assertions.assertTrue(actualMessage.contains(expectedMessage));
+//    }
+//	@Test
+//    public void addProjectbyIdTestfailed2() throws URISyntaxException, CandidateNotFoundException{
+//      
+//     ProfileDTO dto = new ProfileDTO();
+//            dto.setAge(22);
+//            dto.setCandidateName("yashss");
+//            dto.setEducationQualification("extra");
+//            dto.setEmailId("emailid");
+//            dto.setExperience(2);
+//            dto.setLocation("here");
+//            dto.setPassword("password");
+//            
+//            dto.setProjectDTOList(pdtl);
+//            
+//            dto.setSkillDTOSet(csdts);
+//            
+//          String url  = "http://localhost:9989/addProfile";
+//          RestTemplate template = new RestTemplate();
+//          
+//          HttpHeaders headers = new HttpHeaders();
+//          headers.add("Authorization", commonToken);
+//          HttpEntity<ProfileDTO> entity=new HttpEntity(dto,headers);
+//
+//          String response = template.exchange(url,  HttpMethod.POST, entity,String.class).getBody();
+//          Assertions.assertEquals("Candidate added successfully", response);
+//           
+//          
+//          //real test starts from here
+//          
+//          Candidate c= candao.findByCandidateName("yashss");
+//          String url2 = "http://localhost:9989/addProjectById";
+//          
+//         
+//          
+//          
+//          List<ProjectDTO> pdt = new ArrayList<>();
+//           pdt.add(new ProjectDTO("kjsnv","skjnvk"));
+//           HttpEntity<List<ProjectDTO>> entity2=new HttpEntity(pdt,headers);
+//
+//                  
+//          Exception exception = Assertions.assertThrows(HttpClientErrorException.class, () -> {
+//              ResponseEntity<String> result = template.exchange(url2,  HttpMethod.POST, entity2,String.class);
+//                  });
+//
+//          String expectedMessage = "Check the format of the input or wrong user id";
+//          String actualMessage = exception.getMessage();
+//            //System.out.println(actualMessage);
+//          Assertions.assertTrue(actualMessage.contains(expectedMessage));
+//    }
+//	
 	
 	
 	 @Test
@@ -400,7 +400,7 @@ public class CandidateControllerTest {
 
 	         
 	         
-	         String url2 = "http://localhost:9989/updateLocationById/"+c.getCandidateId();
+	         String url2 = "http://localhost:9989/updateLocation";
 	         
 	        
 	         
@@ -456,7 +456,7 @@ public class CandidateControllerTest {
 //         System.out.println(p.get(0).getCandidate());
   
            
-           String url2 = "http://localhost:9989/addSkillById/"+c.getCandidateId();
+           String url2 = "http://localhost:9989/addSkillToCandidate";
            
           SkillDTO sk = new SkillDTO("Klingon");
            
@@ -515,7 +515,7 @@ public class CandidateControllerTest {
 
            
            
-           String url2 = "http://localhost:9989/removeskillbyCanidateIdAndSkillName/"+c.getCandidateId()+"/Java";
+           String url2 = "http://localhost:9989/removeskillbyCanidateIdAndSkillName"+"/Java";
            
           
            

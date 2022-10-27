@@ -12,9 +12,10 @@ import javax.validation.ValidationException;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.TransactionSystemException;
 
 import com.dao.CandidateDAO;
 
@@ -70,6 +71,12 @@ public class CandidateService {
 	    return project;
 	}
 
+	public Candidate findCandidateByEmailId(String emailId) {
+        return candao.findByEmailId(emailId);
+    }
+    
+	
+	
 	public Candidate findCandidateByName(String name) {
         return candao.findByCandidateName(name);
 	    
@@ -87,7 +94,7 @@ public class CandidateService {
 	       c.setAge(profile.getAge());
 	       c.setEducationQualification(profile.getEducationQualification());
 	       c.setLocation(profile.getLocation());
-	       
+	       c.setExperience(profile.getExperience());
 	       c.setEmailId(profile.getEmailId());
 	       c.setPassword(profile.getPassword());
 	       
@@ -225,14 +232,19 @@ public class CandidateService {
 	
 
 	//in case need a exception 
-	 public Candidate getCandidateById(int id) throws  NoSuchElementException {
-	        
-	       Candidate candidate = candao.getById(id);
-	       return candidate;
 	    
+	   public Candidate getCandidateById(int id) throws CandidateNotFoundException {
+	       try {
+	           Candidate c = candao.findById(id).get();
+	           return c;
+	       }
+	       catch(NoSuchElementException n) {
+	           throw new CandidateNotFoundException("Candidate not found");
+	       }
 	   }
+     
 
-	 
+	
 	   
      //get all candidates
 	    public List<Candidate> getAllCandidates() throws CandidateNotFoundException {
@@ -244,14 +256,16 @@ public class CandidateService {
 	        
 	    }
 	 
-	    public void updateProfle(ProfileDTO profile) {
-	        Candidate c = new Candidate();
+	    public void updateProfile(int id,ProfileDTO profile) throws CandidateNotFoundException {
+	        try {
+	        
+	        Candidate c = candao.findById(id).get();
 	           
 	           c.setCandidateName(profile.getCandidateName());
 	           c.setAge(profile.getAge());
 	           c.setEducationQualification(profile.getEducationQualification());
 	           c.setLocation(profile.getLocation());
-	           
+	           c.setExperience(profile.getExperience());
 	           c.setEmailId(profile.getEmailId());
 	           c.setPassword(profile.getPassword());
 	           
@@ -282,49 +296,41 @@ public class CandidateService {
 	          
 	           
 	          c.setSkillSet(noRepSkills);
-	          try {
+	         
 	           candao.save(c);
 	          }
 	          catch(ValidationException v)
 	          {
 	              throw new CandidateValidationExceptioncheck("hey there check the docs for validation errors");
 	          }
+	           catch (NoSuchElementException n) {
+               throw new CandidateNotFoundException("Check the id u r enter the data into");
+            }
+	        catch(TransactionSystemException t) {
+	            throw new CandidateValidationExceptioncheck("hey there check the docs for validation errors");
+	        }
 	    }
-	    
 
 	
-	public Candidate findById(int id) {
-		if(candao.existsById(id)) {
-		return candao.findById(id).get();
-		}
-		{
-			return null;
-		}
-	}
-	
 	public void updateCandidate(Candidate c) {
-		if(candao.existsById(c.getCandidateId()))
-		{
+		
 		candao.save(c);
 		
-		}
-	}
-	public boolean deleteCandidate(Candidate c) {
-		Example<Candidate> ex = Example.of(c);
 		
-		if(candao.exists(ex)) {
-			
-			candao.delete(c);
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 	
 	
-	public void deletebyid(int id) {
+	public Boolean deletebyid(int id) throws CandidateNotFoundException {
+	   try {
+	    
 		candao.deleteById(id);
+		 return true;
+	   }
+	   catch(EmptyResultDataAccessException x) {
+	    
+	       throw new CandidateNotFoundException("no candidate found");
+	       
+	   }
 	}
 	
 	
@@ -336,10 +342,7 @@ public class CandidateService {
 
 	//rating  by id and interview id
 	
-	public void ratetheinterview(float rate,String id) {
-		
-		
-	}
+	
 	
 	public void checkIfAlreadySelectedByEmployer(Candidate candidate, Employer employer) throws AlreadySelectedBySameEmployerException, MoonLightingException {
 	  List<Interview> interviewList = candidate.getInterviewList();
@@ -381,7 +384,7 @@ public class CandidateService {
 		
 		List<Candidate> candidates= candao.findAll();
 		
-		String [] skillsRequired = skills.split(",");
+		String [] skillsRequired = skills.split("\\s*,\\s*");
 
 		System.out.println(Arrays.toString(skillsRequired));
 		System.out.println(skills);
