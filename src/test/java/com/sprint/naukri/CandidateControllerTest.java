@@ -458,10 +458,7 @@ public class CandidateControllerTest {
            //real test starts from here
            
            Candidate c= candao.findByCandidateName("yashkmlwfes");
-//         List<Project> p = candao.findByCandidateName("yashkmlwfes").getProjectList();
-//         System.out.println(p.get(0).getProjectId());
-//         System.out.println(p.get(0).getCandidate());
-  
+
            
            String url2 = "http://localhost:9989/addSkillToCandidate";
            

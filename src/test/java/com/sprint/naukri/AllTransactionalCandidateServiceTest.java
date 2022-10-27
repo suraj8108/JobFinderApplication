@@ -351,7 +351,8 @@ public class AllTransactionalCandidateServiceTest {
 //        inter.setCandidateRating(5);
 //        inter.setCandidateFeedback("ssome gibberish");
         inter.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
-      //  inter.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+       //inter.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+        
         interviews.add(inter);
         cand1.setInterviewList(interviews);
         candao.save(cand1);

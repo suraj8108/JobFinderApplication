@@ -401,16 +401,16 @@ public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundEx
 
 	
 	
-	@GetMapping("/getAllCandidatesByJobId/{jobId}")
-	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
-		Job job= null;
-		try {
-			job = jobService.findJobById(jobId);
-			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
-		} catch (NoSuchJobFoundException e) {
-			throw e;
-		}
-	}
+//	@GetMapping("/getAllCandidatesByJobId/{jobId}")
+//	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+//		Job job= null;
+//		try {
+//			job = jobService.findJobById(jobId);
+//			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+//		} catch (NoSuchJobFoundException e) {
+//			throw e;
+//		}
+//	}
 
 	
 	@PostMapping("/candidateApplicationForJob")
