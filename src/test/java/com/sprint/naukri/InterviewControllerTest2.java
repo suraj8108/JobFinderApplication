@@ -145,28 +145,28 @@ public class InterviewControllerTest2 {
 
 	}
 	
-	  @Test
-	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
-		  RestTemplate template3 = new RestTemplate();
-		  HttpHeaders headers3 = new HttpHeaders();
-		  headers3.add("Authorization", commonToken);
-
-		  //Get All Interviews
-		  String url3 = "http://localhost:9989/getAllInterviews";
-		  
-		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-		  
-		  List<Interview> expected = interviewService.getAllInterviews();
-		  
-		  expected.get(0).setCandidate(null);
-		  expected.get(0).setEmployer(null);
-		  expected.get(0).setJob(null);
-		  
-		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
-		  
-		 		  
-		  assertEquals(expected.toString(), actual.toString());
-		  
-	  }	
-	  
+//	  @Test
+//	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
+//		  RestTemplate template3 = new RestTemplate();
+//		  HttpHeaders headers3 = new HttpHeaders();
+//		  headers3.add("Authorization", commonToken);
+//
+//		  //Get All Interviews
+//		  String url3 = "http://localhost:9989/getAllInterviews";
+//		  
+//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
+//		  
+//		  List<Interview> expected = interviewService.getAllInterviews();
+//		  
+//		  expected.get(0).setCandidate(null);
+//		  expected.get(0).setEmployer(null);
+//		  expected.get(0).setJob(null);
+//		  
+//		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
+//		  
+//		 		  
+//		  assertEquals(expected.toString(), actual.toString());
+//		  
+//	  }	
+//	  
 }
