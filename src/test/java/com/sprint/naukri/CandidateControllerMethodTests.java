@@ -47,6 +47,7 @@ import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
 import com.exception.FormatException;
 import com.exception.NoSuchInterviewFoundException;
+import com.exception.NullValueException;
 import com.exception.ProjectNotFoundException;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
@@ -197,7 +198,7 @@ public class CandidateControllerMethodTests {
 //   * suraj method without transactional
     @Transactional
     @Test
-    public void addProjectbyIdTest() throws URISyntaxException, CandidateNotFoundException, FormatException{
+    public void addProjectbyIdTest() throws URISyntaxException, CandidateNotFoundException, FormatException, NullValueException{
  
       
              Candidate c= candao.findByCandidateName("yashs");
@@ -320,6 +321,30 @@ public class CandidateControllerMethodTests {
               //System.out.println(actualMessage);
             Assertions.assertTrue(actualMessage.contains(expectedMessage));
             }
+    
+    @Test
+    @Transactional
+    public void removeProjectByProjectNameTEst() throws URISyntaxException, CandidateNotFoundException, ProjectNotFoundException, FormatException{
+      
+     
+                   
+        Candidate c= candao.findByCandidateName("yashs");
+        
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", commonToken);
+            ResponseEntity<String> result = candidateController.removeProjectByProjectName(request,"yjbabv");
+         
+
+        String expectedMessage = "Candidate project removed successfully";
+       
+          //System.out.println(actualMessage);
+        Assertions.assertTrue(expectedMessage.contains(result.getBody()));
+    }
+    
+    
+    
+    
 //    @Test
 //    @Transactional
 //    public void removeProjectByProjectIdfalied2() throws URISyntaxException, CandidateNotFoundException, ProjectNotFoundException, FormatException{
@@ -360,7 +385,7 @@ public class CandidateControllerMethodTests {
 
 
               
-             ResponseEntity<?> result = candidateController.updateLocationById(request,"Location");
+             ResponseEntity result = candidateController.updateLocationById(request,"Location");
          
 
              String expectedMessage = "Candidate updated location";

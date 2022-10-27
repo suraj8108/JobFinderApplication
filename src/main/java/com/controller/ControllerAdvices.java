@@ -21,6 +21,7 @@ import com.exception.skillNotFoundException;
 import com.model.ExceptionResponse;
 import com.exception.NoSuchJobFoundException;
 import com.exception.NotShortlistedException;
+import com.exception.NullValueException;
 
 
 
@@ -81,4 +82,8 @@ public class ControllerAdvices extends ResponseEntityExceptionHandler {
     	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
     }
     
+    @ExceptionHandler(NullValueException.class)
+    public ResponseEntity<Object> handleNullValueException(NullValueException e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.controller.CandidateController;
 import com.controller.JobController;
 import com.dao.JobDAO;
 import com.dto.EmployerDTO;
@@ -37,6 +38,9 @@ class JobControllerMethodTest {
 	
 	@Autowired
 	JobController jobControl;
+	
+	@Autowired
+	CandidateController candidateController;
 	
 	@Autowired
 	EmployerService employerService;
@@ -71,7 +75,7 @@ class JobControllerMethodTest {
 		job.setCreatedBy(emploCurr);
 		jobDao.save(job);
 		
-		List<Job> actual = jobControl.getAllJobs().getBody();
+		List<Job> actual = candidateController.getAllJobs().getBody();
 		
 		List<Job> expected = jobService.getAllJob();
 		
@@ -157,7 +161,7 @@ class JobControllerMethodTest {
 		JobDTO expect = new JobDTO(emploCurr.getEmployerId(), "Presentation Skills", "TCS", "Chennai", 2456655.45f);
 		jobService.addJobByEmployer(expect);
 		
-		ResponseEntity<List<Job>> actual = jobControl.getJobsByIndustry("TCS");
+		ResponseEntity<List<Job>> actual = candidateController.getJobsByIndustry("TCS");
 		
 		assertEquals(200, actual.getStatusCodeValue());
 		assertEquals(expect.getIndustry(), actual.getBody().get(0).getIndustry());
@@ -175,7 +179,7 @@ class JobControllerMethodTest {
 		JobDTO expect = new JobDTO(emploCurr.getEmployerId(), "Presentation Skills", "TCS", "Chennai", 2456655.45f);
 		jobService.addJobByEmployer(expect);
 		
-		ResponseEntity<List<Job>> actual = jobControl.getJobsByLocation("Chennai");
+		ResponseEntity<List<Job>> actual = candidateController.getJobsByLocation("Chennai");
 		
 		assertEquals(200, actual.getStatusCodeValue());
 		assertEquals(expect.getLocation(), actual.getBody().get(0).getLocation());
@@ -193,7 +197,7 @@ class JobControllerMethodTest {
 		JobDTO expect = new JobDTO(emploCurr.getEmployerId(), "Presentation Skills and Public Speaking", "TCS", "Chennai", 2456655.45f);
 		jobService.addJobByEmployer(expect);
 		
-		List<Job> actual = jobControl.getAllJobBySkill("Public Speaking");
+		List<Job> actual = candidateController.getAllJobBySkill("Public Speaking");
 		
 		assertEquals(expect.getJobDescription(), actual.get(0).getJobDescription());
 		

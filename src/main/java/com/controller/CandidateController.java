@@ -39,6 +39,7 @@ import com.exception.FormatException;
 import com.exception.JobNotFoundException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NoSuchJobFoundException;
+import com.exception.NullValueException;
 import com.exception.ProjectNotFoundException;
 import com.exception.exceptions;
 import com.exception.feedbackException;
@@ -95,10 +96,12 @@ public class CandidateController {
     DecryptUserDetails decryptUser;
     
 	
-	//user Story 2 -able to add profile 
-    // - should be linked to user register
-	@ApiOperation(value = "Add",notes="Add profile",nickname = "addprofile" )
-    @ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
+	//user Story 2 Candidate should be able to create a profile by mentioning his details 
+    //like educational qualification ,technical skills ,experience ,projects 
+    //worked upon etc 
+    // Can be linked using user should be linked to user register
+	@ApiOperation(value = "Add Candidate",notes="Register and  Add profile",nickname = "addprofile" )
+    @ApiResponses(value= {@ApiResponse(code=200, message="Add profile")})
 	@PostMapping("/addProfile")
     public ResponseEntity addProfile(@RequestBody ProfileDTO profile)throws CandidateValidationExceptioncheck {
 		
@@ -115,9 +118,9 @@ public class CandidateController {
     }
 	 
 	//user Story 2 -able to add Project by Id
-	@ApiOperation(value = "Adding Project",notes="Candidate Id fetched from token",nickname = "Add Project By Candidate Id")
+	@ApiOperation(value = "Adding Project",notes="Candidate Id is fetched from token",nickname = "Add Project By Candidate Id")
     @PostMapping("/addProjectById")
-    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws CandidateNotFoundException, FormatException{
+    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws CandidateNotFoundException, FormatException, NullValueException{
        
        try {
            
@@ -131,19 +134,15 @@ public class CandidateController {
         return new  ResponseEntity<>("Project added successfully"
                 ,HttpStatus.ACCEPTED);
         }
-       
-        catch(ValidationException v) {
-            throw new CandidateValidationExceptioncheck("Check validation error");
-        }
-        catch (NumberFormatException e) {
-            throw new FormatException("Check the format of the input or wrong user id");
-        }
-      
+       catch(NullPointerException n ) {
+    	   throw new NullValueException("Don't pass a null object please");
+       }
        
     }
 	
 	
 	//user Story 2 -able to remove project 
+	@ApiOperation(value = "Removing Project",notes="Candidate Id is fetched from token",nickname = "RPC")
 	@DeleteMapping("/removeProject/{projectid}")
 	public ResponseEntity removeProjectByProjectId
 	(@PathVariable("projectid") String projectid ) throws ProjectNotFoundException, FormatException {
@@ -164,12 +163,35 @@ public class CandidateController {
       
 	}
 	
+	@ApiOperation(value = "Removing Project",notes="Candidate Id is fetched from token for and removal of projectname",nickname = "RPC")
+	@DeleteMapping("/removeProjectByName/{ProjectName}")
+	public ResponseEntity removeProjectByProjectName
+	(HttpServletRequest request,@PathVariable("ProjectName") String projectName ) throws ProjectNotFoundException, FormatException {
+	    try {
+	    	  String emailId = decryptUser.decryptEmailId(request);
+	           
+	         Candidate candidate = candidateService.findCandidateByEmailId(emailId);
+	         
+	        projectService.removeProjectByNameAndCandidate(candidate,projectName);
+	        return new  ResponseEntity<>("Candidate project removed successfully"
+	                ,HttpStatus.ACCEPTED);
+	    }
+	    
+	    catch(ProjectNotFoundException p) {
+	    throw new ProjectNotFoundException(p.getMessage());
+	    }
+	    catch(NumberFormatException n) {
+            throw new FormatException("Check the format of the input or wrong user id");
+
+	    }
+      
+	}
 	
 	    
-	@ApiOperation(value = "Add",notes="Add Location",nickname = "addLocation" )
+	@ApiOperation(value = "UpdatingLocation",notes="Updating Profile Location and id taken from the token",nickname = "ULP")
     @ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
 	   @PostMapping("/updateLocation")
-	   public ResponseEntity updateLocationById(HttpServletRequest request,@RequestBody String str)throws CandidateValidationExceptioncheck, CandidateNotFoundException {
+	public ResponseEntity updateLocationById(HttpServletRequest request,@RequestBody String str)throws CandidateValidationExceptioncheck, CandidateNotFoundException {
 	        try {
 	            String emailId = decryptUser.decryptEmailId(request);
 	            
@@ -191,9 +213,9 @@ public class CandidateController {
 	    }
 	   
      //add skill to a particular candidate
-     @ApiOperation(value = "Add",notes="Add Candidate Skill",nickname = "Add Skill to Candidate" )
+     @ApiOperation(value = "Add",notes="Add Candidate Skill and id is taken from the Token",nickname = "Add Skill to Candidate" )
      @PatchMapping("/addSkillToCandidate")
-      public ResponseEntity addSkillByCandidateId(HttpServletRequest request,@RequestBody SkillDTO cs) throws CandidateNotFoundException {
+     public ResponseEntity addSkillByCandidateId(HttpServletRequest request,@RequestBody SkillDTO cs) throws CandidateNotFoundException {
          try {
              String emailId = decryptUser.decryptEmailId(request);
              
@@ -209,7 +231,7 @@ public class CandidateController {
          
      }
      
-     @ApiOperation(value = "Add",notes="Add Candidate Skill",nickname = "Add Skill to Candidate" ) 
+     @ApiOperation(value = "Add",notes="remove Skill by CanidateId And SkillName",nickname = "Add Skill to Candidate" ) 
      @PatchMapping("/removeskillbyCanidateIdAndSkillName/{skillName}")
      public ResponseEntity removeSkillbyCanidateIdAndSkillName(HttpServletRequest request,@PathVariable("skillName") String skillName) throws NumberFormatException, skillNotFoundException, CandidateNotFoundException {
          try {
@@ -220,23 +242,16 @@ public class CandidateController {
  
          return new  ResponseEntity<>("Candidate skill removed succefully ",HttpStatus.OK);
          }
-         catch(CandidateNotFoundException c) {
-             throw new  CandidateNotFoundException(c.getMessage());
-             
-         }
-         catch(NumberFormatException n) {
-             throw new  CandidateNotFoundException("Check the id entered");
-             
-         }
+         
          catch(skillNotFoundException s) {
              throw new  skillNotFoundException(s.getMessage());
              
          }
  }
      
-     @ApiOperation(value = "Add",notes="Get all Candidates",nickname = "Add Skill to Candidate" ) 
+     @ApiOperation(value = "getallCandidates",notes="Get all Candidates",nickname = "getallCandidates" ) 
      @GetMapping("/getAllCandidates")
-      public List<Candidate> getallCandidates() throws CandidateNotFoundException {
+     public List<Candidate> getallCandidates() throws CandidateNotFoundException {
           try {
               
           return candidateService.getAllCandidates();
@@ -249,7 +264,7 @@ public class CandidateController {
      
 
      @GetMapping("/findCandidateById/{id}")
-   public ResponseEntity getCandidatebyid(@PathVariable int  id  ) throws CandidateNotFoundException{
+     public ResponseEntity getCandidatebyid(@PathVariable int  id  ) throws CandidateNotFoundException{
     
            try {
                return new ResponseEntity<>(candidateService.getCandidateById(id),HttpStatus.FOUND);
@@ -262,7 +277,7 @@ public class CandidateController {
            }
        }
   
-     
+     @ApiOperation(value = "candidateFeedbackRating",notes="candidateFeedbackRating user story 7 8 ",nickname = "candidateFeedbackRating" )
      @PostMapping("/candidateFeedbackRating/{interviewId}")
      public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws NumberFormatException, feedbackException {
         try {
@@ -295,7 +310,42 @@ public class CandidateController {
    return new ResponseEntity("Candidate delete successfully",HttpStatus.FOUND);
    }
  
-	   
+   @ApiOperation(value = "getJobsByIndustry",notes=" candidate cand receive jobs based on lndustry user Story 3",nickname = "getJobsByIndustry" )
+   @GetMapping("/getJobsByIndustry/{industry}")
+   public ResponseEntity<List<Job>> getJobsByIndustry(@PathVariable String industry) {
+       
+   	List<Job> jobList = jobDAO.findByIndustry(industry);
+       return new ResponseEntity<>(jobList, HttpStatus.OK);
+   
+   }
+
+   @ApiOperation(value = "getJobsByLocation",notes="candidate cand receive jobs based on their location user Story 3",nickname = "getJobsByLocation" )
+   @GetMapping("/getJobsByLocation/{location}")
+   public ResponseEntity<List<Job>> getJobsByLocation(@PathVariable String location) {
+       
+   	List<Job> jobList = jobDAO.findByLocation(location);
+       
+       return new ResponseEntity<>(jobList, HttpStatus.OK);
+   }
+   
+   @ApiOperation(value = "getJobBySkill",notes="candidate cand receive jobs based on their skills user Story 3",nickname = "getJobBySkill" )
+   @PostMapping("/getJobBySkill")
+   public List<Job> getAllJobBySkill(@RequestBody String skillNames){
+		
+   	return jobService.getJobBySkillName(skillNames);
+	}
+   
+   
+	@ApiOperation(value = "Candidate views All Jobs",notes="user story 5",nickname = "getall" )
+	@ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
+	@GetMapping("/getAllJobs")
+    public ResponseEntity<List<Job>> getAllJobs() {
+		
+		List<Job> allJobs = jobDAO.findAll();
+		
+        return new ResponseEntity<>(jobDAO.findAll(), HttpStatus.OK);
+        
+	}
    
 
 //   // OM check this method and sync with ur user story to be removed from here  
@@ -348,8 +398,9 @@ public class CandidateController {
 //       }
  
    //no service tests from here
- @PatchMapping("/updatecandidate")
-public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody ProfileDTO candDto ) throws CandidateValidationExceptioncheck, CandidateNotFoundException, FormatException {
+   @ApiOperation(value = "updatecandidate",notes="updatecandidate",nickname = "updatecandidate" )
+   	@PatchMapping("/updatecandidate")
+ 	public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody ProfileDTO candDto ) throws CandidateValidationExceptioncheck, CandidateNotFoundException, FormatException {
   
    
        try {
@@ -374,45 +425,17 @@ public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody P
     }
  }
 	
-	
-	@PatchMapping("/updateCandidate2")
-	public void updateCandidate(@RequestBody Candidate cand ){
-		candidateService.updateCandidate(cand);
+
+	 @ApiOperation(value = "get job status",notes="candidadte gets his job status",nickname = "updatecandidate" )
+
+	 @GetMapping("/getjobstatus/{id}")
+	public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundException {
+	   Candidate candidate = candidateService.getCandidateById(id);
+	   List<Interview> interviewStatus = candidate.getInterviewList();
+	   return  interviewStatus ;
 	}
-	
-//	OM
 
-
- 
- @GetMapping("/getjobstatus/{id}")
-public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundException {
-   Candidate candidate = candidateService.getCandidateById(id);
-   List<Interview> interviewStatus = candidate.getInterviewList();
-   return  interviewStatus ;
-}
-  
-	   
-
-/*
- * *************OM start******************
- */
-	
-	
-
-	
-	
-//	@GetMapping("/getAllCandidatesByJobId/{jobId}")
-//	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
-//		Job job= null;
-//		try {
-//			job = jobService.findJobById(jobId);
-//			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
-//		} catch (NoSuchJobFoundException e) {
-//			throw e;
-//		}
-//	}
-
-	
+	 @ApiOperation(value = "candidateApplicationForJob",notes="candidateApplicationForJob",nickname = "updatecandidate" )
 	@PostMapping("/candidateApplicationForJob")
 	public ResponseEntity<String> candidateApplicationForJob(@RequestParam("candidateId") int candidateId, @RequestParam("jobId") int jobId) throws CandidateNotFoundException, NoSuchJobFoundException{
 			  Candidate c = null;
@@ -459,6 +482,38 @@ public List<Interview> findjob(@PathVariable  int id) throws CandidateNotFoundEx
 			  
 			  return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
 	}
+
+	 
+	@PatchMapping("/updateCandidate2")
+	public void updateCandidate(@RequestBody Candidate cand ){
+		candidateService.updateCandidate(cand);
+	}
+	
+//	OM
+
+	
+	   
+
+/*
+ * *************OM start******************
+ */
+	
+	
+
+	
+	
+//	@GetMapping("/getAllCandidatesByJobId/{jobId}")
+//	public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+//		Job job= null;
+//		try {
+//			job = jobService.findJobById(jobId);
+//			return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+//		} catch (NoSuchJobFoundException e) {
+//			throw e;
+//		}
+//	}
+
+
 	/*
 	 * ********OM end***********
 	 */

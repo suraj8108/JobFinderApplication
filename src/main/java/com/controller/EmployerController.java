@@ -86,7 +86,8 @@ public class EmployerController {
 		return new ResponseEntity<>("Employer added successfully", HttpStatus.ACCEPTED);
 	
 	}
-
+	
+	@ApiOperation(value = "get all empolyees", notes = "get all empolyees", nickname = "get all empolyees")
 	@GetMapping("/getAllEmployers")
 	public ResponseEntity<?> getAllEmployers() {
 	  try {
@@ -96,6 +97,8 @@ public class EmployerController {
 	  }
 	}
 	
+	
+	@ApiOperation(value = "get all candidates by experience", notes = "Employer get all candidates by experience", nickname = "get all empolyees")
 	@GetMapping("/getAllCandidatesByExperience/{experience_lb}/{experience_ub}")
     public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience_lb, @PathVariable Integer experience_ub){
     	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience_lb, experience_ub),HttpStatus.OK);
@@ -148,7 +151,7 @@ public class EmployerController {
 
 
 	
-	
+	@ApiOperation(value = "feedBack", notes = "Employer feedBack", nickname = "employer feedback")
 	@PostMapping("/feedbackRating/{interviewId}")
 	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws feedbackException {
 	  try {
@@ -162,7 +165,7 @@ public class EmployerController {
 	
 	
 	//Pawanesh
-	
+	@ApiOperation(value = "shortlistCandidate", notes = "Employer shortlists the candidate", nickname = "get all empolyees")
 	@PatchMapping("/shortlistCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateShortlistedInterview(@PathVariable String candidateId, @PathVariable String employerId,@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, CandidateNotFoundException
 	{
@@ -182,7 +185,7 @@ public class EmployerController {
 		
 	}
 	
-	
+	@ApiOperation(value = "Shorlisted Candidates", notes = "for sending notification Shorlisted Candidates", nickname = "Shorlisted Candidates")
 	@GetMapping("getAllShortListedCandidate/{jobId}")
 	public ResponseEntity<List> notificationforShortlisted(@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException 
 	{
@@ -198,8 +201,9 @@ public class EmployerController {
 		
 	}
 	
+	
+	@ApiOperation(value = "updating candidates status to waiitng", notes = "updating candidates status to waiitng", nickname = "updating candidates status to waiitng")
 	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
-
 	public ResponseEntity<String> updateSelectedInterview(HttpServletRequest request, @PathVariable String candidateId, @PathVariable String jobId)
 			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException, CandidateNotFoundException
 
@@ -230,7 +234,7 @@ public class EmployerController {
 		
 	}
 	
-	
+	@ApiOperation(value = "Rejecting Candidates", notes = "Employer Rejecting Candidates", nickname = "RC")
 	@PatchMapping("/rejectedCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateSelectedInterview1(@PathVariable String candidateId, @PathVariable String employerId, @PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, CandidateNotFoundException
 	{
@@ -290,6 +294,7 @@ public class EmployerController {
 	// the employer or candidate is missing their rating or feedback,
 	// conducting a new interview should throw error
 	
+	@ApiOperation(value = "Closing job", notes = "Employer closes job without selecting anyone", nickname = "RC")
 	@GetMapping("/closeJobPostingForcefully")
 	public ResponseEntity<?> closeJobPosting(@RequestParam("jobId") String jobId) {
 	  // employer doesn't wish to interview candidates any longer, nor does he/she wish to hire anyone
@@ -312,6 +317,8 @@ public class EmployerController {
 	  }
 	}
 	
+	
+	@ApiOperation(value = "getCandidateApplicationStatus", notes = "Employer getCandidateApplicationStatus", nickname = "RC")
 	@GetMapping("/getCandidateApplicationStatus/{id}")
     public List<Interview> getCandidateInterviews(@PathVariable  int id) throws CandidateNotFoundException {
         Candidate candidate = candidateService.getCandidateById(id);
@@ -322,19 +329,21 @@ public class EmployerController {
         return  interviewStatus;
     }
     
-
+	
+	@ApiOperation(value = "getAllCandidatesByQualification", notes = "Employer gets All Candidates By Qualification", nickname = "RC")
     @GetMapping("/getAllCandidatesByQualification/{qualification}")
     public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
         return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
     }
     
+	@ApiOperation(value = "getAllCandidatesBySkillSet", notes = "Employer getAllCandidatesBySkillSet", nickname = "RC")
     @PostMapping("/getAllCandidatesBySkillSet")
     public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
         return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
     }
   
     
-    
+	@ApiOperation(value = "getAllCandidatesByJobId", notes = "Employer gets All Candidates By SkillSet", nickname = "RC")
     @GetMapping("/getAllCandidatesByJobId/{jobId}")
     public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
         Job job= null;

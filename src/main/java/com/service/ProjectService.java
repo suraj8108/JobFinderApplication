@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 
 import com.dao.ProjectDAO;
 import com.exception.ProjectNotFoundException;
+import com.model.Candidate;
 import com.model.Project;
 @Service
 public class ProjectService {
@@ -36,5 +37,14 @@ public class ProjectService {
                 throw new ProjectNotFoundException("the provided id is not in this world");
             }
     }
+
+	public void removeProjectByNameAndCandidate(Candidate candidate,String projectName) throws ProjectNotFoundException {
+		Project project = projectDao.findByProjectNameAndCandidate( projectName,candidate);
+		projectDao.delete(project);
+		if( project==null) {
+			throw new ProjectNotFoundException(projectName);
+		}
+		
+	}
 
 }

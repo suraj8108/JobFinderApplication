@@ -53,17 +53,7 @@ public class JobController {
     @Autowired
     JobService jobService;
     
-    
-	@ApiOperation(value = "getAllJobs",notes="getting all jobs",nickname = "getall" )
-	@ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
-	@GetMapping("/getAllJobs")
-    public ResponseEntity<List<Job>> getAllJobs() {
-		
-		List<Job> allJobs = jobDAO.findAll();
-		
-        return new ResponseEntity<>(jobDAO.findAll(), HttpStatus.OK);
-        
-	}
+ 
     
 //	@PostMapping("/addjob")
 //	public ResponseEntity addjob(@RequestBody Job job) {
@@ -125,26 +115,6 @@ public class JobController {
 	}
 
     
-    @GetMapping("/getJobsByIndustry/{industry}")
-    public ResponseEntity<List<Job>> getJobsByIndustry(@PathVariable String industry) {
-        
-    	List<Job> jobList = jobDAO.findByIndustry(industry);
-        return new ResponseEntity<>(jobList, HttpStatus.OK);
-    
-    }
-	
-    @GetMapping("/getJobsByLocation/{location}")
-    public ResponseEntity<List<Job>> getJobsByLocation(@PathVariable String location) {
-        
-    	List<Job> jobList = jobDAO.findByLocation(location);
-        
-        return new ResponseEntity<>(jobList, HttpStatus.OK);
-    }
-    
-    @PostMapping("/getJobBySkill")
-    public List<Job> getAllJobBySkill(@RequestBody String skillNames){
-		
-    	return jobService.getJobBySkillName(skillNames);
-	}
+   
 
 }
