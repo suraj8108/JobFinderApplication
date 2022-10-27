@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.List;
+
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ import com.exception.NoEmployersException;
 import com.exception.NoSuchEmployerFoundException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NoSuchJobFoundException;
+import com.exception.feedbackException;
 import com.exception.NotShortlistedException;
 import com.model.Candidate;
 import com.model.Employer;
@@ -132,7 +134,7 @@ public class EmployerController {
 	
 	
 	@PostMapping("/feedbackRating/{interviewId}")
-	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) {
+	public ResponseEntity<String> feedbackRating(@PathVariable("interviewId") String id, @RequestBody RatingFeedbackDTO dto) throws feedbackException {
 	  try {
 	    Interview i = interviewService.getInterviewById(Integer.parseInt(id));
 	      interviewService.provideEmployerFeedback(i, dto);

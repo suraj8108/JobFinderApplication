@@ -42,9 +42,9 @@ public class Interview {
 	private int interviewId;
 	
 	@Range(min = 0,max = 10)
-	private float candidateRating;
+	private int candidateRating;
 	@Range(min = 0,max = 10)
-	private float employerRating;
+	private int employerRating;
 	
 	private String candidateFeedback;
 	

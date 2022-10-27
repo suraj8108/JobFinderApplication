@@ -1,12 +1,14 @@
 package com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 
 import java.util.NoSuchElementException;
 
 import com.dao.ProjectDAO;
+import com.exception.ProjectNotFoundException;
 import com.model.Project;
 @Service
 public class ProjectService {
@@ -17,6 +19,20 @@ public class ProjectService {
        Project p = projectDao.findById(project.getProjectId()).get();
        projectDao.delete(project);
         
+    }
+
+    public void addProject(Project p1) {
+       projectDao.save(p1);
+        
+    }
+
+    public void removeById(int projectid) throws ProjectNotFoundException  {
+        try {
+        projectDao.deleteById(projectid);
+        }
+        catch(EmptyResultDataAccessException e) {
+            throw new ProjectNotFoundException("the provided id is not in this world");
+        }
     }
 
 }

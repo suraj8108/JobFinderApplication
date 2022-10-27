@@ -15,6 +15,7 @@ import com.model.Job;
 public interface InterviewDAO extends JpaRepository<Interview, Integer> {
   Interview findByCandidateAndEmployerAndJob(Candidate candidate, Employer employer, Job job);
   List<Interview> findByJobAndPostInterviewStatus(Job job, PostInterviewStatus status);
+  List<Interview> findByJobAndPreInterviewStatusAndPostInterviewStatus(Job job, PreInterviewStatus preInterviewStatus, PostInterviewStatus postInterviewStatus);
   List<Interview> findByJobAndPostInterviewStatusIsNot(Job job, PostInterviewStatus status);
   List<Interview> findByJobAndInterviewIdIsNot(Job job, int id);
   List<Interview> findByJob(Job job);

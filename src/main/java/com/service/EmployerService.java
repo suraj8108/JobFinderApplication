@@ -16,6 +16,7 @@ import com.dto.EmployerDTO;
 
 import com.enums.JobStatus;
 import com.enums.PostInterviewStatus;
+import com.enums.PreInterviewStatus;
 import com.exception.AllInterviewsNotCompletedException;
 import com.exception.JobAlreadyClosedWithCandidateSelectedException;
 import com.exception.NoEmployersException;
@@ -72,7 +73,7 @@ public class EmployerService {
     if (j.getJobStatus().equals(JobStatus.CLOSED)) {
       throw new JobAlreadyClosedWithCandidateSelectedException();
     }
-    List<Interview> pendingInterviewsForJob = interviewDAO.findByJobAndPostInterviewStatus(j, PostInterviewStatus.INVALID);
+    List<Interview> pendingInterviewsForJob = interviewDAO.findByJobAndPreInterviewStatusAndPostInterviewStatus(j, PreInterviewStatus.SHORTLISTED, PostInterviewStatus.INVALID);
     if (pendingInterviewsForJob.size() != 0) {
       List<String> candidateList = pendingInterviewsForJob.stream().map((i) -> i.getCandidate().getCandidateName()).collect(Collectors.toList());
       throw new AllInterviewsNotCompletedException(j.getJobId(), candidateList);
