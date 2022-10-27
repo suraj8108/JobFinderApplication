@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.client.RestTemplate;
 
 import com.controller.AuthenticationController;
@@ -239,8 +240,10 @@ public class EmployerControllerMethodTests {
 			
 			
 			// waiting
-			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(Integer.toString(c1), Integer.toString(e1), Integer.toString(jb1)).getBody());
-			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(Integer.toString(c2), Integer.toString(e1), Integer.toString(jb1)).getBody());
+			MockHttpServletRequest request = new MockHttpServletRequest();
+			//request.addHeader("Authorization", commonToken);
+			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(request ,Integer.toString(c1), Integer.toString(jb1)).getBody());
+			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(request, Integer.toString(c2), Integer.toString(jb1)).getBody());
 //			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(Integer.toString(c2), Integer.toString(e1), Integer.toString(jb1)));
 //			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(Integer.toString(c3), Integer.toString(e1), Integer.toString(jb1)));
 //			assertEquals("Successfully Updated Waiting candidate", employerController.updateSelectedInterview(Integer.toString(c1), Integer.toString(e1), Integer.toString(jb1)));
@@ -250,6 +253,7 @@ public class EmployerControllerMethodTests {
 			assertEquals("Successfully Updated Rejected candidate", employerController.updateSelectedInterview1(Integer.toString(c3), Integer.toString(e1), Integer.toString(jb1)).getBody());
 			
 			// selecting
+			
 			assertEquals("Candidate selected successfully", employerController.selectCandidateAndCloseJob(Integer.toString(c1), Integer.toString(e1), Integer.toString(jb1)).getBody());
 
 			// feedback

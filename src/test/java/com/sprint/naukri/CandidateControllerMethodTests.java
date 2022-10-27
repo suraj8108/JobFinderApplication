@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +29,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.controller.AuthenticationController;
 import com.controller.CandidateController;
 import com.dao.CandidateDAO;
 import com.dto.ProfileDTO;
@@ -66,7 +71,12 @@ public class CandidateControllerMethodTests {
     @Autowired
     SkillService skillService;
 
+    @Autowired
+	AuthenticationController authController;
+    
     String commonToken;
+    
+    Candidate candidate = new Candidate();
     
      Candidate cand1=new Candidate();
      
@@ -85,8 +95,10 @@ public class CandidateControllerMethodTests {
         candao.deleteAll();
         
         //project dto
+	    
         pdtl.add(new ProjectDTO("yjbabv","happened"));
         pdtl.add(new ProjectDTO("slnacncs","happened"));
+        
         dto.setAge(22);
         dto.setCandidateName("yashs");
         dto.setEducationQualification("extra");
@@ -94,13 +106,22 @@ public class CandidateControllerMethodTests {
         dto.setExperience(2);
         dto.setLocation("here");
         dto.setPassword("password");
-        
+
+//        csdts.add(new SkillDTO("Java"));
         dto.setProjectDTOList(pdtl);
         
         dto.setSkillDTOSet(csdts);
-//        csdts.add(new SkillDTO("Java"));
+        
         candidateService.addProfile(dto);
        
+        JwtRequest jwtRequest = new JwtRequest(dto.getEmailId(), dto.getPassword());
+	    try {
+	    	JwtResponse jwtResponse = authController.authenticateCand(jwtRequest);
+	    	commonToken = "Bearer " + jwtResponse.getJwtToken();
+			System.out.println(commonToken);
+	    } catch (Exception e) {
+	    	
+	    }
     
         cand1.setAge(21);
         List<Project> projectList = new ArrayList<>();
@@ -120,6 +141,7 @@ public class CandidateControllerMethodTests {
         cand2.setPassword("121aaa");
         cand2.setProjectList(projectList);
      
+        
         
    
      
@@ -197,8 +219,10 @@ public class CandidateControllerMethodTests {
           List<ProjectDTO> pdt = new ArrayList<>();
            pdt.add(new ProjectDTO("kjsnv","skjnvk"));
 
-                  
-              ResponseEntity<String> result = candidateController.addProject(pdt, ""+c.getCandidateId());
+           MockHttpServletRequest request = new MockHttpServletRequest();
+           request.addHeader("Authorization", commonToken);
+           
+              ResponseEntity<String> result = candidateController.addProject(request, pdt);
          
           Assertions.assertEquals("Project added successfully",result.getBody());
      
@@ -213,17 +237,17 @@ public class CandidateControllerMethodTests {
        
           
           //real test starts from here
-          
-          
-         
-          
+
           
           List<ProjectDTO> pdt = new ArrayList<>();
            pdt.add(new ProjectDTO("kjsnv","skjnvk"));
 
                   
+           MockHttpServletRequest request = new MockHttpServletRequest();
+           request.addHeader("Authorization", commonToken);
+           
           Exception exception = Assertions.assertThrows(CandidateNotFoundException.class, () -> {
-              ResponseEntity<String> result = candidateController.addProject(pdt, ""+11);
+              ResponseEntity<String> result = candidateController.addProject(request, pdt);
                   });
 
           String expectedMessage = "Check the id entered";
@@ -244,9 +268,10 @@ public class CandidateControllerMethodTests {
         List<ProjectDTO> pdt = new ArrayList<>();
          pdt.add(new ProjectDTO("kjsnv","skjnvk"));
 
-                
+         MockHttpServletRequest request = new MockHttpServletRequest();
+         request.addHeader("Authorization", commonToken);
         Exception exception = Assertions.assertThrows(FormatException.class, () -> {
-            ResponseEntity<String> result = candidateController.addProject(pdt, "11a");
+            ResponseEntity<String> result = candidateController.addProject(request, pdt);
                 });
 
         String expectedMessage = "Check the format of the input or wrong user id";

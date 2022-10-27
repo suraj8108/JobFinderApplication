@@ -40,6 +40,7 @@ class AuthenticationTest {
 	String commonToken;
 	
 	Candidate cand1 = new Candidate(); 
+
 	
 	@BeforeEach
 	void startConnection() {

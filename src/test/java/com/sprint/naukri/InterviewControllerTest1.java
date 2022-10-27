@@ -155,73 +155,73 @@ public class InterviewControllerTest1 {
 		
 	}
 	  
-//	  @Test 
-//	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
-//		  List<Job> jobs = jobDAO.findAll();
-//		  System.out.println(jobs);
-//		  
-//		  System.out.println(interviewDAO.findAll());
-//		  
-//		  startConnection();
-//		  RestTemplate template3 = new RestTemplate();
-//		  HttpHeaders headers3 = new HttpHeaders();
-//		  headers3.add("Authorization", commonToken);
-//
-//		  //Get All Interviews
-//		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
-//		  
-//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-//		  
-//		  Interview expected = interviewService.getAllInterviews().get(0);
-//		  
-//		  expected.setCandidate(null);
-//		  expected.setEmployer(null);
-//		  expected.setJob(null);
-//		  
-//		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
-//		  
-//		 		  
-//		  assertEquals(expected.toString(), actual.toString());
-//	  }
-	  
-	  @Test
-	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
-		  
+	  @Test 
+	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
 		  List<Job> jobs = jobDAO.findAll();
 		  System.out.println(jobs);
 		  
-//		  System.out.println("Int: "+interviewDAO.findAll());
-		  System.out.println("123");
-		  try {
-			System.out.println("EMP: " +employerService.findAllEmployers());
-		} catch (NoEmployersException e) {
-			// TODO Auto-generated catch block
-			System.out.println("00000");
-			e.printStackTrace();
-		}
+		  System.out.println(interviewDAO.findAll());
 		  
-		  
-		  
+		  startConnection();
 		  RestTemplate template3 = new RestTemplate();
 		  HttpHeaders headers3 = new HttpHeaders();
 		  headers3.add("Authorization", commonToken);
 
 		  //Get All Interviews
-		  String url3 = "http://localhost:9989/getAllInterviews";
+		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
 		  
 		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-			
-		  List<Interview> expected = interviewService.getAllInterviews();
 		  
-		  expected.get(0).setCandidate(null);
-		  expected.get(0).setEmployer(null);
-		  expected.get(0).setJob(null);
+		  Interview expected = interviewService.getAllInterviews().get(0);
 		  
-		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
+		  expected.setCandidate(null);
+		  expected.setEmployer(null);
+		  expected.setJob(null);
+		  
+		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
 		  
 		 		  
 		  assertEquals(expected.toString(), actual.toString());
-		  
-	  }	
+	  }
+	  
+//	  @Test
+//	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
+//		  
+//		  List<Job> jobs = jobDAO.findAll();
+//		  System.out.println(jobs);
+//		  
+////		  System.out.println("Int: "+interviewDAO.findAll());
+//		  System.out.println("123");
+//		  try {
+//			System.out.println("EMP: " +employerService.findAllEmployers());
+//		} catch (NoEmployersException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println("00000");
+//			e.printStackTrace();
+//		}
+//		  
+//		  
+//		  
+//		  RestTemplate template3 = new RestTemplate();
+//		  HttpHeaders headers3 = new HttpHeaders();
+//		  headers3.add("Authorization", commonToken);
+//
+//		  //Get All Interviews
+//		  String url3 = "http://localhost:9989/getAllInterviews";
+//		  
+//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
+//			
+//		  List<Interview> expected = interviewService.getAllInterviews();
+//		  
+//		  expected.get(0).setCandidate(null);
+//		  expected.get(0).setEmployer(null);
+//		  expected.get(0).setJob(null);
+//		  
+//		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
+//		  
+//		 		  
+//		  assertEquals(expected.toString(), actual.toString());
+//		  
+//	  }	
 	  
 }

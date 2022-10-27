@@ -51,7 +51,7 @@ public class Interview {
 	private String employerFeedback;
 	@Column
 	@Enumerated(EnumType.STRING)
-	private PreInterviewStatus preInterviewStatus =PreInterviewStatus.INVALID;
+	private PreInterviewStatus preInterviewStatus =PreInterviewStatus.APPLIED;
 	
 	@Column
 	@Enumerated(EnumType.STRING)

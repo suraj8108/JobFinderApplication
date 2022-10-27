@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
 
@@ -41,7 +43,8 @@ import com.exception.ProjectNotFoundException;
 import com.exception.exceptions;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
-
+import com.helper.DecryptUserDetails;
+import com.helper.JwtUtil;
 import com.model.Candidate;
 import com.model.Employer;
 import com.model.Interview;
@@ -87,6 +90,8 @@ public class CandidateController {
 	@Autowired
     JobService jobService;
 	
+	@Autowired
+	DecryptUserDetails decryptUser;
 	
 	//user Story 2 -able to add profile 
     // - should be linked to user register
@@ -112,15 +117,17 @@ public class CandidateController {
     }
 	 
 	//user Story 2 -able to add Project by Id
-	@PostMapping("/addProjectById/{candidateId}")
-    public ResponseEntity addProject(@RequestBody List<ProjectDTO> project,
-            @PathVariable(name = "candidateId") String id) throws CandidateNotFoundException, FormatException{
+	@ApiOperation(value = "Adding Project",notes="Candidate Id fetched from token",nickname = "Add Project By Candidate Id")
+	@PostMapping("/addProjectById")
+    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws CandidateNotFoundException, FormatException{
        
        try {
-        	System.out.println(id);
+    	   
+    	   String emailId = decryptUser.decryptEmailId(request);
+    	   
+    	   int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
         	
-        	
-        	candidateService.addProjectbyId(Integer.parseInt(id),project);
+    	   candidateService.addProjectbyId(candidateId, project);
         	
         return new  ResponseEntity<>("Project added successfully"
                 ,HttpStatus.ACCEPTED);
@@ -237,6 +244,7 @@ public class CandidateController {
    public ResponseEntity getCandidatebyid(@PathVariable int  id  ) throws CandidateNotFoundException{
     
            try {
+        	   
                return new ResponseEntity<>(candidateService.findById(id),HttpStatus.FOUND);
            }
            catch (NoSuchElementException c) {
@@ -392,21 +400,6 @@ public List<Interview> findjob(@PathVariable  int id) {
 		return  interviewStatus;
 	}
 	
-	@GetMapping("/getAllCandidatesByExperience/{experience}")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience),HttpStatus.OK);
-		}
-	    
-	
-    @GetMapping("/getAllCandidatesByQualification/{qualification}")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
-		}
-	    
-    @PostMapping("/getAllCandidatesBySkillSet")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
-	    }
 	
 	
 	@GetMapping("/getAllCandidatesByJobId/{jobId}")
@@ -444,7 +437,7 @@ public List<Interview> findjob(@PathVariable  int id) {
 			    i.setCandidate(c);
 			    i.setJob(j);
 			    i.setEmployer(j.getCreatedBy());
-			    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+			    i.setPreInterviewStatus(PreInterviewStatus.APPLIED);
 			    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
 			    
 			    c.getInterviewList().add(i);

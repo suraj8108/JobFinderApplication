@@ -75,6 +75,9 @@ public class CandidateService {
 	    
 	}
 	
+	public Candidate findCandidateByEmailId(String emailId) {
+		return candao.findByEmailId(emailId);
+	}
 	
 	
 	//for addwhilecheckingskill
