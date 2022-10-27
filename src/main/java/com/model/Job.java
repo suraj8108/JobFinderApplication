@@ -59,7 +59,7 @@ public class Job {
 	
 	@JsonManagedReference(value="job_interview")
 	    @OneToMany(cascade = CascadeType.ALL,mappedBy = "job")
-	private List<Interview> interviewList;
+	private List<Interview> interviewList = new ArrayList<>();
 	
 	@JsonBackReference(value="employer_job")
 	@ManyToOne

@@ -76,7 +76,7 @@ public class JobService {
   	}
   
   	public String addJobByEmployer(JobDTO jobDTO) {
-  		Employer e = employerDAO.getById(jobDTO.getEid());
+  		Employer e = employerDAO.findById(jobDTO.getEid()).get();
 
         Job job = new Job(jobDTO.getJobDescription(), jobDTO.getIndustry(), jobDTO.getLocation(), jobDTO.getSalaryPackage());
 
