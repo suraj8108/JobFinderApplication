@@ -90,6 +90,7 @@ public class CandidateService {
 	       
 	       c.setEmailId(profile.getEmailId());
 	       c.setPassword(profile.getPassword());
+	       c.setExperience(profile.getExperience());
 	       
 	       List<Project> projectList = new ArrayList<>();
 	       

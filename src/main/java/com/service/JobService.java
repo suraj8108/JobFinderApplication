@@ -24,6 +24,7 @@ public class JobService {
   EmployerDAO employerDAO;
 
   public void closeJob(Job j) {
+	
     j.setJobStatus(JobStatus.CLOSED);
     jobDAO.save(j);
   }

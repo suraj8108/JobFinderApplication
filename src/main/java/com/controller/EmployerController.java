@@ -153,7 +153,7 @@ public class EmployerController {
 		
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
 		Job job = jobService.getJobById(Integer.parseInt(jobId));
-		Employer employer = employerService.getEmployerById(Integer.parseInt(jobId));
+		Employer employer = employerService.getEmployerById(Integer.parseInt(employerId));
 		
 		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
 		
@@ -220,7 +220,12 @@ public class EmployerController {
 		
 		Interview interview = interviewDAO.findByCandidateAndEmployerAndJob(candidate, employer, job);
 		
-		interview.setPreInterviewStatus(PreInterviewStatus.NOT_SHORTLISTED);
+		
+		if(interview.getPreInterviewStatus().equals(PreInterviewStatus.INVALID)) {
+			
+			interview.setPreInterviewStatus(PreInterviewStatus.NOT_SHORTLISTED);
+		
+		}
 		interview.setPostInterviewStatus(PostInterviewStatus.REJECTED);
 		
 		interviewDAO.save(interview);
@@ -228,8 +233,6 @@ public class EmployerController {
 		return new ResponseEntity<> ("Successfully Updated Rejected candidate",HttpStatus.OK);
 		
 	}
-	
-	
 	
 //	@GetMapping("getAllNotShortListedCandidate/{jobId}")
 //	public ResponseEntity<List> notificationforNotShortListed(@PathVariable String jobId) throws NumberFormatException, NoSuchJobFoundException

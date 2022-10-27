@@ -282,50 +282,50 @@ public class CandidateController {
 	   
    
    // OM check this method and sync with ur user story to be removed from here  
-   @PostMapping("/candidateAppliesForJob")
-   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
-   
-	   try {	    
-		    // assuming the candidate is already created,
-		    // find the candidate, employer and job using the ids
-		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-		    Job j = jobService.getJobById(Integer.parseInt(jobId));
-		    Employer e = j.getCreatedBy();
-		    
-		    candidateService.checkIfAlreadySelectedByEmployer(c, e);
-		    
-		    // add the candidate to the candidate set of the job
-		    j.getCandidateSet().add(c);
-		    jobDAO.save(j);
-		    
-		    // create a new interview object unique to the employer, candidate, and job
-		    Interview i = new Interview();
-		    i.setCandidate(c);
-		    i.setJob(j);
-		    i.setEmployer(e);
-		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
-		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-		    interviewDAO.save(i);
-		    
-		    
-		    // now add the newly created interview to the interview list of employer
-		    e.getInterviewList().add(i);
-		    employerDAO.save(e);
-		    
-		    // also add this interview to the interview list of the employer
-		    c.getInterviewList().add(i);
-           candidateDAO.save(c);
-           
-           // and add it to interview list of the job
-           j.getInterviewList().add(i);
-           jobDAO.save(j);
-		    
-		    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-		  } catch (Exception e) {
-		    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
-		  }
-             
-       }
+//   @PostMapping("/candidateAppliesForJob")
+//   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
+//   
+//	   try {	    
+//		    // assuming the candidate is already created,
+//		    // find the candidate, employer and job using the ids
+//		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
+//		    Job j = jobService.getJobById(Integer.parseInt(jobId));
+//		    Employer e = j.getCreatedBy();
+//		    
+//		    candidateService.checkIfAlreadySelectedByEmployer(c, e);
+//		    
+//		    // add the candidate to the candidate set of the job
+//		    j.getCandidateSet().add(c);
+//		    jobDAO.save(j);
+//		    
+//		    // create a new interview object unique to the employer, candidate, and job
+//		    Interview i = new Interview();
+//		    i.setCandidate(c);
+//		    i.setJob(j);
+//		    i.setEmployer(e);
+//		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
+//		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
+//		    interviewDAO.save(i);
+//		    
+//		    
+//		    // now add the newly created interview to the interview list of employer
+//		    e.getInterviewList().add(i);
+//		    employerDAO.save(e);
+//		    
+//		    // also add this interview to the interview list of the employer
+//		    c.getInterviewList().add(i);
+//           candidateDAO.save(c);
+//           
+//           // and add it to interview list of the job
+//           j.getInterviewList().add(i);
+//           jobDAO.save(j);
+//		    
+//		    return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
+//		  } catch (Exception e) {
+//		    return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+//		  }
+//             
+//       }
 	
    
    //no service tests from here
@@ -352,33 +352,6 @@ public ResponseEntity updateCandidate(@RequestBody ProfileDTO candDto) throws Ca
 	}
 	
 //	OM
-	@PostMapping("/candidateApplication")
-	public ResponseEntity<String> candidateApplication(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId){
-		try {
-		    Candidate c = candidateService.getCandidateById(Integer.parseInt(candidateId));
-		    Job j = jobService.getJobById(Integer.parseInt(jobId));		
-		    Employer e = j.getCreatedBy();
-		    
-		    Set<Candidate> updatedCandSet = j.getCandidateSet();
-		    updatedCandSet.add(c);
-		    j.setCandidateSet(updatedCandSet);
-		    
-		    Interview i = new Interview();
-		    i.setCandidate(c);
-		    i.setJob(j);
-		    i.setEmployer(j.getCreatedBy());
-		    i.setPreInterviewStatus(PreInterviewStatus.INVALID);
-		    i.setPostInterviewStatus(PostInterviewStatus.INVALID);
-		    
-		    jobDAO.save(j);
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return new ResponseEntity<>("Candidate successfully applied for this job", HttpStatus.OK);
-
-	}
 	
 //	@PatchMapping("/removeskillbyid/{id}")
 //	public ResponseEntity removeskillbyid(@RequestBody CandidateSkill cs,@PathVariable int id) {
