@@ -58,8 +58,12 @@ public class JobController {
 	@ApiResponses(value= {@ApiResponse(code=200, message="all jobs")})
 	@GetMapping("/getAllJobs")
     public ResponseEntity<List<Job>> getAllJobs() {
+		
+		List<Job> allJobs = jobDAO.findAll();
+		
         return new ResponseEntity<>(jobDAO.findAll(), HttpStatus.OK);
-    }
+        
+	}
     
 //	@PostMapping("/addjob")
 //	public ResponseEntity addjob(@RequestBody Job job) {
@@ -103,16 +107,17 @@ public class JobController {
 	@PatchMapping("/updateJobDescription/{id}")
 	public ResponseEntity updateJob(@PathVariable("id") String jobId, @RequestBody String jobDescription) {
 		
-		Job j1 = jobDAO.getById(Integer.parseInt(jobId));
+		Job j1 = jobDAO.findById(Integer.parseInt(jobId)).get();
+		
 		j1.setJobDescription(jobDescription);
 
 		jobDAO.save(j1);
 		
-		return new ResponseEntity("job updated successfuly", HttpStatus.ACCEPTED);
+		return new ResponseEntity("Job updated Successfuly", HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/deleteJob/{id}")
-	public ResponseEntity deleteJob(@PathVariable("id") String jobId) {
+	public ResponseEntity deleteJobById(@PathVariable("id") String jobId) {
 		
 		jobDAO.deleteById(Integer.parseInt(jobId));
 		return new ResponseEntity("Job deleted successfully", HttpStatus.FOUND);
