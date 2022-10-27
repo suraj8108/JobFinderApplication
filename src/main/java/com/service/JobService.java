@@ -83,8 +83,8 @@ public class JobService {
         job.setCreatedBy(e);
         jobDAO.save(job);
         
-        e.getJobList().addAll(Arrays.asList(job));
-        employerDAO.save(e);
+//        e.getJobList().addAll(Arrays.asList(job));
+//        employerDAO.save(e);
         
   		return "Job Added Successfully";
   	}

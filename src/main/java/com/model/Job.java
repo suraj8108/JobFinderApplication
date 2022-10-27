@@ -62,7 +62,7 @@ public class Job {
 	private List<Interview> interviewList;
 	
 	@JsonBackReference(value="employer_job")
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
     private Employer createdBy;
 
 	public Job(String jobDescription, String industry, String location, @NotNull float salaryPackage) {
