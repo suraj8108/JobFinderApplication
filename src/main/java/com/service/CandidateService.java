@@ -371,10 +371,9 @@ public class CandidateService {
   
 
   
-	public List<Candidate> getAllCandidatesByExperience(int experience) {
-		return candao.findAllByExperience(experience);
+	public List<Candidate> getAllCandidatesByExperience(int experience_lb, int experience_ub) {
+		return candao.findByExperienceBetween(experience_lb, experience_ub);
 	}
-	
 	
 	public List<Candidate> getAllCandidatesByQualification(String qualification) {
 		return candao.findAllByEducationQualification(qualification);
