@@ -26,13 +26,15 @@ public class ProjectService {
         
     }
 
-    public void removeById(int projectid) throws ProjectNotFoundException  {
+   
+
+    public void removeProjectById(int projectid) throws ProjectNotFoundException {
         try {
-        projectDao.deleteById(projectid);
-        }
-        catch(EmptyResultDataAccessException e) {
-            throw new ProjectNotFoundException("the provided id is not in this world");
-        }
+            projectDao.deleteById(projectid);
+            }
+            catch(EmptyResultDataAccessException e) {
+                throw new ProjectNotFoundException("the provided id is not in this world");
+            }
     }
 
 }
