@@ -1,15 +1,6 @@
-<<<<<<< HEAD
-projectKey=naukari
+projectKey=naukri
 serverUrl=http://localhost:9000
-serverVersion=8.9.9.56886
-dashboardUrl=http://localhost:9000/dashboard?id=naukari
-ceTaskId=AYQUPIX-g1n7nVgpOy3h
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQUPIX-g1n7nVgpOy3h
-=======
-projectKey=my-new-naukri
-serverUrl=http://localhost:9000
-serverVersion=7.8.0.26217
-dashboardUrl=http://localhost:9000/dashboard?id=my-new-naukri
-ceTaskId=AYQURXgzqBuPAVQGIrRe
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQURXgzqBuPAVQGIrRe
->>>>>>> master
+serverVersion=9.7.0.61563
+dashboardUrl=http://localhost:9000/dashboard?id=naukri
+ceTaskId=AYQXyA0VcATuNRDRAABg
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQXyA0VcATuNRDRAABg

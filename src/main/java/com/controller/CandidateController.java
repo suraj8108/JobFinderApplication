@@ -419,9 +419,9 @@ public List<Interview> findjob(@PathVariable  int id) {
 		return  interviewStatus;
 	}
 	
-	@GetMapping("/getAllCandidatesByExperience/{experience}")
-	    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience){
-	    	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience),HttpStatus.OK);
+	@GetMapping("/getAllCandidatesByExperience/{experience_lb}/{experience_ub}")
+	    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience_lb, @PathVariable Integer experience_ub){
+	    	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience_lb, experience_ub),HttpStatus.OK);
 		}
 	    
 	

@@ -165,20 +165,27 @@ public class InterviewControllerMethodTest1 {
 		  HttpHeaders headers3 = new HttpHeaders();
 		  headers3.add("Authorization", commonToken);
 
-		  //Get All Interviews
+		  //Get Interview by id
 		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
-		  
 		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-		  
 		  Interview expected = interviewService.getAllInterviews().get(0);
 		  
 		  expected.setCandidate(null);
 		  expected.setEmployer(null);
 		  expected.setJob(null);
 		  
-		Interview interview = (Interview) interviewController.getInterview("1").getBody();
-		System.out.println(interview);
-		assertEquals(expected, interview);
+			Interview interview = (Interview) interviewController.getInterview("1").getBody();
+			System.out.println(interview);
+			assertEquals(expected, interview);
+		
+			//Get Interview by id exception testing
+			
+			String id="100";
+			String exp = (String) interviewController.getInterview(id).getBody();
+			assertEquals(exp, "No interview with id "+id+" found:( ");
+
+		  
+
 	  }
 	  
 }

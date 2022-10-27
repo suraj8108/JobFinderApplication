@@ -164,10 +164,7 @@ public class InterviewControllerTest2 {
 		  expected.get(0).setJob(null);
 		  
 		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
-		  
-		 		  
 		  assertEquals(expected.toString(), actual.toString());
 		  
-	  }	
-	  
+	  }	  
 }

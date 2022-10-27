@@ -11,7 +11,7 @@ public interface CandidateDAO extends JpaRepository<Candidate, Integer>{
 
 	public Candidate findByCandidateName(String candidateName);
 	Candidate findByEmailId(String emailId);
-	List<Candidate> findAllByExperience(int experience);
+	List<Candidate> findByExperienceBetween(int experience_lb, int experience_ub);
 	List<Candidate> findAllByEducationQualification(String qualification);
 }
 
