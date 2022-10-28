@@ -27,6 +27,7 @@ import com.dao.CandidateDAO;
 import com.dao.EmployerDAO;
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
+import com.dto.CandidateDTO;
 import com.dto.ProfileDTO;
 import com.dto.ProjectDTO;
 import com.dto.RatingFeedbackDTO;
@@ -598,7 +599,7 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTest() {
 	     candao.save(cand1);
-	     List<Candidate> experience = candidateService.getAllCandidatesByExperience(0,cand1.getExperience());
+	     List<CandidateDTO> experience = candidateService.getAllCandidatesByExperience(0,cand1.getExperience());
 	     Assertions.assertTrue(1==experience.size());
 	 }
 	 
@@ -606,7 +607,7 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTestfailed() {
          
-         List<Candidate> experience = candidateService.getAllCandidatesByExperience(5665,6513);
+         List<CandidateDTO> experience = candidateService.getAllCandidatesByExperience(5665,6513);
 //         System.out.println(experience);
          Assertions.assertTrue(experience.size()==0);
          
@@ -616,14 +617,14 @@ public class CandidateServiceTest {
 	 @Test
      public void getAllCandidatesByQualification() {
          candao.save(cand1);
-         List<Candidate> qualification = candidateService.getAllCandidatesByQualification(cand1.getEducationQualification());
+         List<CandidateDTO> qualification = candidateService.getAllCandidatesByQualification(cand1.getEducationQualification());
          Assertions.assertTrue(1==qualification.size());
      }
 	
 	 @Test
      public void getAllCandidatesByQualificationfalied() {
          candao.save(cand1);
-         List<Candidate> qualification = candidateService.getAllCandidatesByQualification("jknsdkvj");
+         List<CandidateDTO> qualification = candidateService.getAllCandidatesByQualification("jknsdkvj");
          Assertions.assertTrue(0==qualification.size());
      }
 
@@ -632,7 +633,7 @@ public class CandidateServiceTest {
 	 public void getAllCandidatesBySkillSetTest() {
 	     candao.save(cand1);
 	     String skills  = "Json,Javsvds,Jksnks ";
-	     List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+	     List <CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(1==candidates.size());
 
 	     
@@ -642,7 +643,7 @@ public class CandidateServiceTest {
      public void getAllCandidatesBySkillSetTestFailed() {
          candao.save(cand1);
          String skills  = "Json ,Javsvds,Jksnks ";
-         List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+         List <CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(1==candidates.size());
 
          
@@ -652,7 +653,7 @@ public class CandidateServiceTest {
      public void getAllCandidatesBySkillSetTestFailed2() {
          candao.save(cand1);
          String skills  = "Jsoasdn ,Javsvds,Jksnks ";
-         List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+         List<CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(0==candidates.size());
 
          

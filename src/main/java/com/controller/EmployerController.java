@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dao.EmployerDAO;
 import com.dao.InterviewDAO;
 import com.dao.JobDAO;
+import com.dto.CandidateDTO;
 import com.dto.EmployerDTO;
 import com.dto.RatingFeedbackDTO;
 
@@ -110,7 +111,7 @@ public class EmployerController {
 	
 	@ApiOperation(value = "get all candidates by experience", notes = "Employer get all candidates by experience", nickname = "get all empolyees")
 	@GetMapping("/getAllCandidatesByExperience/{experience_lb}/{experience_ub}")
-    public ResponseEntity<List<Candidate>> getAllCandidatesByExperience(@PathVariable Integer experience_lb, @PathVariable Integer experience_ub){
+    public ResponseEntity<List<CandidateDTO>> getAllCandidatesByExperience(@PathVariable Integer experience_lb, @PathVariable Integer experience_ub){
     	return new ResponseEntity<>(candidateService.getAllCandidatesByExperience(experience_lb, experience_ub),HttpStatus.OK);
 	}
     
@@ -212,7 +213,7 @@ public class EmployerController {
 	}
 	
 	
-	@ApiOperation(value = "updating candidates status to waiitng", notes = "updating candidates status to waiitng needed employer token", nickname = "updating candidates status to waiitng")
+	@ApiOperation(value = "updating candidates status to waiitng", notes = "updating candidates status to waiitng", nickname = "updating candidates status to waiitng")
 	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateSelectedInterview(HttpServletRequest request, @PathVariable String candidateId, @PathVariable String jobId)
 			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException, CandidateNotFoundException
@@ -342,24 +343,24 @@ public class EmployerController {
 	
 	@ApiOperation(value = "getAllCandidatesByQualification", notes = "Employer gets All Candidates By Qualification", nickname = "RC")
     @GetMapping("/getAllCandidatesByQualification/{qualification}")
-    public ResponseEntity<List<Candidate>> getAllCandidatesByQualification(@PathVariable String qualification){
+    public ResponseEntity<List<CandidateDTO>> getAllCandidatesByQualification(@PathVariable String qualification){
         return new ResponseEntity<>(candidateService.getAllCandidatesByQualification(qualification),HttpStatus.OK);
     }
     
 	@ApiOperation(value = "getAllCandidatesBySkillSet", notes = "Employer getAllCandidatesBySkillSet", nickname = "RC")
     @PostMapping("/getAllCandidatesBySkillSet")
-    public ResponseEntity<List<Candidate>> getAllCandidatesBySkillSet(@RequestBody String skills){
+    public ResponseEntity<List<CandidateDTO>> getAllCandidatesBySkillSet(@RequestBody String skills){
         return new ResponseEntity<>(candidateService.getAllCandidatesBySkillSet(skills), HttpStatus.OK);
     }
   
     
 	@ApiOperation(value = "getAllCandidatesByJobId", notes = "Employer gets All Candidates By SkillSet", nickname = "RC")
     @GetMapping("/getAllCandidatesByJobId/{jobId}")
-    public ResponseEntity<Set<Candidate>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
+    public ResponseEntity<Set<CandidateDTO>> getAllCandidatesByJobId(@PathVariable Integer jobId) throws NoSuchJobFoundException{
         Job job= null;
         try {
             job = jobService.findJobById(jobId);
-            return new ResponseEntity<>(job.getCandidateSet(), HttpStatus.OK);
+            return new ResponseEntity<>(candidateService.candidateSetToDTO(job.getCandidateSet()), HttpStatus.OK);
         } catch (NoSuchJobFoundException e) {
             throw e;
         }
