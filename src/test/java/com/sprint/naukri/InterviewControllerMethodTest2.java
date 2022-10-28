@@ -141,7 +141,7 @@ public class InterviewControllerMethodTest2 {
 		url = "http://localhost:9989/employerAddjob";		  
 		String res = template.exchange(url,  HttpMethod.POST, entity, String.class).getBody();
 		
-		System.out.println(res);
+//		System.out.println(res);
 		
 		Job jobAct = jobService.getAllJob().get(0);
 		

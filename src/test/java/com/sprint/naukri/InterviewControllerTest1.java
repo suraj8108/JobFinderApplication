@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.controller.InterviewController;
 import com.controller.JobController;
 import com.dao.InterviewDAO;
 import com.dao.JobDAO;
@@ -34,7 +35,7 @@ import com.dto.EmployerDTO;
 import com.dto.InterviewDTO;
 import com.dto.JobDTO;
 import com.enums.JobStatus;
-import com.exception.NoEmployersException;
+import com.exception.CandidateNotFoundException;
 import com.exception.NoSuchEmployerFoundException;
 import com.helper.JwtUtil;
 import com.model.Candidate;
@@ -52,15 +53,15 @@ import com.service.JobService;
 @SpringBootTest
 public class InterviewControllerTest1 {
 	
+
 	@Autowired
 	JobService jobService;
-	@Autowired
-	InterviewDAO interviewDAO;
-	@Autowired
-	JobDAO jobDAO;
+	
 	@Autowired
 	CandidateService candidateService;
 	
+	@Autowired
+	InterviewController interviewController;
 	
 	@Autowired
 	JwtUtil jwtUtil;
@@ -70,6 +71,13 @@ public class InterviewControllerTest1 {
 	
 	@Autowired
 	InterviewService interviewService;
+	
+	@Autowired
+	InterviewDAO interviewDao;
+	
+	@Autowired
+	JobDAO jobDAO;
+	
 	
 	String commonToken;
 
@@ -83,9 +91,10 @@ public class InterviewControllerTest1 {
 	 */
 	
 	@BeforeEach
-	void startConnection() throws NoSuchEmployerFoundException {
+	void startConnection() throws NoSuchEmployerFoundException, CandidateNotFoundException {
 		
 		candidateService.deleteAllCandidate();
+		interviewDao.deleteAll();
 		
 		cand1.setAge(30);
 		cand1.setCandidateName("om");
@@ -103,6 +112,7 @@ public class InterviewControllerTest1 {
 	
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 		
+		Candidate candy = candidateService.getAllCandidates().get(0);
 		// Authenticate and get token
 		JwtRequest jwtRequest = new JwtRequest("om", "pass");
 		String url1 = "http://localhost:9989/authenticate";
@@ -139,89 +149,46 @@ public class InterviewControllerTest1 {
 		url = "http://localhost:9989/employerAddjob";		  
 		String res = template.exchange(url,  HttpMethod.POST, entity, String.class).getBody();
 		
-		System.out.println(res);
+//		System.out.println(res);
+		
+		Job jobAct = jobService.getAllJob().get(0);
 		
 		
 		// Candidate apply for interview
-		interviewDAO.deleteAll();
 		RestTemplate template3 = new RestTemplate();
 		HttpHeaders headers3= new HttpHeaders();
 		headers.add("Authorization", commonToken);
 		template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());	
 		HttpEntity<Object> entity3 = new HttpEntity(headers);		
 	
-		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+1+"&jobId="+1, HttpMethod.POST, entity3, String.class);
+		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+candy.getCandidateId()+"&jobId="+jobAct.getJobId(), HttpMethod.POST, entity3, String.class);
 
-		
 	}
 	  
-//	  @Test 
-//	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
-//		  List<Job> jobs = jobDAO.findAll();
-//		  System.out.println(jobs);
-//		  
-//		  System.out.println(interviewDAO.findAll());
-//		  
-//		  startConnection();
-//		  RestTemplate template3 = new RestTemplate();
-//		  HttpHeaders headers3 = new HttpHeaders();
-//		  headers3.add("Authorization", commonToken);
-//
-//		  //Get All Interviews
-//		  String url3 = "http://localhost:9989/getInterviewById/"+ 1;
-//		  
-//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-//		  
-//		  Interview expected = interviewService.getAllInterviews().get(0);
-//		  
-//		  expected.setCandidate(null);
-//		  expected.setEmployer(null);
-//		  expected.setJob(null);
-//		  
-//		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
-//		  
-//		 		  
-//		  assertEquals(expected.toString(), actual.toString());
-//	  }
+	  @Test 
+	  @Transactional
+	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
+
+		  int iid = interviewDao.findAll().get(0).getInterviewId();
+		  RestTemplate template3 = new RestTemplate();
+		  HttpHeaders headers3 = new HttpHeaders();
+		  headers3.add("Authorization", commonToken);
+
+		  //Get All Interviews
+		  String url3 = "http://localhost:9989/getInterviewById/"+ iid;
+		  
+		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
+		  
+		  Interview expected = interviewService.getAllInterviews().get(0);
+		  
+		  expected.setCandidate(null);
+		  expected.setEmployer(null);
+		  expected.setJob(null);
+		  
+		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
+		  assertEquals(expected.toString(), actual.toString());
 	  
-//	  @Test
-//	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
-//		  
-//		  List<Job> jobs = jobDAO.findAll();
-//		  System.out.println(jobs);
-//		  
-////		  System.out.println("Int: "+interviewDAO.findAll());
-//		  System.out.println("123");
-//		  try {
-//			System.out.println("EMP: " +employerService.findAllEmployers());
-//		} catch (NoEmployersException e) {
-//			// TODO Auto-generated catch block
-//			System.out.println("00000");
-//			e.printStackTrace();
-//		}
-//		  
-//		  
-//		  
-//		  RestTemplate template3 = new RestTemplate();
-//		  HttpHeaders headers3 = new HttpHeaders();
-//		  headers3.add("Authorization", commonToken);
-//
-//		  //Get All Interviews
-//		  String url3 = "http://localhost:9989/getAllInterviews";
-//		  
-//		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-//			
-//		  List<Interview> expected = interviewService.getAllInterviews();
-//		  
-//		  expected.get(0).setCandidate(null);
-//		  expected.get(0).setEmployer(null);
-//		  expected.get(0).setJob(null);
-//		  
-//		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
-//		  
-//		 		  
-//		  assertEquals(expected.toString(), actual.toString());
-//		  
-//	  }	
 	  
-}
+
+	  }
+	  }

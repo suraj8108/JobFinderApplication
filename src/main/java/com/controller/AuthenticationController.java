@@ -59,7 +59,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "/authenticate", headers = "Accept=application/json", method = RequestMethod.POST)
 	public JwtResponse authenticateCand(@RequestBody JwtRequest jwtRequest) throws UsernameNotFoundException, Exception {
 		
-		System.out.println(jwtRequest);
+//		System.out.println(jwtRequest);
 		
 		try {
 			authenticationManager.authenticate(
@@ -71,7 +71,7 @@ public class AuthenticationController {
 		}
 		catch (BadCredentialsException e) {
 			// TODO: handle exception
-			System.out.println(e.getMessage());
+//			System.out.println(e.getMessage());
 			throw new BadCredentialsException("INVALID_CREDENTIALS");
 		}
 //		catch(Exception e) {

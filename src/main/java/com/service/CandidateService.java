@@ -386,8 +386,8 @@ public class CandidateService {
 		
 		String [] skillsRequired = skills.split("\\s*,\\s*");
 
-		System.out.println(Arrays.toString(skillsRequired));
-		System.out.println(skills);
+//		System.out.println(Arrays.toString(skillsRequired));
+//		System.out.println(skills);
 		
 		
 		for(Candidate c: candidates) {

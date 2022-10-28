@@ -113,9 +113,9 @@ public class AllTransactionalCandidateServiceTest {
     public void addProjectbyIdTest() throws CandidateNotFoundException{
        cand1.setSkillSet(css); 
        int length = cand1.getProjectList().size();
-       System.out.println(cand1);
+//       System.out.println(cand1);
        candao.save(cand1);
-       System.out.println(cand1);
+//       System.out.println(cand1);
        
        List<ProjectDTO> pdt = new ArrayList<>();
        pdt.add(new ProjectDTO("kjsnv","skjnvk"));
@@ -163,7 +163,7 @@ public class AllTransactionalCandidateServiceTest {
        candidateService.updateLocationByCandidateId(cand1.getCandidateId(), "Lexter");
       
        Candidate actual = candao.findById(cand1.getCandidateId()).get();
-       System.out.println(actual);
+//       System.out.println(actual);
       
   
        Assertions.assertFalse(before.equals(actual.getLocation()));
@@ -246,7 +246,7 @@ public class AllTransactionalCandidateServiceTest {
         candidateService.removeSkillbyCanidateIdAndSkillName(cand1.getCandidateId(),"JSon" );
 
         int lengthAfter  = candao.findById(cand1.getCandidateId()).get().getSkillSet().size();
-        System.out.println(lengthBefore+" "+lengthAfter);
+//        System.out.println(lengthBefore+" "+lengthAfter);
 
         Assertions.assertNotEquals(lengthBefore,lengthAfter);
         

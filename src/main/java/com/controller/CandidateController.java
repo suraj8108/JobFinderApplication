@@ -328,7 +328,7 @@ public class CandidateController {
        return new ResponseEntity<>(jobList, HttpStatus.OK);
    }
    
-   @ApiOperation(value = "getJobBySkill",notes="candidate cand receive jobs based on their skills user Story 3",nickname = "getJobBySkill" )
+   @ApiOperation(value = "getJobBySkill",notes="candidate cand receive jobs based on their skills user Story 4",nickname = "getJobBySkill" )
    @PostMapping("/getJobBySkill")
    public List<Job> getAllJobBySkill(@RequestBody String skillNames){
 		
@@ -348,7 +348,7 @@ public class CandidateController {
 	}
    
 
-//   // OM check this method and sync with ur user story to be removed from here  
+//    
 //   @PostMapping("/candidateAppliesForJob")
 //   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
 //   
@@ -475,7 +475,7 @@ public class CandidateController {
 //			    employerDAO.save(e);
 			  } catch (Exception e) {
 			    
-				System.out.println(e.getMessage());
+//				System.out.println(e.getMessage());
 				return new ResponseEntity<>("Candidate could not apply for this job", HttpStatus.OK);
 
 			  }
