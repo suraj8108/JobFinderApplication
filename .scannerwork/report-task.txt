@@ -1,6 +1,6 @@
-projectKey=JOBPROFILE
+projectKey=Job_Profile
 serverUrl=http://localhost:9000
 serverVersion=8.9.9.56886
-dashboardUrl=http://localhost:9000/dashboard?id=JOBPROFILE
-ceTaskId=AYQcnLSFBB19i5h2_AeK
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQcnLSFBB19i5h2_AeK
+dashboardUrl=http://localhost:9000/dashboard?id=Job_Profile
+ceTaskId=AYQdx7p9BB19i5h2_Aeb
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYQdx7p9BB19i5h2_Aeb

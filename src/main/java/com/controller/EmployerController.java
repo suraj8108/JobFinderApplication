@@ -212,7 +212,7 @@ public class EmployerController {
 	}
 	
 	
-	@ApiOperation(value = "updating candidates status to waiitng", notes = "updating candidates status to waiitng", nickname = "updating candidates status to waiitng")
+	@ApiOperation(value = "updating candidates status to waiitng", notes = "updating candidates status to waiitng needed employer token", nickname = "updating candidates status to waiitng")
 	@PatchMapping("/waitingCandidate/{candidateId}/{employerId}/{jobId}")
 	public ResponseEntity<String> updateSelectedInterview(HttpServletRequest request, @PathVariable String candidateId, @PathVariable String jobId)
 			throws NumberFormatException, NoSuchJobFoundException, NoSuchEmployerFoundException, NotShortlistedException, CandidateNotFoundException
