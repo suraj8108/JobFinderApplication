@@ -1,5 +1,6 @@
 package com.sprint.naukri;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,6 +38,7 @@ import com.dto.JobDTO;
 import com.enums.JobStatus;
 import com.exception.CandidateNotFoundException;
 import com.exception.NoSuchEmployerFoundException;
+import com.exception.NoSuchInterviewFoundException;
 import com.helper.JwtUtil;
 import com.model.Candidate;
 import com.model.Employer;
@@ -51,7 +53,7 @@ import com.service.JobService;
 
 //@Transactional
 @SpringBootTest
-public class InterviewControllerTest1 {
+public class InterviewControllerTest {
 	
 
 	@Autowired
@@ -149,7 +151,7 @@ public class InterviewControllerTest1 {
 		url = "http://localhost:9989/employerAddjob";		  
 		String res = template.exchange(url,  HttpMethod.POST, entity, String.class).getBody();
 		
-//		System.out.println(res);
+		System.out.println(res);
 		
 		Job jobAct = jobService.getAllJob().get(0);
 		
@@ -174,11 +176,9 @@ public class InterviewControllerTest1 {
 		  HttpHeaders headers3 = new HttpHeaders();
 		  headers3.add("Authorization", commonToken);
 
-		  //Get All Interviews
+		  //Get Interview By ID
 		  String url3 = "http://localhost:9989/getInterviewById/"+ iid;
-		  
 		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
-		  
 		  Interview expected = interviewService.getAllInterviews().get(0);
 		  
 		  expected.setCandidate(null);
@@ -186,9 +186,39 @@ public class InterviewControllerTest1 {
 		  expected.setJob(null);
 		  
 		  Interview actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
-		  assertEquals(expected.toString(), actual.toString());
-	  
-	  
+		  assertEquals(expected.toString(), actual.toString());	  
+
+		  //Exception handling
+		  String url4 = "http://localhost:9989/getInterviewById/"+ 900;
+		  HttpEntity<Object> entity4 = new HttpEntity<>(headers3);
+	       Exception exception = assertThrows(Exception.class, 
+    	       () -> {template3.exchange(url4, HttpMethod.GET, entity3, new ParameterizedTypeReference<Interview>() {}).getBody();
+	       });
 
 	  }
+	  
+		
+	  @Test
+	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
+		  RestTemplate template3 = new RestTemplate();
+		  HttpHeaders headers3 = new HttpHeaders();
+		  headers3.add("Authorization", commonToken);
+
+		  //Get All Interviews
+		  String url3 = "http://localhost:9989/getAllInterviews";
+		  
+		  HttpEntity<Object> entity3 = new HttpEntity<>(headers3);
+		  
+		  List<Interview> expected = interviewService.getAllInterviews();
+		  
+		  expected.get(0).setCandidate(null);
+		  expected.get(0).setEmployer(null);
+		  expected.get(0).setJob(null);
+		  
+		  List<Interview> actual = template3.exchange(url3, HttpMethod.GET, entity3, new ParameterizedTypeReference<List<Interview>>() {}).getBody();
+		  
+		 		  
+		  assertEquals(expected.toString(), actual.toString());
+		  
+	  }	
 	  }

@@ -34,6 +34,7 @@ import com.dto.EmployerDTO;
 import com.dto.InterviewDTO;
 import com.dto.JobDTO;
 import com.enums.JobStatus;
+import com.exception.CandidateNotFoundException;
 import com.exception.NoSuchEmployerFoundException;
 import com.helper.JwtUtil;
 import com.model.Candidate;
@@ -47,10 +48,10 @@ import com.service.EmployerService;
 import com.service.InterviewService;
 import com.service.JobService;
 
-//@Transactional
 @SpringBootTest
-public class InterviewControllerMethodTest1 {
+public class InterviewControllerMethodTest {
 	
+
 	@Autowired
 	JobService jobService;
 	
@@ -70,7 +71,7 @@ public class InterviewControllerMethodTest1 {
 	InterviewService interviewService;
 	
 	@Autowired
-	InterviewDAO interviewDAO;
+	InterviewDAO interviewDao;
 	
 	String commonToken;
 
@@ -84,9 +85,10 @@ public class InterviewControllerMethodTest1 {
 	 */
 	
 	@BeforeEach
-	void startConnection() throws NoSuchEmployerFoundException {
+	void startConnection() throws NoSuchEmployerFoundException, CandidateNotFoundException {
 		
 		candidateService.deleteAllCandidate();
+		interviewDao.deleteAll();
 		
 		cand1.setAge(30);
 		cand1.setCandidateName("om");
@@ -104,6 +106,7 @@ public class InterviewControllerMethodTest1 {
 	
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 		
+		Candidate candy = candidateService.getAllCandidates().get(0);
 		// Authenticate and get token
 		JwtRequest jwtRequest = new JwtRequest("om", "pass");
 		String url1 = "http://localhost:9989/authenticate";
@@ -142,20 +145,52 @@ public class InterviewControllerMethodTest1 {
 		
 //		System.out.println(res);
 		
+		Job jobAct = jobService.getAllJob().get(0);
+		
 		
 		// Candidate apply for interview
-//		interviewService.deleteAllInterviews();
-		interviewDAO.deleteAll();
 		RestTemplate template3 = new RestTemplate();
 		HttpHeaders headers3= new HttpHeaders();
 		headers.add("Authorization", commonToken);
 		template.setRequestFactory(new HttpComponentsClientHttpRequestFactory());	
 		HttpEntity<Object> entity3 = new HttpEntity(headers);		
 	
-		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+1+"&jobId="+1, HttpMethod.POST, entity3, String.class);
+		ResponseEntity<String> responseC1J1 = template3.exchange("http://localhost:9989/candidateApplicationForJob?candidateId="+candy.getCandidateId()+"&jobId="+jobAct.getJobId(), HttpMethod.POST, entity3, String.class);
 
-		
 	}
+	
 	  
+	  @Test 
+	  @Transactional
+	  public void testGetInterviewById() throws NoSuchEmployerFoundException {
+			
 
+		int iid = interviewDao.findAll().get(0).getInterviewId();
+
+		Interview expected = interviewService.getAllInterviews().get(0);
+		  
+		expected.setCandidate(null);
+		expected.setEmployer(null);
+		expected.setJob(null);
+  
+		Interview interview = (Interview) interviewController.getInterview(""+iid).getBody();
+		assertEquals(expected, interview);
+			
+		assertEquals("No interview with id 990 found:( ", interviewController.getInterview("990").getBody());
+	  }
+	  
+	  @Test
+	  public void testGetAllInterviews() throws NoSuchEmployerFoundException {
+
+		  List<Interview> expected = interviewService.getAllInterviews();
+		  
+		  expected.get(0).setCandidate(null);
+		  expected.get(0).setEmployer(null);
+		  expected.get(0).setJob(null);
+		  
+			List<Interview> interviewList = (List<Interview>) interviewController.getAllInterviews().getBody();
+			assertEquals(1, interviewList.size());
+		  
+	  }	
+	  
 }
