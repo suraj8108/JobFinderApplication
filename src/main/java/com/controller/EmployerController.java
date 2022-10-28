@@ -97,6 +97,16 @@ public class EmployerController {
 	  }
 	}
 	
+	@ApiOperation(value = "get empolyees", notes = "get empolyee  details", nickname = "get empolye detailss")
+	@GetMapping("/getEmployeDetails")
+	public ResponseEntity<?> getEmployer(HttpServletRequest request) throws NoSuchEmployerFoundException {
+	  String emailId = descryptUser.decryptEmailId(request);
+	  
+	  Employer employee = employerService.getEmployerByEmailId(emailId);
+	   
+	return new ResponseEntity<>(employee, HttpStatus.OK);
+	}
+	
 	
 	@ApiOperation(value = "get all candidates by experience", notes = "Employer get all candidates by experience", nickname = "get all empolyees")
 	@GetMapping("/getAllCandidatesByExperience/{experience_lb}/{experience_ub}")
