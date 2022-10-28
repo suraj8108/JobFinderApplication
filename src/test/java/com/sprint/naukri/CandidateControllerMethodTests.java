@@ -418,7 +418,41 @@ public class CandidateControllerMethodTests {
      }
     
 
+   @Test
+   @Transactional
+   public void feedbackRating() throws URISyntaxException, CandidateNotFoundException, NumberFormatException, NoSuchInterviewFoundException, feedbackException{
+     
+    
+         
+         Candidate c= candao.findByCandidateName("yashs");
 
+         List<Interview> interviews = new ArrayList<>();
+         Interview x = new Interview();
+         x.setCandidate(c);
+         x.setInterviewId(1);
+         x.setPostInterviewStatus(PostInterviewStatus.SELECTED);
+         x.setPreInterviewStatus(PreInterviewStatus.SHORTLISTED);
+         interviews.add(x);
+         
+         c.setInterviewList(interviews);
+         
+         candao.save(c);
+         
+         
+         
+         RatingFeedbackDTO rto =new RatingFeedbackDTO();
+         rto.setFeedback("FeedBAck");
+         rto.setRating(5);
+     
+
+          
+        ResponseEntity<String> result = candidateController.feedbackRating(x.getInterviewId()+"", rto);
+     
+
+         
+         Assertions.assertEquals(200, result.getStatusCodeValue());
+         Assertions.assertEquals("Feedback and rating by candidate saved", result.getBody());  
+   }
     
 
     

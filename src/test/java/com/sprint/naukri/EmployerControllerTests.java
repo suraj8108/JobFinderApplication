@@ -199,12 +199,6 @@ public class EmployerControllerTests {
 		}
 	}
 
-	@Test
-	void testEmployerFeedbackRating() throws feedbackException {
-	  RatingFeedbackDTO rfbDTO = new RatingFeedbackDTO();
-	  rfbDTO.setFeedback("good");
-	  rfbDTO.setRating(3);
-//	  System.out.println(employerController.feedbackRating("1", rfbDTO).getBody());
-	}
+	
 
 }
