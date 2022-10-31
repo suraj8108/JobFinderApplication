@@ -21,6 +21,7 @@ import com.dao.CandidateDAO;
 
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
+import com.dto.CandidateDTO;
 import com.dto.ProfileDTO;
 import com.dto.ProjectDTO;
 import com.dto.SkillDTO;
@@ -365,29 +366,40 @@ public class CandidateService {
     }
 
    
-
-   
-
-  
-
-  
-	public List<Candidate> getAllCandidatesByExperience(int experience_lb, int experience_ub) {
-		return candao.findByExperienceBetween(experience_lb, experience_ub);
+    public List<CandidateDTO> candidateToDTO(List<Candidate> cands){
+    	List<CandidateDTO> cdtos = new ArrayList<CandidateDTO>();
+    	for (Candidate c: cands) {
+    		cdtos.add(new CandidateDTO(c.getCandidateName(),c.getAge(),c.getEmailId(),c.getExperience(),c.getLocation(),c.getEducationQualification(),c.getSkillSet(),c.getProjectList()));
+    	}
+		return cdtos;    	
+    }
+    public Set<CandidateDTO> candidateSetToDTO(Set<Candidate> cands){
+    	Set<CandidateDTO> cdtos = new HashSet<CandidateDTO>();
+    	for (Candidate c: cands) {
+    		cdtos.add(new CandidateDTO(c.getCandidateName(),c.getAge(),c.getEmailId(),c.getExperience(),c.getLocation(),c.getEducationQualification(),c.getSkillSet(),c.getProjectList()));
+    	}
+		return cdtos;    	
+    }
+    
+	public List<CandidateDTO> getAllCandidatesByExperience(int experience_lb, int experience_ub) {
+		List<Candidate> lc = candao.findByExperienceBetween(experience_lb, experience_ub);
+		return this.candidateToDTO(lc);
 	}
 	
-	public List<Candidate> getAllCandidatesByQualification(String qualification) {
-		return candao.findAllByEducationQualification(qualification);
+	public List<CandidateDTO> getAllCandidatesByQualification(String qualification) {
+		List<Candidate> lc =  candao.findAllByEducationQualification(qualification);
+		return this.candidateToDTO(lc);
 	}
 	
-	public List<Candidate> getAllCandidatesBySkillSet(String skills){
+	public List<CandidateDTO> getAllCandidatesBySkillSet(String skills){
 		List<Candidate> result = new ArrayList<>();
 		
 		List<Candidate> candidates= candao.findAll();
 		
 		String [] skillsRequired = skills.split("\\s*,\\s*");
 
-		System.out.println(Arrays.toString(skillsRequired));
-		System.out.println(skills);
+//		System.out.println(Arrays.toString(skillsRequired));
+//		System.out.println(skills);
 		
 		
 		for(Candidate c: candidates) {
@@ -404,7 +416,7 @@ public class CandidateService {
 				}	
 			}	
 		}
-		return result;
+		return this.candidateToDTO(result);
 	}
 	
 	

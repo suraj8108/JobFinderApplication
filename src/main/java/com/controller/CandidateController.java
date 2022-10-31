@@ -231,7 +231,7 @@ public class CandidateController {
          
      }
      
-     @ApiOperation(value = "Add",notes="remove Skill by CanidateId And SkillName",nickname = "Add Skill to Candidate" ) 
+     @ApiOperation(value = "Add",notes="remove Skill by CanidateId taken from the token And SkillName",nickname = "Add Skill to Candidate" ) 
      @PatchMapping("/removeskillbyCanidateIdAndSkillName/{skillName}")
      public ResponseEntity removeSkillbyCanidateIdAndSkillName(HttpServletRequest request,@PathVariable("skillName") String skillName) throws NumberFormatException, skillNotFoundException, CandidateNotFoundException {
          try {
@@ -328,7 +328,7 @@ public class CandidateController {
        return new ResponseEntity<>(jobList, HttpStatus.OK);
    }
    
-   @ApiOperation(value = "getJobBySkill",notes="candidate cand receive jobs based on their skills user Story 3",nickname = "getJobBySkill" )
+   @ApiOperation(value = "getJobBySkill",notes="candidate cand receive jobs based on their skills user Story 4",nickname = "getJobBySkill" )
    @PostMapping("/getJobBySkill")
    public List<Job> getAllJobBySkill(@RequestBody String skillNames){
 		
@@ -348,7 +348,7 @@ public class CandidateController {
 	}
    
 
-//   // OM check this method and sync with ur user story to be removed from here  
+//    
 //   @PostMapping("/candidateAppliesForJob")
 //   public ResponseEntity<String> candidateAppliesForJob(@RequestParam("candidateId") String candidateId, @RequestParam("jobId") String jobId) throws exceptions {
 //   
@@ -398,7 +398,7 @@ public class CandidateController {
 //       }
  
    //no service tests from here
-   @ApiOperation(value = "updatecandidate",notes="updatecandidate",nickname = "updatecandidate" )
+   @ApiOperation(value = "updatecandidate",notes="updatecandidate need authentication token",nickname = "updatecandidate" )
    	@PatchMapping("/updatecandidate")
  	public ResponseEntity updateCandidate( HttpServletRequest request,@RequestBody ProfileDTO candDto ) throws CandidateValidationExceptioncheck, CandidateNotFoundException, FormatException {
   
@@ -475,7 +475,7 @@ public class CandidateController {
 //			    employerDAO.save(e);
 			  } catch (Exception e) {
 			    
-				System.out.println(e.getMessage());
+//				System.out.println(e.getMessage());
 				return new ResponseEntity<>("Candidate could not apply for this job", HttpStatus.OK);
 
 			  }
@@ -517,4 +517,29 @@ public class CandidateController {
 	/*
 	 * ********OM end***********
 	 */
+	
+	   @GetMapping("/getMyDetails")
+	     public ResponseEntity getMyDetails(HttpServletRequest request  ) throws CandidateNotFoundException{
+	    
+	           try {
+	        	   String emailId = decryptUser.decryptEmailId(request);
+	               
+	               int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();
+	           
+	               return new ResponseEntity<>(candidateService.getCandidateById(candidateId),HttpStatus.FOUND);
+
+	           }
+	           catch (NoSuchElementException c) {
+	               
+	               throw new CandidateNotFoundException("User Not found");
+	           
+	           }
+	       }
+	
+	
+	
+	
+	
+	
+	
 }

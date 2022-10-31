@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("Hell S");
+//		System.out.println("Hell S");
 		http
 			.cors().disable().csrf().disable()
 			.authorizeRequests()
@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("Hello Sir");
+//		System.out.println("Hello Sir");
 		auth.userDetailsService(candService);
 	}
 	

@@ -42,13 +42,13 @@ public class InterviewService {
 	      Interview i = interviewDAO.findById(j).get();
 	   
 	      if(i.getPostInterviewStatus().equals(PostInterviewStatus.WAITING)||i.getPostInterviewStatus().equals(PostInterviewStatus.INVALID)||(!i.getPreInterviewStatus().equals(PreInterviewStatus.SHORTLISTED))) {
-	          System.out.println("in the if");
+//	          System.out.println("in the if");
 	          throw new feedbackException("candidate need to complete his interview or data corrupted");
 	      }
 	      
 	      i.setCandidateRating(dto.getRating());
-	      System.out.println(dto.getRating());
-	      System.out.println(i.getCandidateRating());
+//	      System.out.println(dto.getRating());
+//	      System.out.println(i.getCandidateRating());
 	      i.setCandidateFeedback(dto.getFeedback());
 	      interviewDAO.save(i);
 	      }

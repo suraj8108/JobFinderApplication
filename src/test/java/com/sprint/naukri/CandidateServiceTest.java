@@ -27,6 +27,7 @@ import com.dao.CandidateDAO;
 import com.dao.EmployerDAO;
 import com.dao.ProjectDAO;
 import com.dao.SkillDAO;
+import com.dto.CandidateDTO;
 import com.dto.ProfileDTO;
 import com.dto.ProjectDTO;
 import com.dto.RatingFeedbackDTO;
@@ -330,7 +331,7 @@ public class CandidateServiceTest {
 	      candidateService.addProfile(dto);
 	      Candidate candexpec = candidateService.findCandidateByName("yashss");
           
-	      System.out.println(candexpec.getExperience());
+//	      System.out.println(candexpec.getExperience());
 	      
 	       
 	       ProfileDTO dto1 = new ProfileDTO();
@@ -348,7 +349,7 @@ public class CandidateServiceTest {
        
 	      candidateService.updateProfile(candexpec.getCandidateId(),dto1);
 	      
-	      System.out.println(candexpec.getExperience());
+//	      System.out.println(candexpec.getExperience());
 	        Candidate candactual = candao.findById(candexpec.getCandidateId()).get();
 
 	      
@@ -374,7 +375,7 @@ public class CandidateServiceTest {
           candidateService.addProfile(dto);
           Candidate candexpec = candidateService.findCandidateByName("yashss");
           
-          System.out.println(candexpec.getExperience());
+//          System.out.println(candexpec.getExperience());
           
            
            ProfileDTO dto1 = new ProfileDTO();
@@ -392,7 +393,7 @@ public class CandidateServiceTest {
            Candidate candactual = candao.findById(candexpec.getCandidateId()).get();
 
           
-          System.out.println(candexpec.getExperience());
+//          System.out.println(candexpec.getExperience());
 
           
             Exception exception= Assertions.assertThrows(CandidateNotFoundException.class, ()->{
@@ -424,7 +425,7 @@ public class CandidateServiceTest {
           candidateService.addProfile(dto);
           Candidate candexpec = candidateService.findCandidateByName("yashss");
           
-          System.out.println(candexpec.getExperience());
+//          System.out.println(candexpec.getExperience());
           
            
            ProfileDTO dto1 = new ProfileDTO();
@@ -441,13 +442,13 @@ public class CandidateServiceTest {
            dto1.setSkillDTOSet(csdts);
            Candidate candactual = candao.findById(candexpec.getCandidateId()).get();
            
-           System.out.println(candexpec.getExperience());
+//           System.out.println(candexpec.getExperience());
 
            
              Exception exception= Assertions.assertThrows(CandidateValidationExceptioncheck.class, ()->{
                  candidateService.updateProfile(candexpec.getCandidateId(),dto1);
                  Candidate candactual1 = candao.findById(candexpec.getCandidateId()).get();
-                 System.out.println(candactual1.getAge());
+//                 System.out.println(candactual1.getAge());
     
              });
                  String expectedMessage = 
@@ -598,7 +599,7 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTest() {
 	     candao.save(cand1);
-	     List<Candidate> experience = candidateService.getAllCandidatesByExperience(0,cand1.getExperience());
+	     List<CandidateDTO> experience = candidateService.getAllCandidatesByExperience(0,cand1.getExperience());
 	     Assertions.assertTrue(1==experience.size());
 	 }
 	 
@@ -606,8 +607,8 @@ public class CandidateServiceTest {
 	 @Test
 	 public void getAllCandidatesByExperienceTestfailed() {
          
-         List<Candidate> experience = candidateService.getAllCandidatesByExperience(5665,6513);
-         System.out.println(experience);
+         List<CandidateDTO> experience = candidateService.getAllCandidatesByExperience(5665,6513);
+//         System.out.println(experience);
          Assertions.assertTrue(experience.size()==0);
          
      }
@@ -616,14 +617,14 @@ public class CandidateServiceTest {
 	 @Test
      public void getAllCandidatesByQualification() {
          candao.save(cand1);
-         List<Candidate> qualification = candidateService.getAllCandidatesByQualification(cand1.getEducationQualification());
+         List<CandidateDTO> qualification = candidateService.getAllCandidatesByQualification(cand1.getEducationQualification());
          Assertions.assertTrue(1==qualification.size());
      }
 	
 	 @Test
      public void getAllCandidatesByQualificationfalied() {
          candao.save(cand1);
-         List<Candidate> qualification = candidateService.getAllCandidatesByQualification("jknsdkvj");
+         List<CandidateDTO> qualification = candidateService.getAllCandidatesByQualification("jknsdkvj");
          Assertions.assertTrue(0==qualification.size());
      }
 
@@ -632,7 +633,7 @@ public class CandidateServiceTest {
 	 public void getAllCandidatesBySkillSetTest() {
 	     candao.save(cand1);
 	     String skills  = "Json,Javsvds,Jksnks ";
-	     List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+	     List <CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(1==candidates.size());
 
 	     
@@ -642,7 +643,7 @@ public class CandidateServiceTest {
      public void getAllCandidatesBySkillSetTestFailed() {
          candao.save(cand1);
          String skills  = "Json ,Javsvds,Jksnks ";
-         List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+         List <CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(1==candidates.size());
 
          
@@ -652,123 +653,12 @@ public class CandidateServiceTest {
      public void getAllCandidatesBySkillSetTestFailed2() {
          candao.save(cand1);
          String skills  = "Jsoasdn ,Javsvds,Jksnks ";
-         List <Candidate> candidates = candidateService.getAllCandidatesBySkillSet(skills);
+         List<CandidateDTO> candidates = candidateService.getAllCandidatesBySkillSet(skills);
          Assertions.assertTrue(0==candidates.size());
 
          
      }
 	 
 	 
-	 
-//	@Test
-//	void addcandidate() {
-//		Candidate cand1 = new Candidate();
-//		cand1.setAge(21);
-//		cand1.setCandidateName("Yash");
-//		service.addAndCheckSkill(cand1);
-//		
-//		Candidate candexpec = cand1;
-//		
-//		
-//		Candidate candactual = candao.findById(candexpec.getCandidateId()).get();
-//		Assertions.assertEquals(candexpec.getCandidateName(), candactual.getCandidateName());
-//		
-//	}
-//
-//	
-//
-//	@Test
-//	void updateCandidate() {
-//		Candidate cand1 = new Candidate();
-//		cand1.setAge(21);
-//		cand1.setCandidateName("Yash");
-//		candao.save(cand1);
-//		
-//		Candidate candexpec = cand1;
-//		//System.out.println(cand1);
-//		service.updateCandidate(candexpec);
-//		
-//
-//		
-//		Candidate candactual = candao.findById(candexpec.getCandidateId()).get();
-//		Assertions.assertEquals(candexpec.getCandidateName(), candactual.getCandidateName());
-//		
-//	}
-//
-//	@Test
-//	void deleteCandidateTest() {
-//		Candidate cand1 = new Candidate();
-//		cand1.setAge(21);
-//		cand1.setCandidateName("Yash");
-//		candao.save(cand1);
-//		
-//	
-//	
-//		Candidate cand2 = cand1;
-//		service.deleteCandidate(cand2);
-//		Example<Candidate> ex = Example.of(cand2);
-//
-//		Assertions.assertFalse(candao.exists(ex));
-//		
-//		
-//	}
-//	
-//	@Test
-//	void updateLocationTest() {
-//		
-//		Candidate cand1 = new Candidate();
-//		cand1.setAge(21);
-//		cand1.setCandidateName("Yash");
-//		candao.save(cand1);
-//		cand1.setLocation("sdfksdjssdcs");;
-//		
-//
-//		
-//		service.updateLocation(cand1.getCandidateId(),"sdfksdj");
-//		Candidate actual = candao.findById(cand1.getCandidateId()).get();
-//		
-//		
-//		assertFalse(cand1.getLocation().equals(actual.getLocation()));
-//		
-//	}
-////
-////	@ParameterizedTest
-////	@ValueSource(ints = {1})
-////	void findbyidTest(int i) {
-////		Candidate cand1 = new Candidate();
-////		cand1.setAge(21);
-////		cand1.setCandidateName("Yash");
-////		
-////		
-////		candao.save(cand1);
-////		//System.out.println(cand1.getCandidateId());
-////		cand1.setAge(25);
-////		candao.save(cand1);
-////		
-////		Candidate cn = service.findById(i);
-////		assertNotNull(cn);
-////		
-////	
-////	
-////	}
-////	
-//	@ParameterizedTest
-//	@ValueSource(ints = {0})
-//
-//	void findbyidTest0(int i) {
-//		Candidate cand1 = new Candidate();
-//		cand1.setAge(21);
-//		cand1.setCandidateName("Yash");
-//		candao.save(cand1);
-//		//System.out.println(cand1.getCandidateId());
-//		cand1.setAge(25);
-//		candao.save(cand1);
-//		
-//		Candidate cn = service.findById(i);
-//		assertNull(cn);
-//	
-//	}
-//	
-//	
-//	
+	
 }
