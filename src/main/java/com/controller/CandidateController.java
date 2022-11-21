@@ -14,6 +14,7 @@ import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,6 +36,7 @@ import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
+import com.exception.EmailAlreadyExit;
 import com.exception.FormatException;
 import com.exception.JobNotFoundException;
 import com.exception.NoSuchInterviewFoundException;
@@ -57,6 +59,7 @@ import com.service.InterviewService;
 import com.service.JobService;
 import com.service.ProjectService;
 
+import io.jsonwebtoken.JwtException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -95,6 +98,9 @@ public class CandidateController {
     @Autowired
     DecryptUserDetails decryptUser;
     
+    @Autowired 
+	 JwtUtil jwtUtil;
+    
 	
 	//user Story 2 Candidate should be able to create a profile by mentioning his details 
     //like educational qualification ,technical skills ,experience ,projects 
@@ -103,7 +109,7 @@ public class CandidateController {
 	@ApiOperation(value = "Add Candidate",notes="Register and  Add profile",nickname = "addprofile" )
     @ApiResponses(value= {@ApiResponse(code=200, message="Add profile")})
 	@PostMapping("/addProfile")
-    public ResponseEntity addProfile(@RequestBody ProfileDTO profile)throws CandidateValidationExceptioncheck {
+    public ResponseEntity addProfile(@RequestBody ProfileDTO profile)throws CandidateValidationExceptioncheck, EmailAlreadyExit {
 		
         try {
         candidateService.addProfile(profile);
@@ -120,9 +126,9 @@ public class CandidateController {
 	//user Story 2 -able to add Project by Id
 	@ApiOperation(value = "Adding Project",notes="Candidate Id is fetched from token",nickname = "Add Project By Candidate Id")
     @PostMapping("/addProjectById")
-    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws CandidateNotFoundException, FormatException, NullValueException{
+    public ResponseEntity addProject(HttpServletRequest request, @RequestBody List<ProjectDTO> project) throws NullPointerException, CandidateNotFoundException, FormatException, NullValueException{
        
-       try {
+     
            
            String emailId = decryptUser.decryptEmailId(request);
            
@@ -133,10 +139,7 @@ public class CandidateController {
 
         return new  ResponseEntity<>("Project added successfully"
                 ,HttpStatus.ACCEPTED);
-        }
-       catch(NullPointerException n ) {
-    	   throw new NullValueException("Don't pass a null object please");
-       }
+      
        
     }
 	
@@ -162,6 +165,7 @@ public class CandidateController {
 	    }
       
 	}
+	
 	
 	@ApiOperation(value = "Removing Project",notes="Candidate Id is fetched from token for and removal of projectname",nickname = "RPC")
 	@DeleteMapping("/removeProjectByName/{ProjectName}")
@@ -519,9 +523,17 @@ public class CandidateController {
 	 */
 	
 	   @GetMapping("/getMyDetails")
-	     public ResponseEntity getMyDetails(HttpServletRequest request  ) throws CandidateNotFoundException{
+	     public ResponseEntity getMyDetails(HttpServletRequest request  ) throws CandidateNotFoundException, JwtException, UsernameNotFoundException {
 	    
 	           try {
+//	        	   String authorization = request.getHeader("Authorization");
+//	               String token = null;
+//	               String userName = null;
+//	               if(null == authorization ) {
+//	                  throw new JwtException("enter jwt token");
+//	               }
+//	               
+	               
 	        	   String emailId = decryptUser.decryptEmailId(request);
 	               
 	               int candidateId = candidateService.findCandidateByEmailId(emailId).getCandidateId();

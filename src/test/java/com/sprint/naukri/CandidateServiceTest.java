@@ -37,6 +37,7 @@ import com.enums.PreInterviewStatus;
 import com.exception.AlreadySelectedBySameEmployerException;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
+import com.exception.EmailAlreadyExit;
 import com.exception.MoonLightingException;
 import com.exception.ProjectNotFoundException;
 import com.exception.feedbackException;
@@ -123,7 +124,7 @@ public class CandidateServiceTest {
 	}
 	
 	@Test 
-	void addProfileTest(){
+	void addProfileTest() throws EmailAlreadyExit{
 	    
 	    ProfileDTO dto = new ProfileDTO();
 	    dto.setAge(22);
@@ -266,7 +267,7 @@ public class CandidateServiceTest {
 	 
 	 
 	  @Test 
-	    void addProfileTestForCoverage(){
+	    void addProfileTestForCoverage() throws EmailAlreadyExit{
 	        
 	        ProfileDTO dto = new ProfileDTO();
 	        dto.setAge(22);
@@ -315,7 +316,7 @@ public class CandidateServiceTest {
 	  
 	  @Test 
 	  @Transactional
-      public void updateProfileTest() throws CandidateNotFoundException{
+      public void updateProfileTest() throws CandidateNotFoundException, EmailAlreadyExit{
 	      ProfileDTO dto = new ProfileDTO();
 	        dto.setAge(22);
 	        dto.setCandidateName("yashss");
@@ -359,7 +360,7 @@ public class CandidateServiceTest {
         }
 	  @Test 
       @Transactional
-      public void updateProfileTestFailed() throws CandidateNotFoundException{
+      public void updateProfileTestFailed() throws CandidateNotFoundException, EmailAlreadyExit{
           ProfileDTO dto = new ProfileDTO();
             dto.setAge(22);
             dto.setCandidateName("yashss");
@@ -409,7 +410,7 @@ public class CandidateServiceTest {
 	 
 	  @Test 
      
-      public void updateProfileTestFailed2() throws CandidateNotFoundException{
+      public void updateProfileTestFailed2() throws CandidateNotFoundException, EmailAlreadyExit{
           ProfileDTO dto = new ProfileDTO();
             dto.setAge(22);
             dto.setCandidateName("yashss");

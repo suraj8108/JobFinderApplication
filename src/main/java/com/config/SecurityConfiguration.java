@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.dao.CandidateDAO;
@@ -56,8 +57,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.antMatchers(AUTH_WHITELIST).permitAll()
 			.anyRequest().authenticated()
 			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+				.exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint());
 		
 		 //.httpBasic();
 		
@@ -79,4 +83,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManager();
 	}
 	
+	
+	 @Bean
+	    public AuthenticationEntryPoint authenticationEntryPoint(){
+	        return new CustomAuthenticationEntryPoint();
+	    }
+	
 }
+
+

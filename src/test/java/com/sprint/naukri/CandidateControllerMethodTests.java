@@ -45,6 +45,7 @@ import com.enums.PostInterviewStatus;
 import com.enums.PreInterviewStatus;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
+import com.exception.EmailAlreadyExit;
 import com.exception.FormatException;
 import com.exception.NoSuchInterviewFoundException;
 import com.exception.NullValueException;
@@ -154,7 +155,7 @@ public class CandidateControllerMethodTests {
     }
     
     @Test
-    public void addProfiletest() throws URISyntaxException 
+    public void addProfiletest() throws URISyntaxException, CandidateValidationExceptioncheck, EmailAlreadyExit 
     {
         ProfileDTO dto1 = new ProfileDTO("yasnjnda",22,22,"sdfsdf","sdfsd","adsfsd","sdfsdf",new ArrayList<>(),new HashSet<>());
 

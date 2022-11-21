@@ -90,6 +90,12 @@ dependencies {
    	implementation 'org.springframework.boot:spring-boot-starter-batch'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.batch:spring-batch-test'
+  
+  // https://mvnrepository.com/artifact/com.github.holgerbrandl/jsonbuilder
+implementation group: 'com.github.holgerbrandl', name: 'jsonbuilder', version: '0.9'
+  
+   	// https://mvnrepository.com/artifact/org.json/json
+implementation group: 'org.json', name: 'json', version: '20220924'
    	
    	
    	

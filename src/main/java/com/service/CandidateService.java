@@ -27,6 +27,7 @@ import com.dto.ProjectDTO;
 import com.dto.SkillDTO;
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
+import com.exception.EmailAlreadyExit;
 import com.exception.skillNotFoundException;
 import com.enums.PostInterviewStatus;
 import com.exception.AlreadySelectedBySameEmployerException;
@@ -88,8 +89,11 @@ public class CandidateService {
 	//for addwhilecheckingskill
 
 	//dealing with profile userstory
-	public void addProfile(ProfileDTO profile) {
+	public void addProfile(ProfileDTO profile) throws EmailAlreadyExit {
 	       Candidate c = new Candidate();
+	       if(candao.findByEmailId(profile.getEmailId())!=null) {
+	    	   throw new EmailAlreadyExit("entered email is already in database give a new one ");
+	       }
 	       
 	       c.setCandidateName(profile.getCandidateName());
 	       c.setAge(profile.getAge());

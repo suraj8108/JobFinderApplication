@@ -221,8 +221,10 @@ public class EmployerController {
 	{
 		
 		String employerEmailId = descryptUser.decryptEmailId(request);
-		 int employerId = employerService.getEmployerByEmailId(employerEmailId).getEmployerId();
+		int employerId = employerService.getEmployerByEmailId(employerEmailId).getEmployerId();
+		
 		Candidate candidate = candidateService.getCandidateById(Integer.parseInt(candidateId));
+		
 		Job job = jobService.getJobById(Integer.parseInt(jobId));
 		Employer employer= employerService.getEmployerById(employerId);
 		

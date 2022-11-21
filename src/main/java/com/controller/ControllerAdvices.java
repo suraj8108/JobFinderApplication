@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,11 +15,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.exception.CandidateNotFoundException;
 import com.exception.CandidateValidationExceptioncheck;
+import com.exception.EmailAlreadyExit;
 import com.exception.FormatException;
 import com.exception.ProjectNotFoundException;
 import com.exception.feedbackException;
 import com.exception.skillNotFoundException;
 import com.model.ExceptionResponse;
+
+import io.jsonwebtoken.JwtException;
+
 import com.exception.NoSuchJobFoundException;
 import com.exception.NotShortlistedException;
 import com.exception.NullValueException;
@@ -86,4 +91,21 @@ public class ControllerAdvices extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNullValueException(NullValueException e, WebRequest req){
     	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
     }
+    
+    
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Object> handleJwtException(JwtException e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
+    }
+    
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
+    }
+    
+    @ExceptionHandler(EmailAlreadyExit.class)
+    public ResponseEntity<Object> handleEmailAlreadyExit(EmailAlreadyExit e, WebRequest req){
+    	return new ResponseEntity<>(e.toString(), HttpStatus.NOT_ACCEPTABLE);
+    }
+    
 }
