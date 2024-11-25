@@ -64,11 +64,6 @@ A pipeline is created to:
     kubectl get pods
     ```
 
-
-## Acknowledgements 🙏
-- Thanks to all contributors and users for their support.
-- Special thanks to the developers of JWT, Swagger, and SonarQube for their amazing tools.
-
 For more details, refer to the PPT attached in the repository.
 
 ---
